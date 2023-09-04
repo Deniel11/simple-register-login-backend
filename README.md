@@ -19,9 +19,9 @@ If you want use it, then you can implement your country laws.
 - [ ] Logging
 - [X] GitHub Actions
   - [x] CheckStyle
-- [ ] Environment Variables
-  - [ ] Database Connection
-  - [ ] Secret Key
+- [x] Environment Variables
+  - [x] Database Connection
+  - [x] Secret Key
 - [ ] Registration, Login Backend APIs
 - [ ] User APIs
   - [ ] Edit API
