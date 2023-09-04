@@ -17,6 +17,8 @@ If you want use it, then you can implement your country laws.
 - [ ] Centralized Error Handling
 - [ ] Custom Exceptions
 - [ ] Logging
+- [X] GitHub Actions
+  - [x] CheckStyle
 - [ ] Environment Variables
   - [ ] Database Connection
   - [ ] Secret Key
@@ -24,7 +26,7 @@ If you want use it, then you can implement your country laws.
 - [ ] User APIs
   - [ ] Edit API
   - [ ] GET API
-- [ ] Admin/User based Authorize
+- [ ] Admin and User based Authorize
 - [ ] Schedule APIs
   - [ ] Create API
   - [ ] Delete API
