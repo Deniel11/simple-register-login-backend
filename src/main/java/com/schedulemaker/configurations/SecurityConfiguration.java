@@ -62,7 +62,7 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(authorize -> authorize
-                        .antMatchers("/", "/api/registration", "/api/login", "/register", "/access-denied").permitAll()
+                        .antMatchers("/", "/api/user/registration", "/api/user/login").permitAll()
                         .antMatchers("/js/**", "/css/**", "/img/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception

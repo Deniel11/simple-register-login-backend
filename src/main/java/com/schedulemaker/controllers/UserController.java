@@ -1,5 +1,7 @@
 package com.schedulemaker.controllers;
 
+import com.schedulemaker.dtos.AuthenticationRequestDTO;
+import com.schedulemaker.dtos.AuthenticationResponseDTO;
 import com.schedulemaker.dtos.MessageDTO;
 import com.schedulemaker.dtos.UserDTO;
 import com.schedulemaker.services.UserService;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
 
     private UserService userService;
@@ -56,7 +58,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login() {
-        return null;
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequest) {
+        String invalidParameter = "";
+        if (GeneralUtility.isEmptyOrNull(authenticationRequest.getUsername())) {
+            invalidParameter = "Username";
+        } else if (GeneralUtility.isEmptyOrNull(authenticationRequest.getPassword())) {
+            invalidParameter = "Password";
+        }
+        if (!invalidParameter.isBlank()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageDTO("error", invalidParameter + " is required."));
+        }
+        userService.authenticate(authenticationRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationResponseDTO("ok", userService.createAuthenticationToken(authenticationRequest)));
     }
 }

@@ -1,5 +1,6 @@
 package com.schedulemaker.services;
 
+import com.schedulemaker.dtos.AuthenticationRequestDTO;
 import com.schedulemaker.dtos.RegisteredUserDTO;
 import com.schedulemaker.dtos.UserDTO;
 import org.springframework.stereotype.Service;
@@ -11,4 +12,8 @@ public interface UserService {
     boolean isUsernameTaken(String username);
 
     boolean isEmailTaken(String email);
+
+    String createAuthenticationToken(AuthenticationRequestDTO authenticationRequest);
+
+    void authenticate(AuthenticationRequestDTO authenticationRequest);
 }
