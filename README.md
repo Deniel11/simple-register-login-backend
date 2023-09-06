@@ -12,21 +12,21 @@ If you want use it, then you can implement your country laws.
 ## The plan for this project:
 
 ### Backend:
-- [ ] Token Based Authentication
-- [ ] Flyway Database Migration
-- [ ] Centralized Error Handling
-- [ ] Custom Exceptions
+- [x] Token Based Authentication
+- [x] Flyway Database Migration
+- [x] Centralized Error Handling
+- [x] Custom Exceptions
 - [ ] Logging
 - [X] GitHub Actions
   - [x] CheckStyle
 - [x] Environment Variables
   - [x] Database Connection
   - [x] Secret Key
-- [ ] Registration, Login Backend APIs
+- [x] Registration, Login Backend APIs
 - [ ] User APIs
   - [ ] Edit API
   - [ ] GET API
-- [ ] Admin and User based Authorize
+- [x] Admin and User based Authorize
 - [ ] Schedule APIs
   - [ ] Create API
   - [ ] Delete API
