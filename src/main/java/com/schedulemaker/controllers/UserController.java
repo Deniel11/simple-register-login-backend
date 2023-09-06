@@ -33,7 +33,7 @@ public class UserController {
         } else if (GeneralUtility.isEmptyOrNull(userDTO.getPassword())) {
             parameter = "Password";
         } else if (GeneralUtility.isEmptyOrNull(String.valueOf(userDTO.getBirthdate()))) {
-            parameter = "Kingdom";
+            parameter = "Birthday date";
         }
 
         if (parameter.length() > 0) {
@@ -53,5 +53,10 @@ public class UserController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addNewUser(userDTO));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login() {
+        return null;
     }
 }
