@@ -18,26 +18,6 @@ public class GeneralInterceptor implements HandlerInterceptor {
     private final Logger logger = LoggerFactory.getLogger(GeneralInterceptor.class);
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (response.getStatus() >= 400) {
-            logger.error("ERROR: " + HttpStatus.valueOf(response.getStatus()));
-        } else {
-            logger.info(createInfoMessage(request, response));
-        }
-
-        return true;
-    }
-
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-        if (response.getStatus() >= 400) {
-            logger.error("ERROR: " + HttpStatus.valueOf(response.getStatus()));
-        } else {
-            logger.info(createInfoMessage(request, response));
-        }
-    }
-
-    @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         if (ex != null) {
             logger.error("Error message: " + ex.getMessage());
