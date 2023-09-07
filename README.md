@@ -16,7 +16,7 @@ If you want use it, then you can implement your country laws.
 - [x] Flyway Database Migration
 - [x] Centralized Error Handling
 - [x] Custom Exceptions
-- [ ] Logging
+- [x] Logging
 - [X] GitHub Actions
   - [x] CheckStyle
 - [x] Environment Variables
@@ -43,8 +43,20 @@ If you want use it, then you can implement your country laws.
   - [ ] Create
   - [ ] Edit
 - [ ] Access Denied Page
+- [ ] Something Went Wrong Page
 
-### Guides
+### Test:
+- [x] Use fakeUser for tests
+- [ ] Use SQL annotation for tests
+#### Coverage:
+Plan more than 80%
+
+Actual:
+- Class: 86%
+- Method: 67%
+- Line: 58%
+
+## Guides
 
 * First start:
 
