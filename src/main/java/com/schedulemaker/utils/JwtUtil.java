@@ -2,10 +2,7 @@ package com.schedulemaker.utils;
 
 import com.schedulemaker.exceptions.InvalidTokenException;
 import com.schedulemaker.security.UserDetailsImpl;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.*;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +50,7 @@ public class JwtUtil {
         Claims claims = null;
         try {
             claims = Jwts.parser().setSigningKey(env.getProperty("SECRET_KEY")).parseClaimsJws(token).getBody();
-        } catch (SignatureException exception) {
+        } catch (JwtException exception) {
             throw new InvalidTokenException(token);
         }
         return claims;

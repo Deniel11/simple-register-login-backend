@@ -27,6 +27,12 @@ public class UserDetailsImpl implements UserDetails {
         addRole();
     }
 
+    public UserDetailsImpl(String username, String password, Boolean isAdmin) {
+        this.username = username;
+        this.password = password;
+        this.isAdmin = isAdmin;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return grantedAuthorityList;
