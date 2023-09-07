@@ -5,18 +5,24 @@ import com.schedulemaker.exceptions.InvalidTokenException;
 import com.schedulemaker.security.UserDetailsImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+//@ActiveProfiles("test")
 public class JwtUtilTest {
 
     JwtUtil jwtUtil;
 
+    BeanFactory beanFactory;
+
     @Autowired
-    JwtUtilTest(JwtUtil jwtUtil) {
+    JwtUtilTest(JwtUtil jwtUtil, BeanFactory beanFactory) {
         this.jwtUtil = jwtUtil;
+        this.beanFactory = beanFactory;
     }
 
     @Test
@@ -26,9 +32,9 @@ public class JwtUtilTest {
 
     @Test
     void extractAllClaims_withValidToken_returnsCorrectClaims() {
-        String name = "fakeUser";
-        String validToken = jwtUtil.generateToken(new UserDetailsImpl(name, "password", false));
-        Assertions.assertEquals(name, jwtUtil.extractAllClaims(validToken).getSubject());
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        String validToken = jwtUtil.generateToken(new UserDetailsImpl(fakeUser));
+        Assertions.assertEquals(fakeUser.getUsername(), jwtUtil.extractAllClaims(validToken).getSubject());
     }
 
     @Test
@@ -38,9 +44,9 @@ public class JwtUtilTest {
 
     @Test
     void validateToken_withValidToken_returnTrue() {
-        UserDetailsImpl user = new UserDetailsImpl("fakeUser", "password", false);
-        String validToken = jwtUtil.generateToken(user);
-        Assertions.assertTrue(jwtUtil.validateToken(validToken, user));
+        UserDetailsImpl userDetails = new UserDetailsImpl(beanFactory.getBean("fakeUser", User.class));
+        String validToken = jwtUtil.generateToken(userDetails);
+        Assertions.assertTrue(jwtUtil.validateToken(validToken, userDetails));
     }
 
     @Test
