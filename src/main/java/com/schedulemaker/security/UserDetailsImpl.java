@@ -11,26 +11,20 @@ import java.util.List;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private String username;
+    private final String username;
 
-    private String password;
+    private final String password;
 
-    private List<GrantedAuthority> grantedAuthorityList;
+    private final List<GrantedAuthority> grantedAuthorityList;
 
-    private Boolean isAdmin;
+    private final Boolean isAdmin;
 
     public UserDetailsImpl(User user) {
         username = user.getUsername();
         password = user.getPassword();
         this.grantedAuthorityList = new ArrayList<>();
-        this.isAdmin = user.isAdmin();
+        this.isAdmin = user.getAdmin();
         addRole();
-    }
-
-    public UserDetailsImpl(String username, String password, Boolean isAdmin) {
-        this.username = username;
-        this.password = password;
-        this.isAdmin = isAdmin;
     }
 
     @Override

@@ -4,19 +4,19 @@ import java.util.Date;
 
 public class RegisteredUserDTO {
 
-    private Long id;
+    private final Long id;
 
-    private String username;
+    private final String username;
 
-    private String email;
+    private final String email;
 
-    private String password;
+    private final String password;
 
-    private Date birthdate;
+    private final Date birthdate;
 
-    private boolean admin;
+    private final boolean admin;
 
-    private boolean valid;
+    private final boolean valid;
 
     public RegisteredUserDTO(Long id, String username, String email, String password, Date birthdate, boolean admin, boolean valid) {
         this.id = id;

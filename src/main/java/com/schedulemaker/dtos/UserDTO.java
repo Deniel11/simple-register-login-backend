@@ -4,13 +4,13 @@ import java.util.Date;
 
 public class UserDTO {
 
-    private String username;
+    private final String username;
 
-    private String email;
+    private final String email;
 
-    private String password;
+    private final String password;
 
-    private Date birthdate;
+    private final Date birthdate;
 
     public UserDTO(String username, String email, String password, Date birthdate) {
         this.username = username;

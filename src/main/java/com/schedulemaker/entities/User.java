@@ -43,10 +43,6 @@ public class User {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -57,10 +53,6 @@ public class User {
 
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPassword() {
@@ -75,11 +67,7 @@ public class User {
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate) {
-        this.birthdate = birthdate;
-    }
-
-    public boolean isAdmin() {
+    public boolean getAdmin() {
         return admin;
     }
 
@@ -87,7 +75,7 @@ public class User {
         this.admin = admin;
     }
 
-    public boolean isValid() {
+    public boolean getValid() {
         return valid;
     }
 

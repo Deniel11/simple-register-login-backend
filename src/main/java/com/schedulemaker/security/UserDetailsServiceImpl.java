@@ -15,9 +15,9 @@ import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     @Autowired
     public UserDetailsServiceImpl(UserRepository userRepository, JwtUtil jwtUtil) {
@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetailsImpl loadUserByUsername(String username) throws UserNotFoundException {
         Optional<User> user = userRepository.findUserByUsername(username);
 
-        user.orElseThrow(() -> new UserNotFoundException());
+        user.orElseThrow(UserNotFoundException::new);
 
         return user.map(UserDetailsImpl::new).get();
     }
@@ -51,7 +51,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public User getUserByUsernameFromRequest(HttpServletRequest request) {
-        Optional<User> user = userRepository.findUserByUsername(jwtUtil.extractUsernameFromRequest(request));
-        return user.orElseThrow(() -> new UserNotFoundException(user.get().getUsername()));
+        String username = jwtUtil.extractUsernameFromRequest(request);
+        Optional<User> user = userRepository.findUserByUsername(username);
+        return user.orElseThrow(() -> new UserNotFoundException(username));
     }
 }

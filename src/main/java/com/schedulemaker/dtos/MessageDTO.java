@@ -2,9 +2,9 @@ package com.schedulemaker.dtos;
 
 public class MessageDTO {
 
-    private String status;
+    private final String status;
 
-    private String message;
+    private final String message;
 
     public MessageDTO(String status, String message) {
         this.status = status;

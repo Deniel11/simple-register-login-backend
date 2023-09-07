@@ -9,10 +9,8 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-//@ActiveProfiles("test")
 public class JwtUtilTest {
 
     JwtUtil jwtUtil;
@@ -60,6 +58,6 @@ public class JwtUtilTest {
     @Test
     void extractTokenFromHeaderAuthorization_withoutHeaderToken_returnsNull() {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        Assertions.assertEquals(null, jwtUtil.extractTokenFromHeaderAuthorization(request));
+        Assertions.assertNull(jwtUtil.extractTokenFromHeaderAuthorization(request));
     }
 }

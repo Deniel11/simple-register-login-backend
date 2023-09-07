@@ -19,15 +19,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private BCryptPasswordEncoder encoder;
+    private final BCryptPasswordEncoder encoder;
 
-    private UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
@@ -43,17 +43,17 @@ public class UserServiceImpl implements UserService {
         User user = new User(userDTO.getUsername(), userDTO.getEmail(), userDTO.getPassword(), userDTO.getBirthdate());
         user.setPassword(encoder.encode(user.getPassword()));
         userRepository.save(user);
-        return new RegisteredUserDTO(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), user.getBirthdate(), user.isAdmin(), user.isValid());
+        return new RegisteredUserDTO(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), user.getBirthdate(), user.getAdmin(), user.getValid());
     }
 
     @Override
     public boolean isUsernameTaken(String username) {
-        return !userRepository.findUserByUsername(username).isEmpty();
+        return userRepository.findUserByUsername(username).isPresent();
     }
 
     @Override
     public boolean isEmailTaken(String email) {
-        return !userRepository.findUserByEmail(email).isEmpty();
+        return userRepository.findUserByEmail(email).isPresent();
     }
 
     @Override

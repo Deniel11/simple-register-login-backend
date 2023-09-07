@@ -2,9 +2,9 @@ package com.schedulemaker.dtos;
 
 public class AuthenticationResponseDTO {
 
-    private String status;
+    private final String status;
 
-    private String token;
+    private final String token;
 
     public AuthenticationResponseDTO(String status, String token) {
         this.status = status;

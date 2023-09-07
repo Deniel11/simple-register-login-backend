@@ -2,9 +2,9 @@ package com.schedulemaker.dtos;
 
 public class AuthenticationRequestDTO {
 
-    private String username;
+    private final String username;
 
-    private String password;
+    private final String password;
 
     public AuthenticationRequestDTO(String username, String password) {
         this.username = username;
