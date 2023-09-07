@@ -35,7 +35,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public UserDetailsImpl extractUserDetailsFromRequest(HttpServletRequest request) {
-        String jwt = jwtUtil.extractTokenFromHeaderAuthorization(request);
+        String jwt = jwtUtil.extractTokenFromHeaderAuthorization(request.getHeader("Authorization"));
         String username = null;
         if (jwt != null) {
             username = jwtUtil.extractUsername(jwt);
@@ -50,8 +50,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userDetails;
     }
 
-    public User getUserByUsernameFromRequest(HttpServletRequest request) {
-        String username = jwtUtil.extractUsernameFromRequest(request);
+    public User getUserByUsernameFromRequest(String authorizationHeader) {
+        String username = jwtUtil.extractUsernameFromHeaderAuthorization(authorizationHeader);
         Optional<User> user = userRepository.findUserByUsername(username);
         return user.orElseThrow(() -> new UserNotFoundException(username));
     }

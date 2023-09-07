@@ -6,7 +6,6 @@ import io.jsonwebtoken.*;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,10 +20,9 @@ public class JwtUtil {
         this.env = env;
     }
 
-    public String extractTokenFromHeaderAuthorization(HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
-            return header.substring(7);
+    public String extractTokenFromHeaderAuthorization(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
         }
         return null;
     }
@@ -33,8 +31,8 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String extractUsernameFromRequest(HttpServletRequest request) {
-        return extractUsername(extractTokenFromHeaderAuthorization(request));
+    public String extractUsernameFromHeaderAuthorization(String authorizationHeader) {
+        return extractUsername(extractTokenFromHeaderAuthorization(authorizationHeader));
     }
 
     private Date extractExpiration(String token) {

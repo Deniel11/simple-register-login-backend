@@ -8,9 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class JwtUtilTest {
 
     JwtUtil jwtUtil;
@@ -50,14 +51,11 @@ public class JwtUtilTest {
     @Test
     void extractTokenFromHeaderAuthorization_withValidHeaderToken_returnsToken() {
         String token = "to.ke.nn";
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader("Authorization", "Bearer " + token);
-        Assertions.assertEquals(token, jwtUtil.extractTokenFromHeaderAuthorization(request));
+        Assertions.assertEquals(token, jwtUtil.extractTokenFromHeaderAuthorization("Bearer " + token));
     }
 
     @Test
     void extractTokenFromHeaderAuthorization_withoutHeaderToken_returnsNull() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        Assertions.assertNull(jwtUtil.extractTokenFromHeaderAuthorization(request));
+        Assertions.assertNull(jwtUtil.extractTokenFromHeaderAuthorization(null));
     }
 }

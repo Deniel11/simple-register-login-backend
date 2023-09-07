@@ -17,13 +17,13 @@ public class UserDetailsImpl implements UserDetails {
 
     private final List<GrantedAuthority> grantedAuthorityList;
 
-    private final Boolean isAdmin;
+    private final Boolean admin;
 
     public UserDetailsImpl(User user) {
         username = user.getUsername();
         password = user.getPassword();
         this.grantedAuthorityList = new ArrayList<>();
-        this.isAdmin = user.getAdmin();
+        this.admin = user.getAdmin();
         addRole();
     }
 
@@ -63,11 +63,11 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public boolean isAdmin() {
-        return isAdmin;
+        return admin;
     }
 
     private void addRole() {
-        if (isAdmin) {
+        if (admin) {
             grantedAuthorityList.add(new SimpleGrantedAuthority("ADMIN"));
         } else {
             grantedAuthorityList.add(new SimpleGrantedAuthority("USER"));
