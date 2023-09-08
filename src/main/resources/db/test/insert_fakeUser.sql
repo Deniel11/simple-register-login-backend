@@ -1,1 +1,1 @@
-INSERT INTO users(username, email, password, birthdate, admin, valid) VALUES('fakeUser', 'fake_user@email.com', '$10$Ud.JcelqAxg/6sgKFMe8OeeC8p/kpkAifuZ.pd6WL9uK7qSCmF8iW', '01-01-2001', false, true);
+INSERT INTO users(username, email, password, birthdate, admin, valid) VALUES('fakeUser', 'fake_user@email.com', '$2a$10$hwa79Vaamz4/UoNyXfiwxefMuK3RnoEkKn6gOFtWrFqm4rHihFFOO', '01-01-2001', false, true);

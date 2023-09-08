@@ -1,7 +1,9 @@
 package com.schedulemaker.conrollers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.schedulemaker.dtos.AuthenticationRequestDTO;
 import com.schedulemaker.dtos.UserDTO;
+import com.schedulemaker.entities.User;
 import com.schedulemaker.repositories.UserRepository;
 import com.schedulemaker.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
@@ -141,5 +143,40 @@ public class UserControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value("error"))
                 .andExpect(jsonPath("$.message").value("Accepted date format: dd-mm-yyyy"));
+    }
+
+    @Test
+    @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
+    void createAuthenticationToken_LoginWithCorrectCredentials_ReturnsOkAndToken() throws Exception {
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        AuthenticationRequestDTO authenticationRequestDTO = new AuthenticationRequestDTO(fakeUser.getUsername(), fakeUser.getPassword());
+        String authenticationRequestDTOJson = mapper.writeValueAsString(authenticationRequestDTO);
+        MockHttpServletRequestBuilder requestBuilder = post("/api/user/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(authenticationRequestDTOJson);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value("ok"))
+                .andExpect(jsonPath("$.token").isString());
+    }
+
+    @Test
+    @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
+    void createAuthenticationToken_LoginWithIncorrectCredentials_ReturnsExceptedError() throws Exception {
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        fakeUser.setUsername("otherFakeUser");
+        AuthenticationRequestDTO authenticationRequestDTO = new AuthenticationRequestDTO(fakeUser.getUsername(), fakeUser.getPassword());
+        String authenticationRequestDTOJson = mapper.writeValueAsString(authenticationRequestDTO);
+        MockHttpServletRequestBuilder requestBuilder = post("/api/user/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(authenticationRequestDTOJson);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value("error"))
+                .andExpect(jsonPath("$.message").value("Username or password is incorrect."));
     }
 }
