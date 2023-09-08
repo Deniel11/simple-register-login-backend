@@ -2,7 +2,6 @@ package com.schedulemaker.conrollers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.schedulemaker.dtos.UserDTO;
-import com.schedulemaker.entities.User;
 import com.schedulemaker.repositories.UserRepository;
 import com.schedulemaker.utils.JwtUtil;
 import org.junit.jupiter.api.Test;

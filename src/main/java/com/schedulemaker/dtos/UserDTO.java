@@ -1,18 +1,19 @@
 package com.schedulemaker.dtos;
 
-import java.util.Date;
-
 public class UserDTO {
 
-    private final String username;
+    private String username;
 
-    private final String email;
+    private String email;
 
-    private final String password;
+    private String password;
 
-    private final Date birthdate;
+    private String birthdate;
 
-    public UserDTO(String username, String email, String password, Date birthdate) {
+    public UserDTO() {
+    }
+
+    public UserDTO(String username, String email, String password, String birthdate) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -31,7 +32,23 @@ public class UserDTO {
         return password;
     }
 
-    public Date getBirthdate() {
+    public String getBirthdate() {
         return birthdate;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
     }
 }

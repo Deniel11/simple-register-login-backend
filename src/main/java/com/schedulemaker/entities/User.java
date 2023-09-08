@@ -3,7 +3,6 @@ package com.schedulemaker.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username", "email"})})
@@ -20,23 +19,22 @@ public class User {
     @JsonIgnore
     private String password;
 
-    private Date birthdate;
+    private String birthdate;
 
     private boolean admin;
 
     private boolean valid;
 
     public User() {
-        admin = false;
-        valid = false;
     }
 
-    public User(String username, String email, String password, Date birthdate) {
-        this();
+    public User(String username, String email, String password, String birthdate) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.birthdate = birthdate;
+        admin = false;
+        valid = false;
     }
 
     public Long getId() {
@@ -63,7 +61,7 @@ public class User {
         this.password = password;
     }
 
-    public Date getBirthdate() {
+    public String getBirthdate() {
         return birthdate;
     }
 
@@ -81,5 +79,17 @@ public class User {
 
     public void setValid(boolean valid) {
         this.valid = valid;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
     }
 }

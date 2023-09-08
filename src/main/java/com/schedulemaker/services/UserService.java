@@ -16,4 +16,6 @@ public interface UserService {
     String createAuthenticationToken(AuthenticationRequestDTO authenticationRequest);
 
     void authenticate(AuthenticationRequestDTO authenticationRequest);
+
+    String checkUserParameters(UserDTO userDTO);
 }

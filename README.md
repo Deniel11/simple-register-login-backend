@@ -48,14 +48,14 @@ If you want use it, then you can implement your country laws.
 
 ### Test:
 - [x] Use fakeUser for tests
-- [ ] Use SQL annotation for tests
+- [x] Use SQL annotation for tests
 #### Coverage:
 Plan more than 80%
 
 Actual:
-- Class: 86%
-- Method: 67%
-- Line: 58%
+- Class: 95%
+- Method: 83%
+- Line: 75%
 
 ## Guides
 

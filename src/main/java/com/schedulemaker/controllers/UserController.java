@@ -27,16 +27,7 @@ public class UserController {
 
     @PostMapping("/registration")
     public ResponseEntity<?> registration(@RequestBody UserDTO userDTO) {
-        String parameter = "";
-        if (GeneralUtility.isEmptyOrNull(userDTO.getUsername())) {
-            parameter = "Username";
-        } else if (GeneralUtility.isEmptyOrNull(userDTO.getEmail())) {
-            parameter = "Email";
-        } else if (GeneralUtility.isEmptyOrNull(userDTO.getPassword())) {
-            parameter = "Password";
-        } else if (GeneralUtility.isEmptyOrNull(String.valueOf(userDTO.getBirthdate()))) {
-            parameter = "Birthday date";
-        }
+        String parameter = userService.checkUserParameters(userDTO);
 
         if (parameter.length() > 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageDTO("error", parameter + " is required."));
@@ -54,11 +45,11 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageDTO("error", "Email is already taken"));
         }
 
-        if(!GeneralUtility.isValidEmail(userDTO.getEmail())) {
+        if (!GeneralUtility.isValidEmail(userDTO.getEmail())) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new MessageDTO("error", "Wrong email format"));
         }
 
-        if(!GeneralUtility.isValidDate(userDTO.getBirthdate())) {
+        if (!GeneralUtility.isValidDate(userDTO.getBirthdate())) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new MessageDTO("error", "Accepted date format: dd-mm-yyyy"));
         }
 
