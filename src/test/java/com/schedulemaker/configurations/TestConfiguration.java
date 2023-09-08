@@ -1,6 +1,9 @@
 package com.schedulemaker.configurations;
 
+import com.schedulemaker.dtos.UserDTO;
 import com.schedulemaker.entities.User;
+import com.schedulemaker.services.MapperService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Configuration
@@ -19,13 +23,17 @@ public class TestConfiguration {
 
     private final String fakeUserPassword = "password";
 
-    private final Date fakeUserBirthDate = new SimpleDateFormat("yyyy-MM-dd").parse("2001-01-01");
+    private final String fakeUserBirthDate = "01-01-2001";
 
     private final boolean fakeUserAdmin = false;
 
     private final boolean fakeUserValid = true;
 
-    public TestConfiguration() throws ParseException {
+    MapperService mapperService;
+
+    @Autowired
+    public TestConfiguration(MapperService mapperService) throws ParseException {
+        this.mapperService = mapperService;
     }
 
     @Bean(name = "fakeUser")
@@ -35,5 +43,11 @@ public class TestConfiguration {
         fakeUser.setAdmin(fakeUserAdmin);
         fakeUser.setValid(fakeUserValid);
         return fakeUser;
+    }
+
+    @Bean(name = "fakeUserDTO")
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    UserDTO getFakeUserDTO() {
+        return mapperService.convertUserToUserDTO(getFakeUser());
     }
 }

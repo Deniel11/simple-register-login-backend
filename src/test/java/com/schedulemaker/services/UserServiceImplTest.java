@@ -66,8 +66,8 @@ public class UserServiceImplTest {
         Assertions.assertEquals(registeredUserDTO.getEmail(), userService.addNewUser(userDTO).getEmail());
         Assertions.assertEquals(registeredUserDTO.getPassword(), userService.addNewUser(userDTO).getPassword());
         Assertions.assertEquals(registeredUserDTO.getBirthdate(), userService.addNewUser(userDTO).getBirthdate());
-        Assertions.assertEquals(registeredUserDTO.isAdmin(), userService.addNewUser(userDTO).isAdmin());
-        Assertions.assertEquals(registeredUserDTO.isValid(), userService.addNewUser(userDTO).isValid());
+        Assertions.assertEquals(registeredUserDTO.getAdmin(), userService.addNewUser(userDTO).getAdmin());
+        Assertions.assertEquals(registeredUserDTO.getValid(), userService.addNewUser(userDTO).getValid());
     }
 
     @Test
