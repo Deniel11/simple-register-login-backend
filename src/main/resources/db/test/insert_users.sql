@@ -1,0 +1,5 @@
+INSERT INTO users(username, email, password, birthdate, admin, valid) VALUES('Sanyi', 'sanyi213@citromail.com', '$10$Ud.JcelqAxg/6sgKFMe8OeeC8p/kpkAifuZ.pd6WL9uK7qSCmF8iW', '2011-01-01', false, false);
+INSERT INTO users(username, email, password, birthdate, admin, valid) VALUES('Banana', 'banana@gmail.com', '$10$Ud.JcelqAxg/6sgKFMe8OeeC8p/kpkAifuZ.pd6WL9uK7qSCmF8iW', '1990-05-21', false, false);
+INSERT INTO users(username, email, password, birthdate, admin, valid) VALUES('Jack', 'jackson213424@outlook.com', '$10$Ud.JcelqAxg/6sgKFMe8OeeC8p/kpkAifuZ.pd6WL9uK7qSCmF8iW', '1999-06-26', false, true);
+INSERT INTO users(username, email, password, birthdate, admin, valid) VALUES('Flower', 'flower99@whynotemail.com', '$10$Ud.JcelqAxg/6sgKFMe8OeeC8p/kpkAifuZ.pd6WL9uK7qSCmF8iW', '2001-02-16', false, true);
+INSERT INTO users(username, email, password, birthdate, admin, valid) VALUES('salt', 'br3ad@hotmail.com', '$10$Ud.JcelqAxg/6sgKFMe8OeeC8p/kpkAifuZ.pd6WL9uK7qSCmF8iW', '1995-04-03', true, true);
