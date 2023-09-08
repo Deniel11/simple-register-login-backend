@@ -29,21 +29,25 @@ public class UserServiceImpl implements UserService {
 
     private final AuthenticationManager authenticationManager;
 
+    private final MapperService mapperService;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder encoder, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder encoder, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager, MapperService mapperService) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
+        this.mapperService = mapperService;
     }
 
     @Override
     public RegisteredUserDTO addNewUser(UserDTO userDTO) {
-        User user = new User(userDTO.getUsername(), userDTO.getEmail(), userDTO.getPassword(), userDTO.getBirthdate());
+        User user = mapperService.convertUserDTOtoUser(userDTO);
         user.setPassword(encoder.encode(user.getPassword()));
         userRepository.save(user);
-        return new RegisteredUserDTO(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), user.getBirthdate(), user.getAdmin(), user.getValid());
+
+        return mapperService.convertUserToRegisteredUserDTO(user);
     }
 
     @Override

@@ -17,6 +17,7 @@ If you want use it, then you can implement your country laws.
 - [x] Centralized Error Handling
 - [x] Custom Exceptions
 - [x] Logging
+- [x] Mapper Service
 - [X] GitHub Actions
   - [x] CheckStyle
 - [x] Environment Variables
@@ -58,7 +59,7 @@ Actual:
 
 ## Guides
 
-* First start:
+- ### First start:
 
   You can set up your system administrator user and the rules for the application.
 

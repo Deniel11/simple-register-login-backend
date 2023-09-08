@@ -36,6 +36,8 @@ public class UserServiceImplTest {
 
     UserServiceImpl userService;
 
+    MapperService mapperService;
+
     BeanFactory beanFactory;
 
     @Autowired
@@ -45,7 +47,8 @@ public class UserServiceImplTest {
         userDetailsService = Mockito.mock(UserDetailsServiceImpl.class);
         jwtUtil = Mockito.mock(JwtUtil.class);
         authenticationManager = Mockito.mock(AuthenticationManager.class);
-        userService = new UserServiceImpl(userRepository, encoder, userDetailsService, jwtUtil, authenticationManager);
+        mapperService = Mockito.mock(MapperService.class);
+        userService = new UserServiceImpl(userRepository, encoder, userDetailsService, jwtUtil, authenticationManager, mapperService);
         this.beanFactory = beanFactory;
     }
 
@@ -55,6 +58,8 @@ public class UserServiceImplTest {
         fakeUser.setValid(false);
         UserDTO userDTO = new UserDTO(fakeUser.getUsername(), fakeUser.getEmail(), fakeUser.getPassword(), fakeUser.getBirthdate());
         RegisteredUserDTO registeredUserDTO = new RegisteredUserDTO(1L, fakeUser.getUsername(), fakeUser.getEmail(), fakeUser.getPassword(), fakeUser.getBirthdate(), fakeUser.getAdmin(), fakeUser.getValid());
+        Mockito.when(mapperService.convertUserDTOtoUser(userDTO)).thenReturn(fakeUser);
+        Mockito.when(mapperService.convertUserToRegisteredUserDTO(fakeUser)).thenReturn(registeredUserDTO);
         Mockito.when(encoder.encode(fakeUser.getPassword())).thenReturn(fakeUser.getPassword());
 
         Assertions.assertEquals(registeredUserDTO.getUsername(), userService.addNewUser(userDTO).getUsername());
