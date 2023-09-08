@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        if (GeneralUtility.isEmptyOrNull(String.valueOf(userDTO.getBirthdate()))) {
+        if (GeneralUtility.isEmptyOrNull(userDTO.getBirthdate())) {
             String birthdate = "Birthday date";
             if (parameter.length() > 0) {
                 parameter += ", " + birthdate;

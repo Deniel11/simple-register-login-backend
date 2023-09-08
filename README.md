@@ -53,9 +53,9 @@ If you want use it, then you can implement your country laws.
 Plan more than 80%
 
 Actual:
-- Class: 95%
-- Method: 83%
-- Line: 75%
+- Class: 100%
+- Method: 95%
+- Line: 87%
 
 ## Guides
 

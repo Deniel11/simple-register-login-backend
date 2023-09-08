@@ -49,10 +49,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         return userDetails;
     }
-
-    public User getUserByUsernameFromRequest(String authorizationHeader) {
-        String username = jwtUtil.extractUsernameFromHeaderAuthorization(authorizationHeader);
-        Optional<User> user = userRepository.findUserByUsername(username);
-        return user.orElseThrow(() -> new UserNotFoundException(username));
-    }
 }

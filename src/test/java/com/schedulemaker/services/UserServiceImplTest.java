@@ -4,6 +4,7 @@ import com.schedulemaker.dtos.AuthenticationRequestDTO;
 import com.schedulemaker.dtos.RegisteredUserDTO;
 import com.schedulemaker.dtos.UserDTO;
 import com.schedulemaker.entities.User;
+import com.schedulemaker.exceptions.UserNotFoundException;
 import com.schedulemaker.repositories.UserRepository;
 import com.schedulemaker.security.UserDetailsImpl;
 import com.schedulemaker.security.UserDetailsServiceImpl;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -108,5 +111,35 @@ public class UserServiceImplTest {
         Mockito.when(jwtUtil.generateToken(userDetails)).thenReturn(token);
 
         Assertions.assertEquals(token, userService.createAuthenticationToken(authenticationRequest));
+    }
+
+    @Test
+    void authenticate_WithWrongCredentials_ThrowsUserNotFoundException() {
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        AuthenticationRequestDTO authenticationRequest = new AuthenticationRequestDTO(fakeUser.getUsername(), fakeUser.getPassword());
+        Mockito.when(authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())))
+                .thenThrow(BadCredentialsException.class);
+
+        Assertions.assertThrows(UserNotFoundException.class, () -> userService.authenticate(authenticationRequest));
+    }
+
+    @Test
+    void checkUserParameters_WithCorrectUserDTO_ReturnEmptyString() {
+        UserDTO fakeuserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
+        Assertions.assertEquals("", userService.checkUserParameters(fakeuserDTO));
+    }
+
+    @Test
+    void checkUserParameters_WithEmptyUsername_ReturnExceptedString() {
+        UserDTO fakeuserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
+        fakeuserDTO.setUsername("");
+        Assertions.assertEquals("Username", userService.checkUserParameters(fakeuserDTO));
+    }
+
+    @Test
+    void checkUserParameters_WithEmptyUserDTO_ReturnExceptedString() {
+        UserDTO fakeuserDTO = new UserDTO();
+        Assertions.assertEquals("Username, Email, Password, Birthday date", userService.checkUserParameters(fakeuserDTO));
     }
 }
