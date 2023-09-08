@@ -54,6 +54,14 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageDTO("error", "Email is already taken"));
         }
 
+        if(!GeneralUtility.isValidEmail(userDTO.getEmail())) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new MessageDTO("error", "Wrong email format"));
+        }
+
+        if(!GeneralUtility.isValidDate(userDTO.getBirthdate())) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new MessageDTO("error", "Accepted date format: dd-mm-yyyy"));
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addNewUser(userDTO));
     }
 

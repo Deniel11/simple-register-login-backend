@@ -1,12 +1,11 @@
 DROP TABLE IF EXISTS users;
-
 CREATE TABLE users (
     id BIGINT NOT NULL AUTO_INCREMENT,
-    username VARCHAR(255) UNIQUE NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    birthdate datetime(6) NOT NULL,
-    admin BIT,
-    valid BIT,
-    PRIMARY KEY (id)
-);
+    username VARCHAR(255),
+    email VARCHAR(255),
+    password VARCHAR(255),
+    birthdate DATE,
+    admin BIT NOT NULL,
+    valid BIT NOT NULL,
+    primary key (id)
+)
