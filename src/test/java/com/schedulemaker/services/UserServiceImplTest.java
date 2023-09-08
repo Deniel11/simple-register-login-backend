@@ -53,7 +53,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void addNewUser_withValidUserDTO_returnCorrectRegisteredUserDTO() {
+    void addNewUser_WithValidUserDTO_ReturnCorrectRegisteredUserDTO() {
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
         fakeUser.setValid(false);
         UserDTO userDTO = new UserDTO(fakeUser.getUsername(), fakeUser.getEmail(), fakeUser.getPassword(), fakeUser.getBirthdate());
@@ -71,28 +71,28 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void isUsernameTaken_withUniqueUsername_returnFalse() {
+    void isUsernameTaken_WithUniqueUsername_ReturnFalse() {
         String fakeUsername = "fakeUser";
         Mockito.when(userRepository.findUserByUsername(fakeUsername)).thenReturn(Optional.empty());
         Assertions.assertFalse(userService.isUsernameTaken(fakeUsername));
     }
 
     @Test
-    void isUsernameTaken_withTakenUsername_returnTrue() {
+    void isUsernameTaken_WithTakenUsername_ReturnTrue() {
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
         Mockito.when(userRepository.findUserByUsername(fakeUser.getUsername())).thenReturn(Optional.of(fakeUser));
         Assertions.assertTrue(userService.isUsernameTaken(fakeUser.getUsername()));
     }
 
     @Test
-    void isEmailTaken_withUniqueEmail_returnFalse() {
+    void isEmailTaken_WithUniqueEmail_ReturnFalse() {
         String fakeEmail = "fake@mail.com";
         Mockito.when(userRepository.findUserByEmail(fakeEmail)).thenReturn(Optional.empty());
         Assertions.assertFalse(userService.isEmailTaken(fakeEmail));
     }
 
     @Test
-    void isEmailTaken_withTakenEmail_returnTrue() {
+    void isEmailTaken_WithTakenEmail_ReturnTrue() {
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
         Mockito.when(userRepository.findUserByEmail(fakeUser.getEmail())).thenReturn(Optional.of(fakeUser));
         Assertions.assertTrue(userService.isEmailTaken(fakeUser.getEmail()));

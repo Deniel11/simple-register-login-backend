@@ -24,7 +24,7 @@ public class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void invalidTokenException_withToken_returnGivenTokenAndMessage() {
+    void invalidTokenException_WithToken_ReturnGivenTokenAndMessage() {
         String token = "[THIS IS TOKEN]";
         MessageDTO messageDTO = new MessageDTO("error", "Invalid token: " + token);
         MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleInvalidTokenException(new InvalidTokenException(token)).getBody();

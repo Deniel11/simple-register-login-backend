@@ -24,7 +24,7 @@ public class InitialLoadIntegrationTest {
     @Test
     @Sql("/db/test/clear_tables.sql")
     @Sql("/db/test/insert_users.sql")
-    public void whenLoadInsertPlayersSQLData_allUsersInserted() {
+    public void whenLoadInsertPlayersSQLData_AllUsersInserted() {
         Assertions.assertEquals(5, userRepository.findAll().size());
         Assertions.assertEquals("Sanyi", userRepository.findById(1L).get().getUsername());
         Assertions.assertTrue(userRepository.findById(4L).get().getValid());

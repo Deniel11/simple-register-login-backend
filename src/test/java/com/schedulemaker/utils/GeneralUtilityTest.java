@@ -6,47 +6,47 @@ import org.junit.jupiter.api.Test;
 public class GeneralUtilityTest {
 
     @Test
-    void isEmptyOrNull_withValidData_returnsFalse() {
+    void isEmptyOrNull_WithValidData_ReturnsFalse() {
         Assertions.assertFalse(GeneralUtility.isEmptyOrNull("data"));
     }
 
     @Test
-    void isEmptyOrNull_withEmptyData_returnsTrue() {
+    void isEmptyOrNull_WithEmptyData_ReturnsTrue() {
         Assertions.assertTrue(GeneralUtility.isEmptyOrNull(""));
     }
 
     @Test
-    void isEmptyOrNull_withNull_returnsTrue() {
+    void isEmptyOrNull_WithNull_ReturnsTrue() {
         Assertions.assertTrue(GeneralUtility.isEmptyOrNull(null));
     }
 
     @Test
-    void isLongEnough_withValidDataAndLength_returnsTrue() {
+    void isLongEnough_WithValidDataAndLength_ReturnsTrue() {
         Assertions.assertTrue(GeneralUtility.hasLessCharactersThan("data", 3));
     }
 
     @Test
-    void isLongEnough_withValidDataAndBiggerLength_returnsFalse() {
+    void isLongEnough_WithValidDataAndBiggerLength_ReturnsFalse() {
         Assertions.assertFalse(GeneralUtility.hasLessCharactersThan("data", 10));
     }
 
     @Test
-    void isValidDate_withValidDate_returnTrue() {
+    void isValidDate_WithValidDate_ReturnTrue() {
         Assertions.assertTrue(GeneralUtility.isValidDate("01-01-1900"));
     }
 
     @Test
-    void isValidDate_withInvalidDate_returnFalse() {
+    void isValidDate_WithInvalidDate_ReturnFalse() {
         Assertions.assertFalse(GeneralUtility.isValidDate("01-01-19000"));
     }
 
     @Test
-    void isValidEmail_withValidEmail_returnTrue() {
+    void isValidEmail_WithValidEmail_ReturnTrue() {
         Assertions.assertTrue(GeneralUtility.isValidEmail("valid@email.com"));
     }
 
     @Test
-    void isValidEmail_withInvalidEmail_returnFalse() {
+    void isValidEmail_WithInvalidEmail_ReturnFalse() {
         Assertions.assertFalse(GeneralUtility.isValidEmail("invalid@email"));
     }
 }

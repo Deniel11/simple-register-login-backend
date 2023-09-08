@@ -60,9 +60,20 @@ public class UserController {
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequest) {
         String invalidParameter = "";
         if (GeneralUtility.isEmptyOrNull(authenticationRequest.getUsername())) {
-            invalidParameter = "Username";
-        } else if (GeneralUtility.isEmptyOrNull(authenticationRequest.getPassword())) {
-            invalidParameter = "Password";
+            String username = "Username";
+            if (invalidParameter.length() > 0) {
+                invalidParameter += ", " + username;
+            } else {
+                invalidParameter = username;
+            }
+        }
+        if (GeneralUtility.isEmptyOrNull(authenticationRequest.getPassword())) {
+            String password = "Password";
+            if (invalidParameter.length() > 0) {
+                invalidParameter += ", " + password;
+            } else {
+                invalidParameter = password;
+            }
         }
         if (!invalidParameter.isBlank()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageDTO("error", invalidParameter + " is required."));
