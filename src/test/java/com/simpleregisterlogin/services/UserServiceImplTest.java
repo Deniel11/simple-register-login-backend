@@ -4,7 +4,7 @@ import com.simpleregisterlogin.dtos.AuthenticationRequestDTO;
 import com.simpleregisterlogin.dtos.RegisteredUserDTO;
 import com.simpleregisterlogin.dtos.UserDTO;
 import com.simpleregisterlogin.entities.User;
-import com.simpleregisterlogin.exceptions.UserNotFoundException;
+import com.simpleregisterlogin.exceptions.*;
 import com.simpleregisterlogin.repositories.UserRepository;
 import com.simpleregisterlogin.security.UserDetailsImpl;
 import com.simpleregisterlogin.security.UserDetailsServiceImpl;
@@ -74,31 +74,59 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void isUsernameTaken_WithUniqueUsername_ReturnFalse() {
-        String fakeUsername = "fakeUser";
-        Mockito.when(userRepository.findUserByUsername(fakeUsername)).thenReturn(Optional.empty());
-        Assertions.assertFalse(userService.isUsernameTaken(fakeUsername));
+    void addNewUser_WithMissingParameter_ThrowsInvalidParameterException() {
+        UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
+        fakeUserDTO.setUsername("");
+
+        Assertions.assertThrows(InvalidParameterException.class, () -> userService.addNewUser(fakeUserDTO));
     }
 
     @Test
-    void isUsernameTaken_WithTakenUsername_ReturnTrue() {
+    void addNewUser_WithLowPasswordLength_ThrowsLowPasswordLengthException() {
+        UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
+        fakeUserDTO.setPassword("pass");
+
+        Assertions.assertThrows(LowPasswordLengthException.class, () -> userService.addNewUser(fakeUserDTO));
+    }
+
+    @Test
+    void addNewUser_WithTakenUsername_ThrowsParameterTakenException() {
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
-        Mockito.when(userRepository.findUserByUsername(fakeUser.getUsername())).thenReturn(Optional.of(fakeUser));
-        Assertions.assertTrue(userService.isUsernameTaken(fakeUser.getUsername()));
+        UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
+        Mockito.when(userRepository.findUserByUsername(fakeUserDTO.getUsername())).thenReturn(Optional.of(fakeUser));
+
+        Assertions.assertThrows(ParameterTakenException.class, () -> userService.addNewUser(fakeUserDTO));
     }
 
     @Test
-    void isEmailTaken_WithUniqueEmail_ReturnFalse() {
-        String fakeEmail = "fake@mail.com";
-        Mockito.when(userRepository.findUserByEmail(fakeEmail)).thenReturn(Optional.empty());
-        Assertions.assertFalse(userService.isEmailTaken(fakeEmail));
-    }
-
-    @Test
-    void isEmailTaken_WithTakenEmail_ReturnTrue() {
+    void addNewUser_WithTakenEmail_ThrowsParameterTakenException() {
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
-        Mockito.when(userRepository.findUserByEmail(fakeUser.getEmail())).thenReturn(Optional.of(fakeUser));
-        Assertions.assertTrue(userService.isEmailTaken(fakeUser.getEmail()));
+        fakeUser.setUsername("otherFakeUser");
+        UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
+        Mockito.when(userRepository.findUserByUsername(fakeUserDTO.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findUserByEmail(fakeUserDTO.getEmail())).thenReturn(Optional.of(fakeUser));
+
+        Assertions.assertThrows(ParameterTakenException.class, () -> userService.addNewUser(fakeUserDTO));
+    }
+
+    @Test
+    void addNewUser_WithWrongEmailFormat_ThrowsWrongEmailFormatException() {
+        UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
+        fakeUserDTO.setEmail("email@email");
+        Mockito.when(userRepository.findUserByUsername(fakeUserDTO.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findUserByEmail(fakeUserDTO.getEmail())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(WrongEmailFormatException.class, () -> userService.addNewUser(fakeUserDTO));
+    }
+
+    @Test
+    void addNewUser_WithWrongDateFormat_ThrowsWrongDateFormatException() {
+        UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
+        fakeUserDTO.setBirthdate("10.10.2000000");
+        Mockito.when(userRepository.findUserByUsername(fakeUserDTO.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findUserByEmail(fakeUserDTO.getEmail())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(WrongDateFormatException.class, () -> userService.addNewUser(fakeUserDTO));
     }
 
     @Test
@@ -122,24 +150,5 @@ public class UserServiceImplTest {
                 .thenThrow(BadCredentialsException.class);
 
         Assertions.assertThrows(UserNotFoundException.class, () -> userService.authenticate(authenticationRequest));
-    }
-
-    @Test
-    void checkUserParameters_WithCorrectUserDTO_ReturnEmptyString() {
-        UserDTO fakeuserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
-        Assertions.assertEquals("", userService.checkUserParameters(fakeuserDTO));
-    }
-
-    @Test
-    void checkUserParameters_WithEmptyUsername_ReturnExceptedString() {
-        UserDTO fakeuserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
-        fakeuserDTO.setUsername("");
-        Assertions.assertEquals("Username", userService.checkUserParameters(fakeuserDTO));
-    }
-
-    @Test
-    void checkUserParameters_WithEmptyUserDTO_ReturnExceptedString() {
-        UserDTO fakeuserDTO = new UserDTO();
-        Assertions.assertEquals("Username, Email, Password, Birthday date", userService.checkUserParameters(fakeuserDTO));
     }
 }

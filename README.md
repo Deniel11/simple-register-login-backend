@@ -101,7 +101,7 @@ After that, you can use these endpoints:
   ```
 
 
-- EDIT - [YOUR DOMAIN]/api/user/[id]
+- PUT - [YOUR DOMAIN]/api/user/[id]
   - For use these, you need token from login.
   - You can change only 1 parameter like "username" or "password".
   - You can change multiple parameter like this:
