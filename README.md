@@ -1,65 +1,221 @@
-# Schedule Maker Project
+# Simple Register-Login backend project
 
-This project help your team to create weekly or monthly schedule. Every employee can create they wish for the future schedule and this helps the management to create the final schedule.
+This project is a simple register-login for users with token based authentication and admin roles.
 
-Who can use:
-- Teams
-- Companies
-- Students
+### Project have:
+- Token Based Authentication
+- Admin and User based Authorize
+- Flyway Database Migration
+- Centralized Error Handling
+- Custom Exceptions
+- Logging
+- Mapper Service
+- GitHub Actions
+  - CheckStyle
+- Environment Variables
+  - Database Connection
+  - Secret Key
+- User APIs
+  - Register
+  - Login
+  - Edit user
+  - GET user
+  - GET users
+- FakeUser for tests
+- SQL annotation for tests
 
-If you want use it, then you can implement your country laws.
-
-## The plan for this project:
-
-### Backend:
-- [x] Token Based Authentication
-- [x] Flyway Database Migration
-- [x] Centralized Error Handling
-- [x] Custom Exceptions
-- [x] Logging
-- [x] Mapper Service
-- [X] GitHub Actions
-  - [x] CheckStyle
-- [x] Environment Variables
-  - [x] Database Connection
-  - [x] Secret Key
-- [x] Registration, Login Backend APIs
-- [ ] User APIs
-  - [ ] Edit API
-  - [ ] GET API
-- [x] Admin and User based Authorize
-- [ ] Schedule APIs
-  - [ ] Create API
-  - [ ] Delete API
-  - [ ] Edit API
-  - [ ] Get API
-
-### Frontend:
-- [ ] Configuration Files
-  - [ ] Languages
-  - [ ] Frontend Setup
-- [ ] Registration, Login Frontend Pages
-- [ ] Schedule Pages
-  - [ ] Index
-  - [ ] Create
-  - [ ] Edit
-- [ ] Access Denied Page
-- [ ] Something Went Wrong Page
-
-### Test:
-- [x] Use fakeUser for tests
-- [x] Use SQL annotation for tests
-#### Coverage:
-Plan more than 80%
-
-Actual:
+#### Test coverage:
 - Class: 100%
 - Method: 95%
 - Line: 87%
 
 ## Guides
 
-- ### First start:
+Before you want to use this, project, you need setup your environment variables.
 
-  You can set up your system administrator user and the rules for the application.
 
+Or you can use env file ".env.sample".
+
+
+This look like:
+```
+DB_URL=jdbc:mysql://[YOUR MYSQL DOMAIN AND PORT]/[YOUR TABLE NAME]
+DB_USERNAME=[YOUR MYSQL USERNAME]
+DB_PASSWORD=[YOUR MYSQL PASSWORD]
+HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
+HIBERNATE_DDL_AUTO=validate
+SHOW_SQL=true
+JWT_SECRET_KEY=[SELECT YOUR SECRET KEY]
+```
+
+After that, you can use these endpoints:
+- POST - [YOUR DOMAIN]/api/user/registration
+  
+
+  Request Body:
+  ```
+  {
+    "username": "Alexander",
+    "email": "alexander@email.com",
+    "password": "password",
+    "birthdate": "11-11-2000"
+  }
+  ```
+
+  Response:
+
+
+  Status code: 201
+  ```
+  {
+    "id": 1,
+    "username": "Alexander",
+    "email": "alexander@email.com",
+    "birthdate": "11-11-2000",
+    "admin": false,
+    "valid": false
+  }
+  ```
+  
+
+- POST - [YOUR DOMAIN]/api/user/login
+  
+
+  Request Body:
+  ```
+  {
+    "username": "Alexander",
+    "password": "password"
+  }
+  ```
+
+  Response:
+
+
+  Status code: 200
+  ```
+  {
+    "status": "ok",
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+  }
+  ```
+
+
+- EDIT - [YOUR DOMAIN]/api/user/[id]
+  - For use these, you need token from login.
+  - You can change only 1 parameter like "username" or "password".
+  - You can change multiple parameter like this:
+  
+  
+  Request:
+    
+
+  Header:
+  ```
+  {
+    "key": "Authorization",
+    "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+  }
+  ```
+
+  Body:
+  ```
+  {
+    "username": "Big Alexander",
+    "email": "alexander@email.com",
+    "password": "newPassword",
+    "birthdate": "11-11-2000",
+    "admin": true,
+    "valid": true
+  }
+  ```
+  
+  Response:
+  
+
+  Status code: 200 
+  
+
+  Body:
+  ```
+  {
+    "id": 1,
+    "username": "Big Alexander",
+    "email": "alexander@email.com",
+    "birthdate": "11-11-2000",
+    "admin": true,
+    "valid": true
+  }
+  ```
+
+
+- GET - [YOUR DOMAIN]/api/user/[id]
+  - For use these, you need token from login.
+
+
+  Request:
+
+
+  Header:
+  ```
+  {
+    "key": "Authorization",
+    "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+  }
+  ```
+
+  Response:
+    
+
+  Status code: 200
+  
+
+  Body:
+  ```
+  {
+    "id": 1,
+    "username": "Big Alexander",
+    "email": "alexander@email.com",
+    "birthdate": "11-11-2000",
+    "admin": true,
+    "valid": true
+  }
+  ```
+
+
+- GET - [YOUR DOMAIN]/api/user/users
+  - For use these, you need token from login.
+  
+
+  Request:
+
+
+  Header:
+  ```
+  {
+    "key": "Authorization",
+    "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+  }
+  ```
+
+  Response:
+    
+
+  Status code: 200
+  
+
+  Body:
+  ```
+  {
+    "users": {
+      {
+        "id": 1,
+        "username": "Big Alexander",
+        "email": "alexander@email.com",
+        "birthdate": "11-11-2000",
+        "admin": true,
+        "valid": true
+      }
+    }
+  }
+  ```
