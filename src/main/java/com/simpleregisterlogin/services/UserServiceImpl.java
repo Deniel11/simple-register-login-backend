@@ -2,6 +2,7 @@ package com.simpleregisterlogin.services;
 
 import com.simpleregisterlogin.dtos.AuthenticationRequestDTO;
 import com.simpleregisterlogin.dtos.RegisteredUserDTO;
+import com.simpleregisterlogin.dtos.RegisteredUserDTOList;
 import com.simpleregisterlogin.dtos.UserDTO;
 import com.simpleregisterlogin.entities.User;
 import com.simpleregisterlogin.exceptions.*;
@@ -188,5 +189,14 @@ public class UserServiceImpl implements UserService {
         Long id = userDetailsService.extractIdFromRequest(request);
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         return mapperService.convertUserToRegisteredUserDTO(user);
+    }
+
+    @Override
+    public RegisteredUserDTOList getUsers() {
+        RegisteredUserDTOList registeredUserDTOList = new RegisteredUserDTOList();
+        for (User user : userRepository.findAll()) {
+            registeredUserDTOList.getUsers().add(mapperService.convertUserToRegisteredUserDTO(user));
+        }
+        return registeredUserDTOList;
     }
 }

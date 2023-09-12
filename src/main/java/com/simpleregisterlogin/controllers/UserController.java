@@ -42,4 +42,9 @@ public class UserController {
     public ResponseEntity<?> getOwnUser(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getOwnUser(request));
     }
+
+    @GetMapping("/users")
+    public ResponseEntity<?> getUsers() {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUsers());
+    }
 }

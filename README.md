@@ -241,7 +241,7 @@ Body:
   Body:
   ```
   {
-    "users": {
+    "users": [
       {
         "id": 1,
         "username": "Big Alexander",
@@ -249,7 +249,15 @@ Body:
         "birthdate": "11-11-2000",
         "admin": true,
         "valid": true
-      }
-    }
+      },
+      {
+        "id": 2,
+        "username": "Sanyi",
+        "email": "sanyi@email.com",
+        "birthdate": "11-11-2000",
+        "admin": false,
+        "valid": false
+        }
+    ]
   }
   ```

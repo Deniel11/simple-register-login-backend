@@ -2,6 +2,7 @@ package com.simpleregisterlogin.services;
 
 import com.simpleregisterlogin.dtos.AuthenticationRequestDTO;
 import com.simpleregisterlogin.dtos.RegisteredUserDTO;
+import com.simpleregisterlogin.dtos.RegisteredUserDTOList;
 import com.simpleregisterlogin.dtos.UserDTO;
 import org.springframework.stereotype.Service;
 
@@ -19,4 +20,6 @@ public interface UserService {
     RegisteredUserDTO getUser(Long id);
 
     RegisteredUserDTO getOwnUser(HttpServletRequest request);
+
+    RegisteredUserDTOList getUsers();
 }

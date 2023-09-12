@@ -2,6 +2,7 @@ package com.simpleregisterlogin.services;
 
 import com.simpleregisterlogin.dtos.AuthenticationRequestDTO;
 import com.simpleregisterlogin.dtos.RegisteredUserDTO;
+import com.simpleregisterlogin.dtos.RegisteredUserDTOList;
 import com.simpleregisterlogin.dtos.UserDTO;
 import com.simpleregisterlogin.entities.User;
 import com.simpleregisterlogin.exceptions.*;
@@ -22,6 +23,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -197,5 +200,19 @@ public class UserServiceImplTest {
         Mockito.when(userRepository.findById(id)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(UserNotFoundException.class, () -> userService.getOwnUser(request));
+    }
+
+    @Test
+    void getUsers_WithCorrectUserList_ReturnsExceptedRegisteredUserDTOList() {
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        List<User> userList = new ArrayList<>();
+        userList.add(fakeUser);
+        RegisteredUserDTO fakeRegisteredUserDTO = beanFactory.getBean("fakeRegisteredUserDTO", RegisteredUserDTO.class);
+        RegisteredUserDTOList registeredUserDTOList = new RegisteredUserDTOList();
+        registeredUserDTOList.getUsers().add(fakeRegisteredUserDTO);
+        Mockito.when(userRepository.findAll()).thenReturn(userList);
+        Mockito.when(mapperService.convertUserToRegisteredUserDTO(fakeUser)).thenReturn(fakeRegisteredUserDTO);
+
+        Assertions.assertEquals(registeredUserDTOList.getUsers(), userService.getUsers().getUsers());
     }
 }
