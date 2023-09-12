@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -59,18 +60,17 @@ public class UserServiceImplTest {
     void addNewUser_WithValidUserDTO_ReturnCorrectRegisteredUserDTO() {
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
         fakeUser.setValid(false);
-        UserDTO userDTO = new UserDTO(fakeUser.getUsername(), fakeUser.getEmail(), fakeUser.getPassword(), fakeUser.getBirthdate());
-        RegisteredUserDTO registeredUserDTO = new RegisteredUserDTO(1L, fakeUser.getUsername(), fakeUser.getEmail(), fakeUser.getPassword(), fakeUser.getBirthdate(), fakeUser.getAdmin(), fakeUser.getValid());
+        UserDTO userDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
+        RegisteredUserDTO fakeRegisteredUserDTO = beanFactory.getBean("fakeRegisteredUserDTO", RegisteredUserDTO.class);
         Mockito.when(mapperService.convertUserDTOtoUser(userDTO)).thenReturn(fakeUser);
-        Mockito.when(mapperService.convertUserToRegisteredUserDTO(fakeUser)).thenReturn(registeredUserDTO);
+        Mockito.when(mapperService.convertUserToRegisteredUserDTO(fakeUser)).thenReturn(fakeRegisteredUserDTO);
         Mockito.when(encoder.encode(fakeUser.getPassword())).thenReturn(fakeUser.getPassword());
 
-        Assertions.assertEquals(registeredUserDTO.getUsername(), userService.addNewUser(userDTO).getUsername());
-        Assertions.assertEquals(registeredUserDTO.getEmail(), userService.addNewUser(userDTO).getEmail());
-        Assertions.assertEquals(registeredUserDTO.getPassword(), userService.addNewUser(userDTO).getPassword());
-        Assertions.assertEquals(registeredUserDTO.getBirthdate(), userService.addNewUser(userDTO).getBirthdate());
-        Assertions.assertEquals(registeredUserDTO.getAdmin(), userService.addNewUser(userDTO).getAdmin());
-        Assertions.assertEquals(registeredUserDTO.getValid(), userService.addNewUser(userDTO).getValid());
+        Assertions.assertEquals(fakeRegisteredUserDTO.getUsername(), userService.addNewUser(userDTO).getUsername());
+        Assertions.assertEquals(fakeRegisteredUserDTO.getEmail(), userService.addNewUser(userDTO).getEmail());
+        Assertions.assertEquals(fakeRegisteredUserDTO.getBirthdate(), userService.addNewUser(userDTO).getBirthdate());
+        Assertions.assertEquals(fakeRegisteredUserDTO.getAdmin(), userService.addNewUser(userDTO).getAdmin());
+        Assertions.assertEquals(fakeRegisteredUserDTO.getValid(), userService.addNewUser(userDTO).getValid());
     }
 
     @Test
@@ -150,5 +150,52 @@ public class UserServiceImplTest {
                 .thenThrow(BadCredentialsException.class);
 
         Assertions.assertThrows(UserNotFoundException.class, () -> userService.authenticate(authenticationRequest));
+    }
+
+    @Test
+    void getUser_WithValidIdAndUser_ReturnExpectedRegisteredUserDTO() {
+        Long id = 1L;
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        RegisteredUserDTO fakeRegisteredUserDTO = beanFactory.getBean("fakeRegisteredUserDTO", RegisteredUserDTO.class);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(fakeUser));
+        Mockito.when(mapperService.convertUserToRegisteredUserDTO(fakeUser)).thenReturn(fakeRegisteredUserDTO);
+
+        Assertions.assertEquals(fakeRegisteredUserDTO, userService.getUser(id));
+    }
+
+    @Test
+    void getUser_WithIdNull_ThrowsInvalidParameterException() {
+        Assertions.assertThrows(InvalidParameterException.class, () -> userService.getUser(null));
+    }
+
+    @Test
+    void getUser_WithNotExistedId_ThrowsUserNotFoundException() {
+        Long id = 99L;
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(UserNotFoundException.class, () -> userService.getUser(id));
+    }
+
+    @Test
+    void getOwnUser_WithExistedUser_ReturnExpectedRegisteredUserDTO() {
+        Long id = 1L;
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        RegisteredUserDTO fakeRegisteredUserDTO = beanFactory.getBean("fakeRegisteredUserDTO", RegisteredUserDTO.class);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(fakeUser));
+        Mockito.when(mapperService.convertUserToRegisteredUserDTO(fakeUser)).thenReturn(fakeRegisteredUserDTO);
+
+        Assertions.assertEquals(fakeRegisteredUserDTO, userService.getOwnUser(request));
+    }
+
+    @Test
+    void getOwnUser_WithNotExistedId_ThrowsUserNotFoundException() {
+        Long id = 1L;
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(UserNotFoundException.class, () -> userService.getOwnUser(request));
     }
 }

@@ -49,4 +49,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         return userDetails;
     }
+
+    public Long extractIdFromRequest(HttpServletRequest request) {
+        return jwtUtil.extractId(request.getHeader("Authorization"));
+    }
+
+    public boolean extractAdminFromRequest(HttpServletRequest request) {
+        return jwtUtil.extractAdmin(request.getHeader("Authorization"));
+    }
 }

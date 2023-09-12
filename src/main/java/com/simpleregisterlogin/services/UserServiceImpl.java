@@ -17,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -169,5 +171,22 @@ public class UserServiceImpl implements UserService {
             }
         }
         return parameter;
+    }
+
+    @Override
+    public RegisteredUserDTO getUser(Long id) {
+
+        if (id == null) {
+            throw new InvalidParameterException("id");
+        }
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        return mapperService.convertUserToRegisteredUserDTO(user);
+    }
+
+    @Override
+    public RegisteredUserDTO getOwnUser(HttpServletRequest request) {
+        Long id = userDetailsService.extractIdFromRequest(request);
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        return mapperService.convertUserToRegisteredUserDTO(user);
     }
 }

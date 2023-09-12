@@ -6,9 +6,9 @@ import com.simpleregisterlogin.entities.User;
 
 public interface MapperService {
 
-    public UserDTO convertUserToUserDTO(User user);
+    UserDTO convertUserToUserDTO(User user);
 
     RegisteredUserDTO convertUserToRegisteredUserDTO(User user);
 
-    public User convertUserDTOtoUser(UserDTO userDTO);
+    User convertUserDTOtoUser(UserDTO userDTO);
 }

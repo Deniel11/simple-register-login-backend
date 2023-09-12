@@ -19,11 +19,14 @@ public class UserDetailsImpl implements UserDetails {
 
     private final Boolean admin;
 
+    private final Long id;
+
     public UserDetailsImpl(User user) {
         username = user.getUsername();
         password = user.getPassword();
         this.grantedAuthorityList = new ArrayList<>();
         this.admin = user.getAdmin();
+        this.id = user.getId();
         addRole();
     }
 
@@ -72,5 +75,9 @@ public class UserDetailsImpl implements UserDetails {
         } else {
             grantedAuthorityList.add(new SimpleGrantedAuthority("USER"));
         }
+    }
+
+    public Long getId() {
+        return id;
     }
 }

@@ -7,10 +7,9 @@ import com.simpleregisterlogin.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/user")
@@ -32,5 +31,15 @@ public class UserController {
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequest) {
         userService.authenticate(authenticationRequest);
         return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationResponseDTO("ok", userService.createAuthenticationToken(authenticationRequest)));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUser(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(id));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<?> getOwnUser(HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getOwnUser(request));
     }
 }

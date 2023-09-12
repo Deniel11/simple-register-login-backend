@@ -8,8 +8,6 @@ public class RegisteredUserDTO {
 
     private String email;
 
-    private String password;
-
     private String birthdate;
 
     private boolean admin;
@@ -17,16 +15,6 @@ public class RegisteredUserDTO {
     private boolean valid;
 
     public RegisteredUserDTO() {
-    }
-
-    public RegisteredUserDTO(Long id, String username, String email, String password, String birthdate, boolean admin, boolean valid) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.birthdate = birthdate;
-        this.admin = admin;
-        this.valid = valid;
     }
 
     public Long getId() {
@@ -43,14 +31,6 @@ public class RegisteredUserDTO {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getBirthdate() {

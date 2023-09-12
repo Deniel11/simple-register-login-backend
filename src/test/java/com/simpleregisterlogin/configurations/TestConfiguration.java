@@ -1,5 +1,6 @@
 package com.simpleregisterlogin.configurations;
 
+import com.simpleregisterlogin.dtos.RegisteredUserDTO;
 import com.simpleregisterlogin.dtos.UserDTO;
 import com.simpleregisterlogin.entities.User;
 import com.simpleregisterlogin.services.MapperService;
@@ -46,5 +47,11 @@ public class TestConfiguration {
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     UserDTO getFakeUserDTO() {
         return mapperService.convertUserToUserDTO(getFakeUser());
+    }
+
+    @Bean(name = "fakeRegisteredUserDTO")
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    RegisteredUserDTO getFakeRegisteredUserDTO() {
+        return mapperService.convertUserToRegisteredUserDTO(getFakeUser());
     }
 }

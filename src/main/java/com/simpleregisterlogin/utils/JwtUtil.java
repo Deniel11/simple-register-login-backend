@@ -31,8 +31,14 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String extractUsernameFromHeaderAuthorization(String authorizationHeader) {
-        return extractUsername(extractTokenFromHeaderAuthorization(authorizationHeader));
+    public Long extractId(String authorizationHeader) {
+        Claims claims = extractAllClaims(extractTokenFromHeaderAuthorization(authorizationHeader));
+        return Long.parseLong(claims.get("UserId").toString());
+    }
+
+    public boolean extractAdmin(String authorizationHeader) {
+        Claims claims = extractAllClaims(extractTokenFromHeaderAuthorization(authorizationHeader));
+        return Boolean.getBoolean(claims.get("IsAdmin").toString());
     }
 
     private Date extractExpiration(String token) {
@@ -60,6 +66,7 @@ public class JwtUtil {
 
     public String generateToken(UserDetailsImpl userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("UserId", userDetails.getId());
         claims.put("isAdmin", userDetails.isAdmin());
         return createToken(claims, userDetails.getUsername());
     }

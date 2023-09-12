@@ -26,12 +26,12 @@ This project is a simple register-login for users with token based authenticatio
 
 #### Test coverage:
 - Class: 100%
-- Method: 95%
-- Line: 87%
+- Method: 91%
+- Line: 83%
 
 ## Guides
 
-Before you want to use this, project, you need setup your environment variables.
+Before you want to use this project, you need setup your environment variables.
 
 
 Or you can use env file ".env.sample".
@@ -149,7 +149,7 @@ After that, you can use these endpoints:
   ```
 
 
-- GET - [YOUR DOMAIN]/api/user/[id]
+- GET - [YOUR DOMAIN]/api/user/
   - For use these, you need token from login.
 
 
@@ -181,6 +181,40 @@ After that, you can use these endpoints:
     "valid": true
   }
   ```
+
+- GET - [YOUR DOMAIN]/api/user/[id]
+  - For use these, you need token from login.
+
+
+Request:
+
+
+Header:
+  ```
+  {
+    "key": "Authorization",
+    "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+  }
+  ```
+
+Response:
+
+
+Status code: 200
+
+
+Body:
+  ```
+  {
+    "id": 1,
+    "username": "Big Alexander",
+    "email": "alexander@email.com",
+    "birthdate": "11-11-2000",
+    "admin": true,
+    "valid": true
+  }
+  ```
+
 
 
 - GET - [YOUR DOMAIN]/api/user/users

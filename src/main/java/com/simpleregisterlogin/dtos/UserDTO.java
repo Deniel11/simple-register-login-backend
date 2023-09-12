@@ -13,13 +13,6 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(String username, String email, String password, String birthdate) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.birthdate = birthdate;
-    }
-
     public String getUsername() {
         return username;
     }
