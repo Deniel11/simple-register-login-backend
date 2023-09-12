@@ -26,8 +26,8 @@ This project is a simple register-login for users with token based authenticatio
 
 #### Test coverage:
 - Class: 100%
-- Method: 91%
-- Line: 83%
+- Method: 95%
+- Line: 87%
 
 ## Guides
 
@@ -49,10 +49,12 @@ JWT_SECRET_KEY=[SELECT YOUR SECRET KEY]
 ```
 
 After that, you can use these endpoints:
-- POST - [YOUR DOMAIN]/api/user/registration
+
+-----
+- **POST** - *[YOUR DOMAIN]*/api/user/registration
   
 
-  Request Body:
+  **Request** Body:
   ```
   {
     "username": "Alexander",
@@ -62,7 +64,7 @@ After that, you can use these endpoints:
   }
   ```
 
-  Response:
+  **Response**:
 
 
   Status code: 201
@@ -76,12 +78,12 @@ After that, you can use these endpoints:
     "valid": false
   }
   ```
-  
 
-- POST - [YOUR DOMAIN]/api/user/login
-  
+-----
+- **POST** - *[YOUR DOMAIN]*/api/user/login
 
-  Request Body:
+
+  **Request** Body:
   ```
   {
     "username": "Alexander",
@@ -89,7 +91,7 @@ After that, you can use these endpoints:
   }
   ```
 
-  Response:
+  **Response**:
 
 
   Status code: 200
@@ -100,14 +102,14 @@ After that, you can use these endpoints:
   }
   ```
 
-
-- PUT - [YOUR DOMAIN]/api/user/[id]
+-----
+- **PUT** - *[YOUR DOMAIN]*/api/user/{id}
   - For use these, you need token from login.
   - You can change only 1 parameter like "username" or "password".
   - You can change multiple parameter like this:
-  
-  
-  Request:
+
+
+  **Request**:
     
 
   Header:
@@ -129,8 +131,8 @@ After that, you can use these endpoints:
     "valid": true
   }
   ```
-  
-  Response:
+
+  **Response**:
   
 
   Status code: 200 
@@ -148,12 +150,12 @@ After that, you can use these endpoints:
   }
   ```
 
-
-- GET - [YOUR DOMAIN]/api/user/
+-----
+- **GET** - *[YOUR DOMAIN]*/api/user/
   - For use these, you need token from login.
 
 
-  Request:
+  **Request**:
 
 
   Header:
@@ -164,7 +166,7 @@ After that, you can use these endpoints:
   }
   ```
 
-  Response:
+  **Response**:
     
 
   Status code: 200
@@ -182,46 +184,47 @@ After that, you can use these endpoints:
   }
   ```
 
-- GET - [YOUR DOMAIN]/api/user/[id]
+-----
+- **GET** - *[YOUR DOMAIN]*/api/user/{id}
   - For use these, you need token from login.
 
 
-Request:
-
-
-Header:
-  ```
-  {
-    "key": "Authorization",
-    "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
-  }
-  ```
-
-Response:
-
-
-Status code: 200
-
-
-Body:
-  ```
-  {
-    "id": 1,
-    "username": "Big Alexander",
-    "email": "alexander@email.com",
-    "birthdate": "11-11-2000",
-    "admin": true,
-    "valid": true
-  }
-  ```
-
-
-
-- GET - [YOUR DOMAIN]/api/user/users
-  - For use these, you need token from login.
+  **Request**:
   
+  
+  Header:
+    ```
+    {
+      "key": "Authorization",
+      "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+    }
+    ```
 
-  Request:
+  **Response**:
+  
+  
+  Status code: 200
+  
+  
+  Body:
+    ```
+    {
+      "id": 1,
+      "username": "Big Alexander",
+      "email": "alexander@email.com",
+      "birthdate": "11-11-2000",
+      "admin": true,
+      "valid": true
+    }
+    ```
+
+
+-----
+- **GET** - *[YOUR DOMAIN]*/api/user/users
+  - For use these, you need token from login.
+
+
+  **Request**:
 
 
   Header:
@@ -232,7 +235,7 @@ Body:
   }
   ```
 
-  Response:
+  **Response**:
     
 
   Status code: 200

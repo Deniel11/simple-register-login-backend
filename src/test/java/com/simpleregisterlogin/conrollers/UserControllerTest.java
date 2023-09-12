@@ -5,6 +5,7 @@ import com.simpleregisterlogin.dtos.AuthenticationRequestDTO;
 import com.simpleregisterlogin.dtos.UserDTO;
 import com.simpleregisterlogin.entities.User;
 import com.simpleregisterlogin.repositories.UserRepository;
+import com.simpleregisterlogin.security.UserDetailsImpl;
 import com.simpleregisterlogin.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanFactory;
@@ -17,6 +18,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -178,5 +180,94 @@ public class UserControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value("error"))
                 .andExpect(jsonPath("$.message").value("Username or password is incorrect."));
+    }
+
+    @Test
+    @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
+    void getUser_WithValidId_ReturnExceptedUser() throws Exception {
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        MockHttpServletRequestBuilder requestBuilder = get("/api/user/{id}", 1)
+                .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)));
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.username").value(fakeUser.getUsername()))
+                .andExpect(jsonPath("$.email").value(fakeUser.getEmail()))
+                .andExpect(jsonPath("$.birthdate").value(String.valueOf(fakeUser.getBirthdate())))
+                .andExpect(jsonPath("$.admin").value(fakeUser.getAdmin()))
+                .andExpect(jsonPath("$.valid").value(fakeUser.getValid()));
+    }
+
+    @Test
+    @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
+    void getUser_WithInvalidId_ThrowsUserNotFoundException() throws Exception {
+        Long id = 99L;
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        MockHttpServletRequestBuilder requestBuilder = get("/api/user/{id}", id)
+                .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)));
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value("error"))
+                .andExpect(jsonPath("$.message").value("User with id " + id + " is not found"));
+    }
+
+    @Test
+    @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
+    void getOwnUser_WithValidId_ReturnExceptedUser() throws Exception {
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        fakeUser.setId(1L);
+        MockHttpServletRequestBuilder requestBuilder = get("/api/user/")
+                .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)));
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.username").value(fakeUser.getUsername()))
+                .andExpect(jsonPath("$.email").value(fakeUser.getEmail()))
+                .andExpect(jsonPath("$.birthdate").value(String.valueOf(fakeUser.getBirthdate())))
+                .andExpect(jsonPath("$.admin").value(fakeUser.getAdmin()))
+                .andExpect(jsonPath("$.valid").value(fakeUser.getValid()));
+    }
+
+    @Test
+    @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
+    void getOwnUser_WithInvalidId_ThrowsUserNotFoundException() throws Exception {
+        Long id = 2L;
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        fakeUser.setId(id);
+        MockHttpServletRequestBuilder requestBuilder = get("/api/user/")
+                .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)));
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value("error"))
+                .andExpect(jsonPath("$.message").value("User with id " + id + " is not found"));
+    }
+
+    @Test
+    @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
+    void getUsers_WithValidUsers_ReturnExeptedRegisteredUserDTOList() throws Exception {
+        Long id = 1L;
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        fakeUser.setId(id);
+        MockHttpServletRequestBuilder requestBuilder = get("/api/user/users")
+                .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)));
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.users.size()").value(1))
+                .andExpect(jsonPath("$.users[0].id").value(id))
+                .andExpect(jsonPath("$.users[0].username").value(fakeUser.getUsername()))
+                .andExpect(jsonPath("$.users[0].email").value(fakeUser.getEmail()))
+                .andExpect(jsonPath("$.users[0].birthdate").value(String.valueOf(fakeUser.getBirthdate())))
+                .andExpect(jsonPath("$.users[0].admin").value(fakeUser.getAdmin()))
+                .andExpect(jsonPath("$.users[0].valid").value(fakeUser.getValid()));
     }
 }
