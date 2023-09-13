@@ -1,9 +1,6 @@
 package com.simpleregisterlogin.services;
 
-import com.simpleregisterlogin.dtos.AuthenticationRequestDTO;
-import com.simpleregisterlogin.dtos.RegisteredUserDTO;
-import com.simpleregisterlogin.dtos.RegisteredUserDTOList;
-import com.simpleregisterlogin.dtos.UserDTO;
+import com.simpleregisterlogin.dtos.*;
 import com.simpleregisterlogin.entities.User;
 import com.simpleregisterlogin.exceptions.*;
 import com.simpleregisterlogin.repositories.UserRepository;
@@ -71,7 +68,7 @@ public class UserServiceImplTest {
 
         Assertions.assertEquals(fakeRegisteredUserDTO.getUsername(), userService.addNewUser(userDTO).getUsername());
         Assertions.assertEquals(fakeRegisteredUserDTO.getEmail(), userService.addNewUser(userDTO).getEmail());
-        Assertions.assertEquals(fakeRegisteredUserDTO.getBirthdate(), userService.addNewUser(userDTO).getBirthdate());
+        Assertions.assertEquals(fakeRegisteredUserDTO.getDateOfBirth(), userService.addNewUser(userDTO).getDateOfBirth());
         Assertions.assertEquals(fakeRegisteredUserDTO.getAdmin(), userService.addNewUser(userDTO).getAdmin());
         Assertions.assertEquals(fakeRegisteredUserDTO.getValid(), userService.addNewUser(userDTO).getValid());
     }
@@ -125,7 +122,7 @@ public class UserServiceImplTest {
     @Test
     void addNewUser_WithWrongDateFormat_ThrowsWrongDateFormatException() {
         UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
-        fakeUserDTO.setBirthdate("10.10.2000000");
+        fakeUserDTO.setDateOfBirth("10.10.2000000");
         Mockito.when(userRepository.findUserByUsername(fakeUserDTO.getUsername())).thenReturn(Optional.empty());
         Mockito.when(userRepository.findUserByEmail(fakeUserDTO.getEmail())).thenReturn(Optional.empty());
 
@@ -214,5 +211,403 @@ public class UserServiceImplTest {
         Mockito.when(mapperService.convertUserToRegisteredUserDTO(fakeUser)).thenReturn(fakeRegisteredUserDTO);
 
         Assertions.assertEquals(registeredUserDTOList.getUsers(), userService.getUsers().getUsers());
+    }
+
+    @Test
+    void updateUser_WithAdminRole_ReturnExceptedRegisteredUserDTO() {
+        String email = "new@email.com";
+        Long id = 1L;
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        User editedFakeUser = beanFactory.getBean("fakeUser", User.class);
+        editedFakeUser.setEmail(email);
+        RegisteredUserDTO fakeRegisteredUserDTO = beanFactory.getBean("fakeRegisteredUserDTO", RegisteredUserDTO.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setEmail(email);
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(fakeUser));
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.save(editedFakeUser)).thenReturn(editedFakeUser);
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedFakeUser.getPassword())).thenReturn(false);
+        Mockito.when(mapperService.convertUserToRegisteredUserDTO(fakeUser)).thenReturn(fakeRegisteredUserDTO);
+
+        Assertions.assertEquals(fakeRegisteredUserDTO, userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndWrongActualUserId_ThrowsUserNotFoundException() {
+        Long id = 1L;
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(UserNotFoundException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndWrongOtherUserId_ThrowsUserNotFoundException() {
+        Long id = 1L;
+        Long otherUserId = 2L;
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(fakeUser));
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.findById(otherUserId)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(UserNotFoundException.class, () -> userService.updateUser(otherUserId, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndSameUsername_ThrowsParameterMatchException() {
+        Long id = 1L;
+        User adminUser = beanFactory.getBean("fakeUser", User.class);
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setUsername(editedUser.getUsername());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(adminUser));
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+
+        Assertions.assertThrows(ParameterMatchException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndSameEmail_ThrowsParameterMatchException() {
+        Long id = 1L;
+        User adminUser = beanFactory.getBean("fakeUser", User.class);
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setEmail(editedUser.getEmail());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(adminUser));
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+
+        Assertions.assertThrows(ParameterMatchException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndSamePassword_ThrowsParameterMatchException() {
+        Long id = 1L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setPassword(editedUser.getPassword());
+        editedUser.setPassword(beanFactory.getBean("fakeEncodedPassword", String.class));
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(true);
+
+        Assertions.assertThrows(ParameterMatchException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndSameDateOfBirth_ThrowsParameterMatchException() {
+        Long id = 1L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setDateOfBirth(editedUser.getDateOfBirth());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(false);
+
+        Assertions.assertThrows(ParameterMatchException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndSameAdminParameter_ThrowsParameterMatchException() {
+        Long id = 1L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setAdmin(editedUser.getAdmin());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(false);
+
+        Assertions.assertThrows(ParameterMatchException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndSameValidParameter_ThrowsParameterMatchException() {
+        Long id = 1L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setValid(editedUser.getValid());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(false);
+
+        Assertions.assertThrows(ParameterMatchException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndTakenUsername_ThrowsParameterTakenException() {
+        Long id = 1L;
+        Long otherId = 2L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setUsername(editedUser.getUsername());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(otherId);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(false);
+        Mockito.when(userRepository.findUserByUsername(editedUser.getUsername())).thenReturn(Optional.of(editedUser));
+
+        Assertions.assertThrows(ParameterTakenException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndTakenEmail_ThrowsParameterTakenException() {
+        Long id = 1L;
+        Long otherId = 2L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setEmail(editedUser.getEmail());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(otherId);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(false);
+        Mockito.when(userRepository.findUserByUsername(editedUser.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.of(editedUser));
+
+        Assertions.assertThrows(ParameterTakenException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndWrongEmailFormat_ThrowsWrongEmailFormatException() {
+        Long id = 1L;
+        Long otherId = 2L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setEmail("wrong@email");
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(otherId);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(false);
+        Mockito.when(userRepository.findUserByUsername(editedUser.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(WrongEmailFormatException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndLowPasswordLength_ThrowsLowPasswordLengthException() {
+        Long id = 1L;
+        Long otherId = 2L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setPassword("pass");
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(otherId);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(false);
+        Mockito.when(userRepository.findUserByUsername(editedUser.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(LowPasswordLengthException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithAdminRoleAndWrongDateFormat_ThrowsWrongDateFormatException() {
+        Long id = 1L;
+        Long otherId = 2L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setDateOfBirth("10-10-200000");
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(otherId);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(true);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(false);
+        Mockito.when(userRepository.findUserByUsername(editedUser.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(WrongDateFormatException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithUserRole_ReturnExceptedRegisteredUserDTO() {
+        String email = "new@email.com";
+        Long id = 1L;
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        User editedFakeUser = beanFactory.getBean("fakeUser", User.class);
+        editedFakeUser.setEmail(email);
+        RegisteredUserDTO fakeRegisteredUserDTO = beanFactory.getBean("fakeRegisteredUserDTO", RegisteredUserDTO.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setEmail(email);
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(false);
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(fakeUser));
+        Mockito.when(userRepository.save(editedFakeUser)).thenReturn(fakeUser);
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedFakeUser.getPassword())).thenReturn(false);
+        Mockito.when(mapperService.convertUserToRegisteredUserDTO(fakeUser)).thenReturn(fakeRegisteredUserDTO);
+
+        Assertions.assertEquals(fakeRegisteredUserDTO, userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithUserRoleAndWrongActualUserId_ThrowsUserNotFoundException() {
+        Long id = 1L;
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(UserNotFoundException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithUserRoleAndSameUsername_ThrowsParameterMatchException() {
+        Long id = 1L;
+        User adminUser = beanFactory.getBean("fakeUser", User.class);
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setUsername(editedUser.getUsername());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(adminUser));
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(false);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+
+        Assertions.assertThrows(ParameterMatchException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithUserRoleAndSameEmail_ThrowsParameterMatchException() {
+        Long id = 1L;
+        User adminUser = beanFactory.getBean("fakeUser", User.class);
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setEmail(editedUser.getEmail());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(adminUser));
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(false);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+
+        Assertions.assertThrows(ParameterMatchException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithUserRoleAndSamePassword_ThrowsParameterMatchException() {
+        Long id = 1L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setPassword(editedUser.getPassword());
+        editedUser.setPassword(beanFactory.getBean("fakeEncodedPassword", String.class));
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(false);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(true);
+
+        Assertions.assertThrows(ParameterMatchException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithUserRoleAndSameDateOfBirth_ThrowsParameterMatchException() {
+        Long id = 1L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setDateOfBirth(editedUser.getDateOfBirth());
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(false);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(false);
+
+        Assertions.assertThrows(ParameterMatchException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithUserRoleAndWrongEmailFormat_ThrowsWrongEmailFormatException() {
+        Long id = 1L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setEmail("wrong@email");
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(false);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(false);
+        Mockito.when(userRepository.findUserByUsername(editedUser.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(WrongEmailFormatException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithUserRoleAndLowPasswordLength_ThrowsLowPasswordLengthException() {
+        Long id = 1L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setPassword("pass");
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(false);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(false);
+        Mockito.when(userRepository.findUserByUsername(editedUser.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(LowPasswordLengthException.class, () -> userService.updateUser(id, updateUserDTO, request));
+    }
+
+    @Test
+    void updateUser_WithUserRoleAndWrongDateFormat_ThrowsWrongDateFormatException() {
+        Long id = 1L;
+        User editedUser = beanFactory.getBean("fakeUser", User.class);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setDateOfBirth("10-10-200000");
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);
+        Mockito.when(userDetailsService.extractAdminFromRequest(request)).thenReturn(false);
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(editedUser));
+        Mockito.when(encoder.matches(updateUserDTO.getPassword(), editedUser.getPassword())).thenReturn(false);
+        Mockito.when(userRepository.findUserByUsername(editedUser.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(WrongDateFormatException.class, () -> userService.updateUser(id, updateUserDTO, request));
     }
 }

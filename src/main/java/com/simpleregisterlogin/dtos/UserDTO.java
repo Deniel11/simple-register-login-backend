@@ -8,7 +8,7 @@ public class UserDTO {
 
     private String password;
 
-    private String birthdate;
+    private String dateOfBirth;
 
     public UserDTO() {
     }
@@ -25,8 +25,8 @@ public class UserDTO {
         return password;
     }
 
-    public String getBirthdate() {
-        return birthdate;
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
     public void setUsername(String username) {
@@ -41,7 +41,7 @@ public class UserDTO {
         this.password = password;
     }
 
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }

@@ -8,7 +8,7 @@ public class RegisteredUserDTO {
 
     private String email;
 
-    private String birthdate;
+    private String dateOfBirth;
 
     private boolean admin;
 
@@ -33,8 +33,8 @@ public class RegisteredUserDTO {
         return email;
     }
 
-    public String getBirthdate() {
-        return birthdate;
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
     public boolean getAdmin() {
@@ -61,7 +61,7 @@ public class RegisteredUserDTO {
         this.email = email;
     }
 
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }

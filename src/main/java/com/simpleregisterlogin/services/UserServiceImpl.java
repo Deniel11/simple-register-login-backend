@@ -1,9 +1,6 @@
 package com.simpleregisterlogin.services;
 
-import com.simpleregisterlogin.dtos.AuthenticationRequestDTO;
-import com.simpleregisterlogin.dtos.RegisteredUserDTO;
-import com.simpleregisterlogin.dtos.RegisteredUserDTOList;
-import com.simpleregisterlogin.dtos.UserDTO;
+import com.simpleregisterlogin.dtos.*;
 import com.simpleregisterlogin.entities.User;
 import com.simpleregisterlogin.exceptions.*;
 import com.simpleregisterlogin.repositories.UserRepository;
@@ -47,7 +44,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RegisteredUserDTO addNewUser(UserDTO userDTO) {
-        checkRegistrationUser(userDTO);
+        validateParameters(getInvalidRegistrationParameterNames(userDTO));
+        validatePassword(userDTO.getPassword());
+        validateUsername(userDTO.getUsername());
+        validateEmail(userDTO.getEmail());
+        validateDateOfBirth(userDTO.getDateOfBirth());
+
         User user = mapperService.convertUserDTOtoUser(userDTO);
         user.setPassword(encoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -72,11 +74,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void authenticate(AuthenticationRequestDTO authenticationRequest) {
-
-        String parameter = checkLoginUserParameters(authenticationRequest);
-        if (!parameter.isBlank()) {
-            throw new InvalidParameterException(parameter);
-        }
+        validateParameters(getInvalidUsernameAndPasswordParameterNames(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 
         try {
             authenticationManager.authenticate(
@@ -86,89 +84,79 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void checkRegistrationUser(UserDTO userDTO) {
-        String parameter = checkRegistrationUserParameters(userDTO);
-        if (parameter.length() > 0) {
-            throw new InvalidParameterException(parameter);
+    private void validateParameters(String parameters) {
+        if (parameters.length() > 0) {
+            throw new InvalidParameterException(parameters);
         }
+    }
 
-        if (!GeneralUtility.hasLessCharactersThan(userDTO.getPassword(), 8)) {
+    private void validatePassword(String password) {
+        if (!GeneralUtility.hasLessCharactersThan(password, 8)) {
             throw new LowPasswordLengthException(8);
         }
+    }
 
-        if (isUsernameTaken(userDTO.getUsername())) {
+    private void validateUsername(String username) {
+        if (isUsernameTaken(username)) {
             throw new ParameterTakenException("Username");
         }
+    }
 
-        if (isEmailTaken(userDTO.getEmail())) {
+    private void validateEmail(String email) {
+        if (isEmailTaken(email)) {
             throw new ParameterTakenException("Email");
         }
 
-        if (!GeneralUtility.isValidEmail(userDTO.getEmail())) {
+        if (!GeneralUtility.isValidEmail(email)) {
             throw new WrongEmailFormatException();
         }
+    }
 
-        if (!GeneralUtility.isValidDate(userDTO.getBirthdate())) {
+    private void validateDateOfBirth(String dateOfBirth) {
+        if (!GeneralUtility.isValidDate(dateOfBirth)) {
             throw new WrongDateFormatException();
         }
     }
 
-    private String checkRegistrationUserParameters(UserDTO userDTO) {
-        String parameter = "";
-        if (GeneralUtility.isEmptyOrNull(userDTO.getUsername())) {
-            String username = "Username";
-            if (parameter.length() > 0) {
-                parameter += ", " + username;
-            } else {
-                parameter = username;
-            }
-        }
+    private String getInvalidRegistrationParameterNames(UserDTO userDTO) {
+        String parameter = getInvalidUsernameAndPasswordParameterNames(userDTO.getUsername(), userDTO.getPassword());
 
         if (GeneralUtility.isEmptyOrNull(userDTO.getEmail())) {
-            String email = "Email";
+            String parameterName = "Email";
             if (parameter.length() > 0) {
-                parameter += ", " + email;
+                parameter += ", " + parameterName;
             } else {
-                parameter = email;
+                parameter = parameterName;
             }
         }
 
-        if (GeneralUtility.isEmptyOrNull(userDTO.getPassword())) {
-            String password = "Password";
+        if (GeneralUtility.isEmptyOrNull(userDTO.getDateOfBirth())) {
+            String parameterName = "Date of birth";
             if (parameter.length() > 0) {
-                parameter += ", " + password;
+                parameter += ", " + parameterName;
             } else {
-                parameter = password;
-            }
-        }
-
-        if (GeneralUtility.isEmptyOrNull(userDTO.getBirthdate())) {
-            String birthdate = "Birthday date";
-            if (parameter.length() > 0) {
-                parameter += ", " + birthdate;
-            } else {
-                parameter = birthdate;
+                parameter = parameterName;
             }
         }
         return parameter;
     }
 
-    private String checkLoginUserParameters(AuthenticationRequestDTO authenticationRequest) {
+    private String getInvalidUsernameAndPasswordParameterNames(String username, String password) {
         String parameter = "";
-        if (GeneralUtility.isEmptyOrNull(authenticationRequest.getUsername())) {
-            String username = "Username";
+        if (GeneralUtility.isEmptyOrNull(username)) {
+            String parameterName = "Username";
             if (parameter.length() > 0) {
-                parameter += ", " + username;
+                parameter += ", " + parameterName;
             } else {
-                parameter = username;
+                parameter = parameterName;
             }
         }
-        if (GeneralUtility.isEmptyOrNull(authenticationRequest.getPassword())) {
-            String password = "Password";
+        if (GeneralUtility.isEmptyOrNull(password)) {
+            String parameterName = "Password";
             if (parameter.length() > 0) {
-                parameter += ", " + password;
+                parameter += ", " + parameterName;
             } else {
-                parameter = password;
+                parameter = parameterName;
             }
         }
         return parameter;
@@ -198,5 +186,99 @@ public class UserServiceImpl implements UserService {
             registeredUserDTOList.getUsers().add(mapperService.convertUserToRegisteredUserDTO(user));
         }
         return registeredUserDTOList;
+    }
+
+    @Override
+    public RegisteredUserDTO updateUser(Long id, UpdateUserDTO updateUserDTO, HttpServletRequest request) {
+        Long actualUserId = userDetailsService.extractIdFromRequest(request);
+        boolean ownUser = true;
+        User editedUser = null;
+        if (userDetailsService.extractAdminFromRequest(request)) {
+            if (id.equals(actualUserId)) {
+                editedUser = userRepository.findById(actualUserId).orElseThrow(() -> new UserNotFoundException(actualUserId));
+            } else {
+                editedUser = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+                ownUser = false;
+            }
+        } else {
+            if (updateUserDTO.getAdmin() != null || updateUserDTO.getValid() != null) {
+                throw new CustomAccessDeniedException("Edit: admin, valid");
+            }
+
+            if (!id.equals(actualUserId)) {
+                throw new CustomAccessDeniedException("Edit: other user");
+            }
+            editedUser = userRepository.findById(actualUserId).orElseThrow(() -> new UserNotFoundException(actualUserId));
+        }
+        updateUsername(editedUser, updateUserDTO, ownUser);
+        updateEmail(editedUser, updateUserDTO, ownUser);
+        updatePassword(editedUser, updateUserDTO, ownUser);
+        updateDateOfBirth(editedUser, updateUserDTO, ownUser);
+        updateAdmin(editedUser, updateUserDTO, ownUser);
+        updateValid(editedUser, updateUserDTO, ownUser);
+        userRepository.save(editedUser);
+        return mapperService.convertUserToRegisteredUserDTO(editedUser);
+    }
+
+    private void updateUsername(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
+        if (!GeneralUtility.isEmptyOrNull(updateUserDTO.getUsername())) {
+            if (underUpdateUser.getUsername().equals(updateUserDTO.getUsername()) && ownUser) {
+                throw new ParameterMatchException("Username");
+            }
+            validateUsername(updateUserDTO.getUsername());
+
+            underUpdateUser.setUsername(updateUserDTO.getUsername());
+        }
+    }
+
+    private void updateEmail(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
+        if (!GeneralUtility.isEmptyOrNull(updateUserDTO.getEmail())) {
+            if (underUpdateUser.getEmail().equals(updateUserDTO.getEmail()) && ownUser) {
+                throw new ParameterMatchException("Email");
+            }
+            validateEmail(updateUserDTO.getEmail());
+
+            underUpdateUser.setEmail(updateUserDTO.getEmail());
+        }
+    }
+
+    private void updatePassword(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
+        if (!GeneralUtility.isEmptyOrNull(updateUserDTO.getPassword())) {
+            if (encoder.matches(updateUserDTO.getPassword(), underUpdateUser.getPassword()) && ownUser) {
+                throw new ParameterMatchException("Password");
+            }
+            validatePassword(updateUserDTO.getPassword());
+
+            underUpdateUser.setPassword(encoder.encode(updateUserDTO.getPassword()));
+        }
+    }
+
+    private void updateDateOfBirth(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
+        if (!GeneralUtility.isEmptyOrNull(updateUserDTO.getDateOfBirth())) {
+            if (underUpdateUser.getDateOfBirth().equals(updateUserDTO.getDateOfBirth()) && ownUser) {
+                throw  new ParameterMatchException("Date of Birth");
+            }
+            validateDateOfBirth(updateUserDTO.getDateOfBirth());
+
+            underUpdateUser.setDateOfBirth(updateUserDTO.getDateOfBirth());
+        }
+    }
+
+    private void updateAdmin(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
+        if (updateUserDTO.getAdmin() != null) {
+            if (underUpdateUser.getAdmin() == updateUserDTO.getAdmin() && ownUser) {
+                throw new ParameterMatchException("isAdmin");
+            }
+            underUpdateUser.setAdmin(updateUserDTO.getAdmin());
+        }
+    }
+
+    private void updateValid(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
+        if (updateUserDTO.getValid() != null) {
+            if (underUpdateUser.getValid() == updateUserDTO.getValid() && ownUser) {
+                throw new ParameterMatchException("valid");
+            }
+            underUpdateUser.setValid(updateUserDTO.getValid());
+        }
     }
 }

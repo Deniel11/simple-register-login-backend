@@ -19,7 +19,7 @@ public class User {
     @JsonIgnore
     private String password;
 
-    private String birthdate;
+    private String dateOfBirth;
 
     private boolean admin;
 
@@ -28,11 +28,11 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email, String password, String birthdate) {
+    public User(String username, String email, String password, String dateOfBirth) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.birthdate = birthdate;
+        this.dateOfBirth = dateOfBirth;
         admin = false;
         valid = false;
     }
@@ -61,8 +61,8 @@ public class User {
         this.password = password;
     }
 
-    public String getBirthdate() {
-        return birthdate;
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
     public boolean getAdmin() {
@@ -89,7 +89,7 @@ public class User {
         this.email = email;
     }
 
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
+    public void setDateOfBirth(String birthdate) {
+        this.dateOfBirth = birthdate;
     }
 }

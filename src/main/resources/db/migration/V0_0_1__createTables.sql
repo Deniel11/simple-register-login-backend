@@ -4,7 +4,7 @@ CREATE TABLE users (
     username VARCHAR(255),
     email VARCHAR(255),
     password VARCHAR(255),
-    birthdate VARCHAR(255),
+    dateOfBirth VARCHAR(255),
     admin BIT NOT NULL,
     valid BIT NOT NULL,
     primary key (id)

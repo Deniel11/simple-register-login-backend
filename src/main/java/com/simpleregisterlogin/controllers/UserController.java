@@ -2,6 +2,7 @@ package com.simpleregisterlogin.controllers;
 
 import com.simpleregisterlogin.dtos.AuthenticationRequestDTO;
 import com.simpleregisterlogin.dtos.AuthenticationResponseDTO;
+import com.simpleregisterlogin.dtos.UpdateUserDTO;
 import com.simpleregisterlogin.dtos.UserDTO;
 import com.simpleregisterlogin.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,10 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<?> getUsers() {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUsers());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UpdateUserDTO updateUserDTO, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(id, updateUserDTO, request));
     }
 }

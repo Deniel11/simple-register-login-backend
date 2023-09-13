@@ -9,6 +9,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.text.ParseException;
 
@@ -21,7 +22,7 @@ public class TestConfiguration {
 
     private final String fakeUserPassword = "password";
 
-    private final String fakeUserBirthDate = "01-01-2001";
+    private final String fakeUserDateOfBirth = "01-01-2001";
 
     private final boolean fakeUserAdmin = false;
 
@@ -29,15 +30,18 @@ public class TestConfiguration {
 
     MapperService mapperService;
 
+    BCryptPasswordEncoder encoder;
+
     @Autowired
-    public TestConfiguration(MapperService mapperService) throws ParseException {
+    public TestConfiguration(MapperService mapperService, BCryptPasswordEncoder encoder) throws ParseException {
         this.mapperService = mapperService;
+        this.encoder = encoder;
     }
 
     @Bean(name = "fakeUser")
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     User getFakeUser() {
-        User fakeUser = new User(fakeUserName, fakeUserEmail, fakeUserPassword, fakeUserBirthDate);
+        User fakeUser = new User(fakeUserName, fakeUserEmail, fakeUserPassword, fakeUserDateOfBirth);
         fakeUser.setAdmin(fakeUserAdmin);
         fakeUser.setValid(fakeUserValid);
         return fakeUser;
@@ -53,5 +57,11 @@ public class TestConfiguration {
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     RegisteredUserDTO getFakeRegisteredUserDTO() {
         return mapperService.convertUserToRegisteredUserDTO(getFakeUser());
+    }
+
+    @Bean("fakeEncodedPassword")
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    String getEncodedPassword() {
+        return encoder.encode(fakeUserPassword);
     }
 }

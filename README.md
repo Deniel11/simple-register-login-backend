@@ -27,7 +27,7 @@ This project is a simple register-login for users with token based authenticatio
 #### Test coverage:
 - Class: 100%
 - Method: 95%
-- Line: 87%
+- Line: 90%
 
 ## Guides
 
@@ -60,7 +60,7 @@ After that, you can use these endpoints:
     "username": "Alexander",
     "email": "alexander@email.com",
     "password": "password",
-    "birthdate": "11-11-2000"
+    "dateOfBirth": "11-11-2000"
   }
   ```
 
@@ -73,7 +73,7 @@ After that, you can use these endpoints:
     "id": 1,
     "username": "Alexander",
     "email": "alexander@email.com",
-    "birthdate": "11-11-2000",
+    "dateOfBirth": "11-11-2000",
     "admin": false,
     "valid": false
   }
@@ -126,7 +126,7 @@ After that, you can use these endpoints:
     "username": "Big Alexander",
     "email": "alexander@email.com",
     "password": "newPassword",
-    "birthdate": "11-11-2000",
+    "dateOfBirth": "11-11-2000",
     "admin": true,
     "valid": true
   }
@@ -144,7 +144,7 @@ After that, you can use these endpoints:
     "id": 1,
     "username": "Big Alexander",
     "email": "alexander@email.com",
-    "birthdate": "11-11-2000",
+    "dateOfBirth": "11-11-2000",
     "admin": true,
     "valid": true
   }
@@ -178,7 +178,7 @@ After that, you can use these endpoints:
     "id": 1,
     "username": "Big Alexander",
     "email": "alexander@email.com",
-    "birthdate": "11-11-2000",
+    "dateOfBirth": "11-11-2000",
     "admin": true,
     "valid": true
   }
@@ -212,7 +212,7 @@ After that, you can use these endpoints:
       "id": 1,
       "username": "Big Alexander",
       "email": "alexander@email.com",
-      "birthdate": "11-11-2000",
+      "dateOfBirth": "11-11-2000",
       "admin": true,
       "valid": true
     }
@@ -249,7 +249,7 @@ After that, you can use these endpoints:
         "id": 1,
         "username": "Big Alexander",
         "email": "alexander@email.com",
-        "birthdate": "11-11-2000",
+        "dateOfBirth": "11-11-2000",
         "admin": true,
         "valid": true
       },
@@ -257,7 +257,7 @@ After that, you can use these endpoints:
         "id": 2,
         "username": "Sanyi",
         "email": "sanyi@email.com",
-        "birthdate": "11-11-2000",
+        "dateOfBirth": "11-11-2000",
         "admin": false,
         "valid": false
         }

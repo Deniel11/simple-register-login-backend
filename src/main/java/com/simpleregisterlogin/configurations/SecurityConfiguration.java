@@ -95,6 +95,6 @@ public class SecurityConfiguration {
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
-        return new CustomAccessDeniedHandler(objectMapper);
+        return new CustomAccessDeniedHandler();
     }
 }

@@ -44,4 +44,14 @@ public class GlobalExceptionHandler extends ExceptionHandlerExceptionResolver {
     public ResponseEntity<Object> handleWrongDateFormatException(WrongDateFormatException exception) {
         return new ResponseEntity<>(new MessageDTO("error", exception.getMessage()), HttpStatus.NOT_ACCEPTABLE);
     }
+
+    @ExceptionHandler(value = CustomAccessDeniedException.class)
+    public ResponseEntity<Object> handleCustomAccessDeniedException(CustomAccessDeniedException exception) {
+        return new ResponseEntity<>(new MessageDTO("error", exception.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = ParameterMatchException.class)
+    public ResponseEntity<Object> handleParameterMatchException(ParameterMatchException exception) {
+        return new ResponseEntity<>(new MessageDTO("error", exception.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
 }

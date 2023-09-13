@@ -1,6 +1,7 @@
 package com.simpleregisterlogin.services;
 
 import com.simpleregisterlogin.dtos.RegisteredUserDTO;
+import com.simpleregisterlogin.dtos.UpdateUserDTO;
 import com.simpleregisterlogin.dtos.UserDTO;
 import com.simpleregisterlogin.entities.User;
 import org.modelmapper.ModelMapper;
@@ -30,5 +31,15 @@ public class MapperServiceImpl implements MapperService {
     @Override
     public User convertUserDTOtoUser(UserDTO userDTO) {
         return modelMapper.map(userDTO, User.class);
+    }
+
+    @Override
+    public UpdateUserDTO convertUserToUpdateUserDTO(User user) {
+        return modelMapper.map(user, UpdateUserDTO.class);
+    }
+
+    @Override
+    public User convertUpdateUserDTOToUser(UpdateUserDTO updateUserDTO) {
+        return modelMapper.map(updateUserDTO, User.class);
     }
 }

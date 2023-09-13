@@ -60,7 +60,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.username").value(fakeUserDTO.getUsername()))
                 .andExpect(jsonPath("$.email").value(fakeUserDTO.getEmail()))
-                .andExpect(jsonPath("$.birthdate").value(String.valueOf(fakeUserDTO.getBirthdate())));
+                .andExpect(jsonPath("$.dateOfBirth").value(String.valueOf(fakeUserDTO.getDateOfBirth())));
     }
 
     @Test
@@ -134,7 +134,7 @@ public class UserControllerTest {
     @Sql("/db/test/clear_tables.sql")
     void registration_WithWrongDateFormat_ReturnsExpectedErrorMessage() throws Exception {
         UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
-        fakeUserDTO.setBirthdate("01-01-2000000");
+        fakeUserDTO.setDateOfBirth("01-01-2000000");
         String userDTOJson = mapper.writeValueAsString(fakeUserDTO);
         MockHttpServletRequestBuilder requestBuilder = post("/api/user/registration")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -195,7 +195,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.username").value(fakeUser.getUsername()))
                 .andExpect(jsonPath("$.email").value(fakeUser.getEmail()))
-                .andExpect(jsonPath("$.birthdate").value(String.valueOf(fakeUser.getBirthdate())))
+                .andExpect(jsonPath("$.dateOfBirth").value(String.valueOf(fakeUser.getDateOfBirth())))
                 .andExpect(jsonPath("$.admin").value(fakeUser.getAdmin()))
                 .andExpect(jsonPath("$.valid").value(fakeUser.getValid()));
     }
@@ -229,7 +229,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.username").value(fakeUser.getUsername()))
                 .andExpect(jsonPath("$.email").value(fakeUser.getEmail()))
-                .andExpect(jsonPath("$.birthdate").value(String.valueOf(fakeUser.getBirthdate())))
+                .andExpect(jsonPath("$.dateOfBirth").value(String.valueOf(fakeUser.getDateOfBirth())))
                 .andExpect(jsonPath("$.admin").value(fakeUser.getAdmin()))
                 .andExpect(jsonPath("$.valid").value(fakeUser.getValid()));
     }
@@ -266,7 +266,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.users[0].id").value(id))
                 .andExpect(jsonPath("$.users[0].username").value(fakeUser.getUsername()))
                 .andExpect(jsonPath("$.users[0].email").value(fakeUser.getEmail()))
-                .andExpect(jsonPath("$.users[0].birthdate").value(String.valueOf(fakeUser.getBirthdate())))
+                .andExpect(jsonPath("$.users[0].dateOfBirth").value(String.valueOf(fakeUser.getDateOfBirth())))
                 .andExpect(jsonPath("$.users[0].admin").value(fakeUser.getAdmin()))
                 .andExpect(jsonPath("$.users[0].valid").value(fakeUser.getValid()));
     }
