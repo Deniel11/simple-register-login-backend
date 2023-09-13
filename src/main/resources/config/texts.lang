@@ -24,3 +24,4 @@ text.error.wrongEmailFormat=Wrong email format.
 text.error.wrongDateFormat=Accepted date format: [dd-mm-yyyy].
 text.error.accessDenied=Access Denied.
 text.error.parameterMatch=parameter is already same.
+text.error.invalidUser=Your user is not activated.

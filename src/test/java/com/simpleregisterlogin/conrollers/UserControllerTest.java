@@ -189,8 +189,8 @@ public class UserControllerTest {
     @Test
     @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
     void getUser_WithValidId_ReturnExceptedUser() throws Exception {
-        User fakeUser = beanFactory.getBean("fakeUser", User.class);
-        MockHttpServletRequestBuilder requestBuilder = get("/api/user/{id}", 1)
+        User fakeUser = beanFactory.getBean("fakeAdminUser", User.class);
+        MockHttpServletRequestBuilder requestBuilder = get("/api/user/{id}", 2)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)));
 
         mockMvc.perform(requestBuilder)
@@ -222,8 +222,8 @@ public class UserControllerTest {
     @Test
     @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
     void getOwnUser_WithValidId_ReturnExceptedUser() throws Exception {
-        User fakeUser = beanFactory.getBean("fakeUser", User.class);
-        fakeUser.setId(1L);
+        User fakeUser = beanFactory.getBean("fakeAdminUser", User.class);
+        fakeUser.setId(2L);
         MockHttpServletRequestBuilder requestBuilder = get("/api/user/")
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)));
 
@@ -257,8 +257,8 @@ public class UserControllerTest {
     @Test
     @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
     void getUsers_WithValidUsers_ReturnExceptedRegisteredUserDTOList() throws Exception {
-        Long id = 1L;
-        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        Long id = 2L;
+        User fakeUser = beanFactory.getBean("fakeAdminUser", User.class);
         fakeUser.setId(id);
         MockHttpServletRequestBuilder requestBuilder = get("/api/user/users")
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)));
@@ -267,19 +267,19 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.users.size()").value(2))
-                .andExpect(jsonPath("$.users[0].id").value(id))
-                .andExpect(jsonPath("$.users[0].username").value(fakeUser.getUsername()))
-                .andExpect(jsonPath("$.users[0].email").value(fakeUser.getEmail()))
-                .andExpect(jsonPath("$.users[0].dateOfBirth").value(String.valueOf(fakeUser.getDateOfBirth())))
-                .andExpect(jsonPath("$.users[0].admin").value(fakeUser.getAdmin()))
-                .andExpect(jsonPath("$.users[0].valid").value(fakeUser.getValid()));
+                .andExpect(jsonPath("$.users[1].id").value(id))
+                .andExpect(jsonPath("$.users[1].username").value(fakeUser.getUsername()))
+                .andExpect(jsonPath("$.users[1].email").value(fakeUser.getEmail()))
+                .andExpect(jsonPath("$.users[1].dateOfBirth").value(String.valueOf(fakeUser.getDateOfBirth())))
+                .andExpect(jsonPath("$.users[1].admin").value(fakeUser.getAdmin()))
+                .andExpect(jsonPath("$.users[1].valid").value(fakeUser.getValid()));
     }
 
     @Test
     @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
     void updateUser_WithValidUser_ReturnExceptedRegisteredUserDTO() throws Exception {
-        Long id = 1L;
-        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        Long id = 2L;
+        User fakeUser = beanFactory.getBean("fakeAdminUser", User.class);
         fakeUser.setId(id);
         UpdateUserDTO updateUserDTO = new UpdateUserDTO();
         updateUserDTO.setUsername("OtherUsername");

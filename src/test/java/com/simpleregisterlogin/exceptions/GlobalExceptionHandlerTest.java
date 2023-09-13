@@ -114,4 +114,11 @@ public class GlobalExceptionHandlerTest {
         MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleParameterMatchException(new ParameterMatchException(parameter)).getBody();
         Assertions.assertEquals(messageDTO.getMessage(), resultMessageDTO != null ? resultMessageDTO.getMessage() : null);
     }
+
+    @Test
+    void invalidUserException_WithoutParameter_ReturnGivenParameterAndMessage() {
+        MessageDTO messageDTO = new MessageDTO(texts.getError(), texts.getInvalidUserText());
+        MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleInvalidUserException(new InvalidUserException()).getBody();
+        Assertions.assertEquals(messageDTO.getMessage(), resultMessageDTO != null ? resultMessageDTO.getMessage() : null);
+    }
 }

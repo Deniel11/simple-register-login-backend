@@ -15,6 +15,7 @@ This project is a simple register-login for users with token based authenticatio
 - Environment Variables
   - Database Connection
   - Secret Key
+- Read texts from file
 - User APIs
   - Register
   - Login
@@ -26,8 +27,8 @@ This project is a simple register-login for users with token based authenticatio
 
 #### Test coverage:
 - Class: 100%
-- Method: 97%
-- Line: 91%
+- Method: 96%
+- Line: 93%
 
 ## Guides
 
@@ -50,6 +51,8 @@ JWT_SECRET_KEY=[SELECT YOUR SECRET KEY]
 
 After that, you can use these endpoints:
 
+First registration is validated, and you get admin rights. (First ID)
+
 -----
 - **POST** - *[YOUR DOMAIN]*/api/user/registration
   
@@ -68,6 +71,8 @@ After that, you can use these endpoints:
 
 
   Status code: 201
+
+  Body:
   ```
   {
     "id": 1,
@@ -95,6 +100,8 @@ After that, you can use these endpoints:
 
 
   Status code: 200
+
+  Body:
   ```
   {
     "status": "ok",
@@ -106,6 +113,7 @@ After that, you can use these endpoints:
 - **PUT** - *[YOUR DOMAIN]*/api/user/{id}
   - For use these, you need token from login.
   - You can change only 1 parameter like "username" or "password".
+  - You need admin role for change other user or change admin role or valid parameter.
   - You can change multiple parameter like this:
 
 

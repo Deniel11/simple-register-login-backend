@@ -2,6 +2,7 @@ package com.simpleregisterlogin.security;
 
 import com.simpleregisterlogin.entities.User;
 import com.simpleregisterlogin.exceptions.InvalidTokenException;
+import com.simpleregisterlogin.exceptions.InvalidUserException;
 import com.simpleregisterlogin.exceptions.UserNotFoundException;
 import com.simpleregisterlogin.repositories.UserRepository;
 import com.simpleregisterlogin.utils.JwtUtil;
@@ -28,9 +29,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetailsImpl loadUserByUsername(String username) throws UserNotFoundException {
         Optional<User> user = userRepository.findUserByUsername(username);
-
-        user.orElseThrow(UserNotFoundException::new);
-
+        User checkValidUser = user.orElseThrow(UserNotFoundException::new);
+        if (checkValidUser.getId() == 1L) {
+            checkValidUser.setAdmin(true);
+            checkValidUser.setValid(true);
+            userRepository.save(checkValidUser);
+        }
+        if (!checkValidUser.getValid()) {
+            throw new InvalidUserException();
+        }
         return user.map(UserDetailsImpl::new).get();
     }
 

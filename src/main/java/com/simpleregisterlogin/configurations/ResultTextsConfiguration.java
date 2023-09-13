@@ -53,7 +53,7 @@ public class ResultTextsConfiguration {
     @Value("${text.error.accessDenied}")
     private String accessDeniedText;
 
-    @Value("$text.error.parameterMatch")
+    @Value("${text.error.parameterMatch}")
     private String parameterMatchText;
 
     @Value("${text.username}")
@@ -74,7 +74,7 @@ public class ResultTextsConfiguration {
     @Value("${text.valid}")
     private String validText;
 
-    @Value("$text.id")
+    @Value("${text.id}")
     private String idText;
 
     @Value("${text.accessDeniedOne}")
@@ -85,6 +85,9 @@ public class ResultTextsConfiguration {
 
     @Value("${text.empty}")
     private String emptyText;
+
+    @Value("${text.error.invalidUser}")
+    private String invalidUserText;
 
     public String getOk() {
         return ok;
@@ -188,5 +191,9 @@ public class ResultTextsConfiguration {
 
     public String getEmptyText() {
         return emptyText;
+    }
+
+    public String getInvalidUserText() {
+        return invalidUserText;
     }
 }

@@ -21,12 +21,15 @@ public class UserDetailsImpl implements UserDetails {
 
     private final Long id;
 
+    private final boolean enabled;
+
     public UserDetailsImpl(User user) {
         username = user.getUsername();
         password = user.getPassword();
         this.grantedAuthorityList = new ArrayList<>();
         this.admin = user.getAdmin();
         this.id = user.getId();
+        this.enabled = user.getValid();
         addRole();
     }
 
@@ -62,7 +65,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     public boolean isAdmin() {

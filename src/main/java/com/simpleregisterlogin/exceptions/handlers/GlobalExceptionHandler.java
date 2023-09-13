@@ -77,4 +77,9 @@ public class GlobalExceptionHandler extends ExceptionHandlerExceptionResolver {
     public ResponseEntity<Object> handleParameterMatchException(ParameterMatchException exception) {
         return new ResponseEntity<>(new MessageDTO(texts.getError(), exception.getMessage() + " " + texts.getParameterMatchText()), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(value = InvalidUserException.class)
+    public ResponseEntity<Object> handleInvalidUserException(InvalidUserException exception) {
+        return new ResponseEntity<>(new MessageDTO(texts.getError(), texts.getInvalidUserText()), HttpStatus.UNAUTHORIZED);
+    }
 }
