@@ -1,6 +1,7 @@
 package com.simpleregisterlogin.conrollers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simpleregisterlogin.configurations.ResultTextsConfiguration;
 import com.simpleregisterlogin.dtos.AuthenticationRequestDTO;
 import com.simpleregisterlogin.dtos.UpdateUserDTO;
 import com.simpleregisterlogin.dtos.UserDTO;
@@ -36,13 +37,16 @@ public class UserControllerTest {
 
     BeanFactory beanFactory;
 
+    ResultTextsConfiguration texts;
+
     @Autowired
-    public UserControllerTest(MockMvc mockMvc, UserRepository userRepository, JwtUtil jwtUtil, BeanFactory beanFactory) {
+    public UserControllerTest(MockMvc mockMvc, UserRepository userRepository, JwtUtil jwtUtil, BeanFactory beanFactory, ResultTextsConfiguration texts) {
         this.mockMvc = mockMvc;
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
         mapper = new ObjectMapper();
         this.beanFactory = beanFactory;
+        this.texts = texts;
     }
 
     @Test
@@ -76,8 +80,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Password must be 8 characters."));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getLowPasswordLengthTextPartOne() + " " + 8 + " " + texts.getLowPasswordLengthTextPartTwo()));
     }
 
     @Test
@@ -92,8 +96,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Username is already taken"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getUsernameText() + " " + texts.getParameterTakenText()));
     }
 
     @Test
@@ -109,8 +113,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Email is already taken"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getEmailText() + " " + texts.getParameterTakenText()));
     }
 
     @Test
@@ -126,8 +130,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Wrong email format"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getWrongEmailFormatText()));
     }
 
     @Test
@@ -143,8 +147,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Accepted date format: dd-mm-yyyy"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getWrongDateFormatText()));
     }
 
     @Test
@@ -160,7 +164,7 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("ok"))
+                .andExpect(jsonPath("$.status").value(texts.getOk()))
                 .andExpect(jsonPath("$.token").isString());
     }
 
@@ -178,8 +182,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Username or password is incorrect."));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getUserNotFoundText()));
     }
 
     @Test
@@ -211,8 +215,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("User with id " + id + " is not found"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getUserNotFoundTextWithLongPartOne() + " " + id + " " + texts.getUserNotFoundTextWithLongPartTwo()));
     }
 
     @Test
@@ -246,8 +250,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("User with id " + id + " is not found"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getUserNotFoundTextWithLongPartOne() + " " + id + " " + texts.getUserNotFoundTextWithLongPartTwo()));
     }
 
     @Test
@@ -313,8 +317,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Username parameter is already same"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getUsernameText() + " " + texts.getParameterMatchText()));
     }
 
     @Test
@@ -334,8 +338,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Email parameter is already same"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getEmailText() + " " + texts.getParameterMatchText()));
     }
 
     @Test
@@ -355,8 +359,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Password parameter is already same"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getPasswordText() + " " + texts.getParameterMatchText()));
     }
 
     @Test
@@ -376,8 +380,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Date of Birth parameter is already same"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getDateOfBirthText() + " " + texts.getParameterMatchText()));
     }
 
     @Test
@@ -397,8 +401,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("isAdmin parameter is already same"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getIsAdminText() + " " + texts.getParameterMatchText()));
     }
 
     @Test
@@ -418,8 +422,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("valid parameter is already same"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getValidText() + " " + texts.getParameterMatchText()));
     }
 
     @Test
@@ -440,8 +444,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Username is already taken"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getUsernameText() + " " + texts.getParameterTakenText()));
     }
 
     @Test
@@ -462,8 +466,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Email is already taken"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getEmailText() + " " + texts.getParameterTakenText()));
     }
 
     @Test
@@ -484,8 +488,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Wrong email format"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getWrongEmailFormatText()));
     }
 
     @Test
@@ -506,8 +510,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Password must be 8 characters."));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getLowPasswordLengthTextPartOne() + " " + 8 + " " + texts.getLowPasswordLengthTextPartTwo()));
     }
 
     @Test
@@ -528,7 +532,7 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value("error"))
-                .andExpect(jsonPath("$.message").value("Accepted date format: dd-mm-yyyy"));
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getWrongDateFormatText()));
     }
 }

@@ -1,5 +1,6 @@
 package com.simpleregisterlogin.services;
 
+import com.simpleregisterlogin.configurations.ResultTextsConfiguration;
 import com.simpleregisterlogin.dtos.*;
 import com.simpleregisterlogin.entities.User;
 import com.simpleregisterlogin.exceptions.*;
@@ -44,15 +45,18 @@ public class UserServiceImplTest {
 
     BeanFactory beanFactory;
 
+    ResultTextsConfiguration texts;
+
     @Autowired
-    public UserServiceImplTest(BeanFactory beanFactory) {
+    public UserServiceImplTest(BeanFactory beanFactory, ResultTextsConfiguration texts) {
         userRepository = Mockito.mock(UserRepository.class);
         encoder = Mockito.mock(BCryptPasswordEncoder.class);
         userDetailsService = Mockito.mock(UserDetailsServiceImpl.class);
         jwtUtil = Mockito.mock(JwtUtil.class);
         authenticationManager = Mockito.mock(AuthenticationManager.class);
         mapperService = Mockito.mock(MapperService.class);
-        userService = new UserServiceImpl(userRepository, encoder, userDetailsService, jwtUtil, authenticationManager, mapperService);
+        this.texts = texts;
+        userService = new UserServiceImpl(userRepository, encoder, userDetailsService, jwtUtil, authenticationManager, mapperService, texts);
         this.beanFactory = beanFactory;
     }
 

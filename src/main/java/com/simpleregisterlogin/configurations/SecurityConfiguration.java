@@ -31,11 +31,14 @@ public class SecurityConfiguration {
 
     private final JwtUtil jwtUtil;
 
+    private final ResultTextsConfiguration texts;
+
     @Autowired
-    public SecurityConfiguration(UserRepository userRepository, JwtRequestFilter jwtRequestFilter, JwtUtil jwtUtil) {
+    public SecurityConfiguration(UserRepository userRepository, JwtRequestFilter jwtRequestFilter, JwtUtil jwtUtil, ResultTextsConfiguration texts) {
         this.userRepository = userRepository;
         this.jwtRequestFilter = jwtRequestFilter;
         this.jwtUtil = jwtUtil;
+        this.texts = texts;
     }
 
     @Bean
@@ -86,7 +89,7 @@ public class SecurityConfiguration {
 
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new CustomAuthenticationEntryPoint();
+        return new CustomAuthenticationEntryPoint(texts);
     }
 
     @Bean

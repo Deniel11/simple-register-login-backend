@@ -1,5 +1,6 @@
 package com.simpleregisterlogin.services;
 
+import com.simpleregisterlogin.configurations.ResultTextsConfiguration;
 import com.simpleregisterlogin.dtos.*;
 import com.simpleregisterlogin.entities.User;
 import com.simpleregisterlogin.exceptions.*;
@@ -32,14 +33,17 @@ public class UserServiceImpl implements UserService {
 
     private final MapperService mapperService;
 
+    ResultTextsConfiguration texts;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder encoder, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager, MapperService mapperService) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder encoder, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager, MapperService mapperService, ResultTextsConfiguration texts) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.mapperService = mapperService;
+        this.texts = texts;
     }
 
     @Override
@@ -98,13 +102,13 @@ public class UserServiceImpl implements UserService {
 
     private void validateUsername(String username) {
         if (isUsernameTaken(username)) {
-            throw new ParameterTakenException("Username");
+            throw new ParameterTakenException(texts.getUsernameText());
         }
     }
 
     private void validateEmail(String email) {
         if (isEmailTaken(email)) {
-            throw new ParameterTakenException("Email");
+            throw new ParameterTakenException(texts.getEmailText());
         }
 
         if (!GeneralUtility.isValidEmail(email)) {
@@ -122,20 +126,18 @@ public class UserServiceImpl implements UserService {
         String parameter = getInvalidUsernameAndPasswordParameterNames(userDTO.getUsername(), userDTO.getPassword());
 
         if (GeneralUtility.isEmptyOrNull(userDTO.getEmail())) {
-            String parameterName = "Email";
             if (parameter.length() > 0) {
-                parameter += ", " + parameterName;
+                parameter += ", " + texts.getEmailText();
             } else {
-                parameter = parameterName;
+                parameter = texts.getEmailText();
             }
         }
 
         if (GeneralUtility.isEmptyOrNull(userDTO.getDateOfBirth())) {
-            String parameterName = "Date of birth";
             if (parameter.length() > 0) {
-                parameter += ", " + parameterName;
+                parameter += ", " + texts.getDateOfBirthText();
             } else {
-                parameter = parameterName;
+                parameter = texts.getDateOfBirthText();
             }
         }
         return parameter;
@@ -144,19 +146,17 @@ public class UserServiceImpl implements UserService {
     private String getInvalidUsernameAndPasswordParameterNames(String username, String password) {
         String parameter = "";
         if (GeneralUtility.isEmptyOrNull(username)) {
-            String parameterName = "Username";
             if (parameter.length() > 0) {
-                parameter += ", " + parameterName;
+                parameter += ", " + texts.getUsernameText();
             } else {
-                parameter = parameterName;
+                parameter = texts.getUsernameText();
             }
         }
         if (GeneralUtility.isEmptyOrNull(password)) {
-            String parameterName = "Password";
             if (parameter.length() > 0) {
-                parameter += ", " + parameterName;
+                parameter += ", " + texts.getPasswordText();
             } else {
-                parameter = parameterName;
+                parameter = texts.getPasswordText();
             }
         }
         return parameter;
@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
     public RegisteredUserDTO getUser(Long id) {
 
         if (id == null) {
-            throw new InvalidParameterException("id");
+            throw new InvalidParameterException(texts.getIdText());
         }
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         return mapperService.convertUserToRegisteredUserDTO(user);
@@ -202,11 +202,11 @@ public class UserServiceImpl implements UserService {
             }
         } else {
             if (updateUserDTO.getAdmin() != null || updateUserDTO.getValid() != null) {
-                throw new CustomAccessDeniedException("Edit: admin, valid");
+                throw new CustomAccessDeniedException(texts.getAccessDeniedOneText());
             }
 
             if (!id.equals(actualUserId)) {
-                throw new CustomAccessDeniedException("Edit: other user");
+                throw new CustomAccessDeniedException(texts.getAccessDeniedTwoText());
             }
             editedUser = userRepository.findById(actualUserId).orElseThrow(() -> new UserNotFoundException(actualUserId));
         }
@@ -223,7 +223,7 @@ public class UserServiceImpl implements UserService {
     private void updateUsername(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
         if (!GeneralUtility.isEmptyOrNull(updateUserDTO.getUsername())) {
             if (underUpdateUser.getUsername().equals(updateUserDTO.getUsername()) && ownUser) {
-                throw new ParameterMatchException("Username");
+                throw new ParameterMatchException(texts.getUsernameText());
             }
             validateUsername(updateUserDTO.getUsername());
 
@@ -234,7 +234,7 @@ public class UserServiceImpl implements UserService {
     private void updateEmail(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
         if (!GeneralUtility.isEmptyOrNull(updateUserDTO.getEmail())) {
             if (underUpdateUser.getEmail().equals(updateUserDTO.getEmail()) && ownUser) {
-                throw new ParameterMatchException("Email");
+                throw new ParameterMatchException(texts.getEmailText());
             }
             validateEmail(updateUserDTO.getEmail());
 
@@ -245,7 +245,7 @@ public class UserServiceImpl implements UserService {
     private void updatePassword(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
         if (!GeneralUtility.isEmptyOrNull(updateUserDTO.getPassword())) {
             if (encoder.matches(updateUserDTO.getPassword(), underUpdateUser.getPassword()) && ownUser) {
-                throw new ParameterMatchException("Password");
+                throw new ParameterMatchException(texts.getPasswordText());
             }
             validatePassword(updateUserDTO.getPassword());
 
@@ -256,7 +256,7 @@ public class UserServiceImpl implements UserService {
     private void updateDateOfBirth(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
         if (!GeneralUtility.isEmptyOrNull(updateUserDTO.getDateOfBirth())) {
             if (underUpdateUser.getDateOfBirth().equals(updateUserDTO.getDateOfBirth()) && ownUser) {
-                throw new ParameterMatchException("Date of Birth");
+                throw new ParameterMatchException(texts.getDateOfBirthText());
             }
             validateDateOfBirth(updateUserDTO.getDateOfBirth());
 
@@ -267,7 +267,7 @@ public class UserServiceImpl implements UserService {
     private void updateAdmin(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
         if (updateUserDTO.getAdmin() != null) {
             if (underUpdateUser.getAdmin() == updateUserDTO.getAdmin() && ownUser) {
-                throw new ParameterMatchException("isAdmin");
+                throw new ParameterMatchException(texts.getIsAdminText());
             }
             underUpdateUser.setAdmin(updateUserDTO.getAdmin());
         }
@@ -276,7 +276,7 @@ public class UserServiceImpl implements UserService {
     private void updateValid(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
         if (updateUserDTO.getValid() != null) {
             if (underUpdateUser.getValid() == updateUserDTO.getValid() && ownUser) {
-                throw new ParameterMatchException("valid");
+                throw new ParameterMatchException(texts.getValidText());
             }
             underUpdateUser.setValid(updateUserDTO.getValid());
         }

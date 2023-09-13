@@ -1,5 +1,6 @@
 package com.simpleregisterlogin.controllers;
 
+import com.simpleregisterlogin.configurations.ResultTextsConfiguration;
 import com.simpleregisterlogin.dtos.*;
 import com.simpleregisterlogin.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,12 @@ public class UserController {
 
     private final UserService userService;
 
+    private final ResultTextsConfiguration texts;
+
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ResultTextsConfiguration texts) {
         this.userService = userService;
+        this.texts = texts;
     }
 
     @PostMapping("/registration")
@@ -28,7 +32,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponseDTO> createAuthenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequest) {
         userService.authenticate(authenticationRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationResponseDTO("ok", userService.createAuthenticationToken(authenticationRequest)));
+        return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationResponseDTO(texts.getOk(), userService.createAuthenticationToken(authenticationRequest)));
     }
 
     @GetMapping("/{id}")
