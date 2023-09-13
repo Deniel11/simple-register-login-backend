@@ -1,6 +1,7 @@
 package com.simpleregisterlogin.configurations;
 
 import com.simpleregisterlogin.dtos.RegisteredUserDTO;
+import com.simpleregisterlogin.dtos.UpdateUserDTO;
 import com.simpleregisterlogin.dtos.UserDTO;
 import com.simpleregisterlogin.entities.User;
 import com.simpleregisterlogin.services.MapperService;
@@ -18,13 +19,19 @@ public class TestConfiguration {
 
     private final String fakeUserName = "fakeUser";
 
+    private final String fakeAdminUserName = "fakeAdminUser";
+
     private final String fakeUserEmail = "fake_user@email.com";
+
+    private final String fakeAdminUserEmail = "fake_admin_user@email.com";
 
     private final String fakeUserPassword = "password";
 
     private final String fakeUserDateOfBirth = "01-01-2001";
 
     private final boolean fakeUserAdmin = false;
+
+    private final boolean fakeAdminUserAdmin = true;
 
     private final boolean fakeUserValid = true;
 
@@ -47,6 +54,16 @@ public class TestConfiguration {
         return fakeUser;
     }
 
+    @Bean(name = "fakeAdminUser")
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    User getFakeAdminUser() {
+        User fakeUser = getFakeUser();
+        fakeUser.setUsername(fakeAdminUserName);
+        fakeUser.setEmail(fakeAdminUserEmail);
+        fakeUser.setAdmin(fakeAdminUserAdmin);
+        return fakeUser;
+    }
+
     @Bean(name = "fakeUserDTO")
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     UserDTO getFakeUserDTO() {
@@ -63,5 +80,11 @@ public class TestConfiguration {
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     String getEncodedPassword() {
         return encoder.encode(fakeUserPassword);
+    }
+
+    @Bean(name = "fakeUpdateUserDTO")
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    UpdateUserDTO getFakeUpdateUserDTO() {
+        return mapperService.convertUserToUpdateUserDTO(getFakeUser());
     }
 }

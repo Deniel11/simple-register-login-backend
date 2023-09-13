@@ -52,6 +52,6 @@ public class GlobalExceptionHandler extends ExceptionHandlerExceptionResolver {
 
     @ExceptionHandler(value = ParameterMatchException.class)
     public ResponseEntity<Object> handleParameterMatchException(ParameterMatchException exception) {
-        return new ResponseEntity<>(new MessageDTO("error", exception.getMessage()), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new MessageDTO("error", exception.getMessage()), HttpStatus.CONFLICT);
     }
 }

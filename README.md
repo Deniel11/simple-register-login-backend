@@ -26,12 +26,12 @@ This project is a simple register-login for users with token based authenticatio
 
 #### Test coverage:
 - Class: 100%
-- Method: 95%
-- Line: 90%
+- Method: 97%
+- Line: 91%
 
 ## Guides
 
-Before you want to use this project, you need setup your environment variables.
+Before you want to use this project, you need set up your environment variables.
 
 
 Or you can use env file ".env.sample".

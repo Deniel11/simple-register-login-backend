@@ -102,7 +102,7 @@ public class GlobalExceptionHandlerTest {
     @Test
     void parameterMatchException_WithParameter_ReturnGivenParameterAndMessage() {
         String parameter = "[THIS IS PARAMETER]";
-        MessageDTO messageDTO = new MessageDTO("error", parameter + " is already yours");
+        MessageDTO messageDTO = new MessageDTO("error", parameter + " parameter is already same");
         MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleParameterMatchException(new ParameterMatchException(parameter)).getBody();
         Assertions.assertEquals(messageDTO.getMessage(), resultMessageDTO.getMessage());
     }
