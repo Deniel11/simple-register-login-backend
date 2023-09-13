@@ -26,7 +26,7 @@ public class JwtUtilTest {
 
     @Test
     void extractAllClaims_WithInvalidToken_ThrowsInvalidTokenException() {
-        Assertions.assertThrows(InvalidTokenException.class, () ->  jwtUtil.extractAllClaims("to.ke.nn"));
+        Assertions.assertThrows(InvalidTokenException.class, () -> jwtUtil.extractAllClaims("to.ke.nn"));
     }
 
     @Test
@@ -38,7 +38,7 @@ public class JwtUtilTest {
 
     @Test
     void validateToken_WithInvalidToken_ThrowsInvalidTokenException() {
-        Assertions.assertThrows(InvalidTokenException.class, () ->  jwtUtil.validateToken("to.ke.nn", new UserDetailsImpl(new User())));
+        Assertions.assertThrows(InvalidTokenException.class, () -> jwtUtil.validateToken("to.ke.nn", new UserDetailsImpl(new User())));
     }
 
     @Test

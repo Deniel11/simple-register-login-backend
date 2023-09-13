@@ -12,35 +12,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.text.ParseException;
-
 @Configuration
 public class TestConfiguration {
-
-    private final String fakeUserName = "fakeUser";
-
-    private final String fakeAdminUserName = "fakeAdminUser";
-
-    private final String fakeUserEmail = "fake_user@email.com";
-
-    private final String fakeAdminUserEmail = "fake_admin_user@email.com";
-
-    private final String fakeUserPassword = "password";
-
-    private final String fakeUserDateOfBirth = "01-01-2001";
-
-    private final boolean fakeUserAdmin = false;
-
-    private final boolean fakeAdminUserAdmin = true;
-
-    private final boolean fakeUserValid = true;
 
     MapperService mapperService;
 
     BCryptPasswordEncoder encoder;
 
     @Autowired
-    public TestConfiguration(MapperService mapperService, BCryptPasswordEncoder encoder) throws ParseException {
+    public TestConfiguration(MapperService mapperService, BCryptPasswordEncoder encoder) {
         this.mapperService = mapperService;
         this.encoder = encoder;
     }
@@ -48,19 +28,27 @@ public class TestConfiguration {
     @Bean(name = "fakeUser")
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     User getFakeUser() {
+        String fakeUserName = "fakeUser";
+        String fakeUserEmail = "fake_user@email.com";
+        String fakeUserPassword = "password";
+        String fakeUserDateOfBirth = "01-01-2001";
+
         User fakeUser = new User(fakeUserName, fakeUserEmail, fakeUserPassword, fakeUserDateOfBirth);
-        fakeUser.setAdmin(fakeUserAdmin);
-        fakeUser.setValid(fakeUserValid);
+        fakeUser.setAdmin(false);
+        fakeUser.setValid(true);
         return fakeUser;
     }
 
     @Bean(name = "fakeAdminUser")
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     User getFakeAdminUser() {
+        String fakeAdminUserName = "fakeAdminUser";
+        String fakeAdminUserEmail = "fake_admin_user@email.com";
+
         User fakeUser = getFakeUser();
         fakeUser.setUsername(fakeAdminUserName);
         fakeUser.setEmail(fakeAdminUserEmail);
-        fakeUser.setAdmin(fakeAdminUserAdmin);
+        fakeUser.setAdmin(true);
         return fakeUser;
     }
 
@@ -79,7 +67,7 @@ public class TestConfiguration {
     @Bean("fakeEncodedPassword")
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     String getEncodedPassword() {
-        return encoder.encode(fakeUserPassword);
+        return encoder.encode(getFakeUser().getPassword());
     }
 
     @Bean(name = "fakeUpdateUserDTO")

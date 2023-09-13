@@ -146,7 +146,7 @@ public class UserServiceImplTest {
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
         AuthenticationRequestDTO authenticationRequest = new AuthenticationRequestDTO(fakeUser.getUsername(), fakeUser.getPassword());
         Mockito.when(authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())))
+                        .authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())))
                 .thenThrow(BadCredentialsException.class);
 
         Assertions.assertThrows(UserNotFoundException.class, () -> userService.authenticate(authenticationRequest));

@@ -283,7 +283,7 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", id)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateUserDTOJson);;
+                .content(updateUserDTOJson);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
@@ -308,7 +308,7 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", id)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateUserDTOJson);;
+                .content(updateUserDTOJson);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
@@ -329,7 +329,7 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", id)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateUserDTOJson);;
+                .content(updateUserDTOJson);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
@@ -350,7 +350,7 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", id)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateUserDTOJson);;
+                .content(updateUserDTOJson);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
@@ -371,7 +371,7 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", id)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateUserDTOJson);;
+                .content(updateUserDTOJson);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
@@ -392,7 +392,7 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", id)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateUserDTOJson);;
+                .content(updateUserDTOJson);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
@@ -413,7 +413,7 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", id)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateUserDTOJson);;
+                .content(updateUserDTOJson);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
@@ -435,7 +435,7 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", otherUserId)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateUserDTOJson);;
+                .content(updateUserDTOJson);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
@@ -457,7 +457,7 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", otherUserId)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateUserDTOJson);;
+                .content(updateUserDTOJson);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isConflict())
@@ -479,7 +479,7 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", otherUserId)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateUserDTOJson);;
+                .content(updateUserDTOJson);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotAcceptable())
@@ -501,7 +501,7 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", otherUserId)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateUserDTOJson);;
+                .content(updateUserDTOJson);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotAcceptable())
@@ -523,7 +523,7 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", otherUserId)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(updateUserDTOJson);;
+                .content(updateUserDTOJson);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotAcceptable())

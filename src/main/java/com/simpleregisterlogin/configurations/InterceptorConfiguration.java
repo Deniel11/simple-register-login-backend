@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class InterceptorConfiguration implements WebMvcConfigurer {
-    private GeneralInterceptor generalInterceptor;
+    private final GeneralInterceptor generalInterceptor;
 
     @Autowired
     public InterceptorConfiguration(GeneralInterceptor generalInterceptor) {

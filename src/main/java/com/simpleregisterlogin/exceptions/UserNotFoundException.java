@@ -2,15 +2,22 @@ package com.simpleregisterlogin.exceptions;
 
 public class UserNotFoundException extends RuntimeException {
 
+    private boolean isMessage;
+
     public UserNotFoundException() {
-        super("Username or password is incorrect.");
     }
 
     public UserNotFoundException(String username) {
-        super("User with name " + username + " is not found");
+        super(username);
+        isMessage = true;
     }
 
     public UserNotFoundException(Long id) {
-        super("User with id " + id + " is not found");
+        super(id.toString());
+        isMessage = false;
+    }
+
+    public boolean isMessage() {
+        return isMessage;
     }
 }

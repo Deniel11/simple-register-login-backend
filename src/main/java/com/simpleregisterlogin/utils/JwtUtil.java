@@ -38,11 +38,7 @@ public class JwtUtil {
 
     public boolean extractAdmin(String authorizationHeader) {
         Claims claims = extractAllClaims(extractTokenFromHeaderAuthorization(authorizationHeader));
-        if (claims.get("isAdmin").equals(true)) {
-            return true;
-        } else {
-            return false;
-        }
+        return claims.get("isAdmin").equals(true);
     }
 
     private Date extractExpiration(String token) {

@@ -1,9 +1,6 @@
 package com.simpleregisterlogin.controllers;
 
-import com.simpleregisterlogin.dtos.AuthenticationRequestDTO;
-import com.simpleregisterlogin.dtos.AuthenticationResponseDTO;
-import com.simpleregisterlogin.dtos.UpdateUserDTO;
-import com.simpleregisterlogin.dtos.UserDTO;
+import com.simpleregisterlogin.dtos.*;
 import com.simpleregisterlogin.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,33 +21,33 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<RegisteredUserDTO> registration(@RequestBody UserDTO userDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addNewUser(userDTO));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequest) {
+    public ResponseEntity<AuthenticationResponseDTO> createAuthenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequest) {
         userService.authenticate(authenticationRequest);
         return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationResponseDTO("ok", userService.createAuthenticationToken(authenticationRequest)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Long id) {
+    public ResponseEntity<RegisteredUserDTO> getUser(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(id));
     }
 
     @GetMapping("/")
-    public ResponseEntity<?> getOwnUser(HttpServletRequest request) {
+    public ResponseEntity<RegisteredUserDTO> getOwnUser(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getOwnUser(request));
     }
 
     @GetMapping("/users")
-    public ResponseEntity<?> getUsers() {
+    public ResponseEntity<RegisteredUserDTOList> getUsers() {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUsers());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UpdateUserDTO updateUserDTO, HttpServletRequest request) {
+    public ResponseEntity<RegisteredUserDTO> updateUser(@PathVariable Long id, @RequestBody UpdateUserDTO updateUserDTO, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(id, updateUserDTO, request));
     }
 }

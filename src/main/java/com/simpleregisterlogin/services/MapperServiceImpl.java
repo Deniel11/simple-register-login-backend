@@ -37,9 +37,4 @@ public class MapperServiceImpl implements MapperService {
     public UpdateUserDTO convertUserToUpdateUserDTO(User user) {
         return modelMapper.map(user, UpdateUserDTO.class);
     }
-
-    @Override
-    public User convertUpdateUserDTOToUser(UpdateUserDTO updateUserDTO) {
-        return modelMapper.map(updateUserDTO, User.class);
-    }
 }

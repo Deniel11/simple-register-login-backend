@@ -1,6 +1,5 @@
 package com.simpleregisterlogin.configurations;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleregisterlogin.repositories.UserRepository;
 import com.simpleregisterlogin.security.CustomAccessDeniedHandler;
 import com.simpleregisterlogin.security.CustomAuthenticationEntryPoint;
@@ -32,14 +31,11 @@ public class SecurityConfiguration {
 
     private final JwtUtil jwtUtil;
 
-    private final ObjectMapper objectMapper;
-
     @Autowired
-    public SecurityConfiguration(UserRepository userRepository, JwtRequestFilter jwtRequestFilter, JwtUtil jwtUtil, ObjectMapper objectMapper) {
+    public SecurityConfiguration(UserRepository userRepository, JwtRequestFilter jwtRequestFilter, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.jwtRequestFilter = jwtRequestFilter;
         this.jwtUtil = jwtUtil;
-        this.objectMapper = objectMapper;
     }
 
     @Bean
@@ -90,7 +86,7 @@ public class SecurityConfiguration {
 
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new CustomAuthenticationEntryPoint(objectMapper);
+        return new CustomAuthenticationEntryPoint();
     }
 
     @Bean

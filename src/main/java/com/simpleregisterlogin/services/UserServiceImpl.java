@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
     public RegisteredUserDTO updateUser(Long id, UpdateUserDTO updateUserDTO, HttpServletRequest request) {
         Long actualUserId = userDetailsService.extractIdFromRequest(request);
         boolean ownUser = true;
-        User editedUser = null;
+        User editedUser;
         if (userDetailsService.extractAdminFromRequest(request)) {
             if (id.equals(actualUserId)) {
                 editedUser = userRepository.findById(actualUserId).orElseThrow(() -> new UserNotFoundException(actualUserId));
@@ -256,7 +256,7 @@ public class UserServiceImpl implements UserService {
     private void updateDateOfBirth(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
         if (!GeneralUtility.isEmptyOrNull(updateUserDTO.getDateOfBirth())) {
             if (underUpdateUser.getDateOfBirth().equals(updateUserDTO.getDateOfBirth()) && ownUser) {
-                throw  new ParameterMatchException("Date of Birth");
+                throw new ParameterMatchException("Date of Birth");
             }
             validateDateOfBirth(updateUserDTO.getDateOfBirth());
 

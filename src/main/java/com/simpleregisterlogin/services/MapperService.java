@@ -14,6 +14,4 @@ public interface MapperService {
     User convertUserDTOtoUser(UserDTO userDTO);
 
     UpdateUserDTO convertUserToUpdateUserDTO(User user);
-
-    User convertUpdateUserDTOToUser(UpdateUserDTO updateUserDTO);
 }
