@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public interface UserService {
 
-    RegisteredUserDTO addNewUser(UserDTO userDTO);
+    RegisteredUserDTO addNewUser(UserDTO userDTO, String token);
 
     String createAuthenticationToken(AuthenticationRequestDTO authenticationRequest);
 
@@ -21,4 +21,6 @@ public interface UserService {
     RegisteredUserDTOList getUsers();
 
     RegisteredUserDTO updateUser(Long id, UpdateUserDTO updateUserDTO, HttpServletRequest request);
+
+    void verifyUser(String verificationToken);
 }

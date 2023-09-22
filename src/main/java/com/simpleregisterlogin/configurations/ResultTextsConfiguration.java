@@ -5,11 +5,53 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("classpath:config/texts.lang")
+@PropertySource("classpath:config/texts.sample")
 public class ResultTextsConfiguration {
 
     @Value("${text.ok}")
     private String ok;
+
+    @Value("${text.username}")
+    private String usernameText;
+
+    @Value("${text.email}")
+    private String emailText;
+
+    @Value("${text.password}")
+    private String passwordText;
+
+    @Value("${text.dateOfBirth}")
+    private String dateOfBirthText;
+
+    @Value("${text.isAdmin}")
+    private String isAdminText;
+
+    @Value("${text.valid}")
+    private String validText;
+
+    @Value("${text.id}")
+    private String idText;
+
+    @Value("${text.accessDeniedOne}")
+    private String accessDeniedOneText;
+
+    @Value("${text.accessDeniedTwo}")
+    private String accessDeniedTwoText;
+
+    @Value("${text.email.verifySubject}")
+    private String verifySubjectText;
+
+    @Value("${text.email.verifyButton}")
+    private String verifyButtonText;
+
+    @Value("${text.email.verifyContent.address}")
+    private String verifyContentAddressText;
+
+    @Value("${text.email.verifyContent}")
+    private String verifyContentText;
+
+    @Value("${text.email.beenVerify}")
+    private String beenVerifyText;
 
     @Value("${text.error}")
     private String error;
@@ -56,38 +98,20 @@ public class ResultTextsConfiguration {
     @Value("${text.error.parameterMatch}")
     private String parameterMatchText;
 
-    @Value("${text.username}")
-    private String usernameText;
+    @Value("${text.error.userNotActivated}")
+    private String userNotActivatedText;
 
-    @Value("${text.email}")
-    private String emailText;
+    @Value("${text.error.userNotEnabled}")
+    private String userNotEnabledText;
 
-    @Value("${text.password}")
-    private String passwordText;
+    @Value("${text.error.buildEmailMessageProblem}")
+    private String buildEmailMessageProblemText;
 
-    @Value("${text.dateOfBirth}")
-    private String dateOfBirthText;
+    @Value("${text.error.sendEmailMessageProblem}")
+    private String sendEmailMessageProblemText;
 
-    @Value("${text.isAdmin}")
-    private String isAdminText;
-
-    @Value("${text.valid}")
-    private String validText;
-
-    @Value("${text.id}")
-    private String idText;
-
-    @Value("${text.accessDeniedOne}")
-    private String accessDeniedOneText;
-
-    @Value("${text.accessDeniedTwo}")
-    private String accessDeniedTwoText;
-
-    @Value("${text.empty}")
-    private String emptyText;
-
-    @Value("${text.error.invalidUser}")
-    private String invalidUserText;
+    @Value("${text.error.userAlreadyVerified}")
+    private String userAlreadyVerifiedText;
 
     public String getOk() {
         return ok;
@@ -189,11 +213,43 @@ public class ResultTextsConfiguration {
         return accessDeniedTwoText;
     }
 
-    public String getEmptyText() {
-        return emptyText;
+    public String getUserNotActivatedText() {
+        return userNotActivatedText;
     }
 
-    public String getInvalidUserText() {
-        return invalidUserText;
+    public String getBuildEmailMessageProblemText() {
+        return buildEmailMessageProblemText;
+    }
+
+    public String getSendEmailMessageProblemText() {
+        return sendEmailMessageProblemText;
+    }
+
+    public String getUserNotEnabledText() {
+        return userNotEnabledText;
+    }
+
+    public String getVerifyButtonText() {
+        return verifyButtonText;
+    }
+
+    public String getVerifySubjectText() {
+        return verifySubjectText;
+    }
+
+    public String getVerifyContentAddressText() {
+        return verifyContentAddressText;
+    }
+
+    public String getVerifyContentText() {
+        return verifyContentText;
+    }
+
+    public String getUserAlreadyVerifiedText() {
+        return userAlreadyVerifiedText;
+    }
+
+    public String getBeenVerifyText() {
+        return beenVerifyText;
     }
 }

@@ -35,7 +35,8 @@ public class TestConfiguration {
 
         User fakeUser = new User(fakeUserName, fakeUserEmail, fakeUserPassword, fakeUserDateOfBirth);
         fakeUser.setAdmin(false);
-        fakeUser.setValid(true);
+        fakeUser.setVerified(true);
+        fakeUser.setEnabled(true);
         return fakeUser;
     }
 

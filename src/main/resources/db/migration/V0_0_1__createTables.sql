@@ -6,6 +6,8 @@ CREATE TABLE users (
     password VARCHAR(255),
     dateOfBirth VARCHAR(255),
     admin BIT NOT NULL,
-    valid BIT NOT NULL,
+    verified BIT NOT NULL,
+    verification_token VARCHAR(255),
+    enabled BIT NOT NULL,
     primary key (id)
 )

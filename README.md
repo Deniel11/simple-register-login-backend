@@ -1,57 +1,89 @@
-# Simple Register-Login backend project
+# Simple Register-Login Backend Project
 
-This project is a simple register-login for users with token based authentication and admin roles.
+This project is a simple register-login for users with token based authentication and admin roles, with email verification.
 
-### Project have:
+## Implementations:
+Java Gradle Project
+
+- Spring Boot Security
+- Spring Boot Security Test
+- Spring Boot Starter Web
+- Spring Boot Starter JPA
+- Spring Boot Starter Mail
+- Spring Boot Devtools
+- Spring Boot Starter Test
+- JSON Web Token
+- Flyway Core
+- Flyway MYSQL
+- Model Mapper
+- Hibernate
+- Mysql Connector
+- JUnit Vintage Engine 
+
+## Project Specifications:
 - Token Based Authentication
-- Admin and User based Authorize
+- Admin and User Based Authorization
 - Flyway Database Migration
 - Centralized Error Handling
-- Custom Exceptions
-- Logging
+- Customized Exceptions
+- Request Logging
 - Mapper Service
 - GitHub Actions
-  - CheckStyle
+  - Check Style
+  - Tests Check
 - Environment Variables
+  - Domain Name
   - Database Connection
   - Secret Key
-- Read texts from file
+  - Email Connection
+- Read Texts From File
 - User APIs
   - Register
   - Login
-  - Edit user
-  - GET user
-  - GET users
-- FakeUser for tests
-- SQL annotation for tests
+  - Edit User
+  - GET User
+  - GET Users
+- FakeUser For Tests
+- SQL Annotation For Tests
+- Email Validation with Verification API
+- Forgot Password with Forgot Password API
 
-#### Test coverage:
+### Test Coverage:
 - Class: 100%
 - Method: 96%
 - Line: 93%
 
 ## Guides
 
-Before you want to use this project, you need set up your environment variables.
+Before you use this project, you need to set up your environment variables.
 
 
 Or you can use env file ".env.sample".
 
 
-This look like:
+For example:
 ```
-DB_URL=jdbc:mysql://[YOUR MYSQL DOMAIN AND PORT]/[YOUR TABLE NAME]
+DOMAIN=[YOUR DOMAIN]
+DB_HOST=[YOUR MYSQL DOMAIN]
+DB_PORT=[YOUR MYSQL PORT]
+DB_DATABASE=[YOUR DATABASE NAME]
 DB_USERNAME=[YOUR MYSQL USERNAME]
 DB_PASSWORD=[YOUR MYSQL PASSWORD]
 HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
 HIBERNATE_DDL_AUTO=validate
 SHOW_SQL=true
 JWT_SECRET_KEY=[SELECT YOUR SECRET KEY]
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=[YOUR GMAIL USERNAME]
+MAIL_PASSWORD=[YOUR GMAIL APPLICATION PASSWORD]
 ```
+
+I use gmail for email service in my application, if you would like to use different one, then change the environment variables.
 
 After that, you can use these endpoints:
 
-First registration is validated, and you get admin rights. (First ID)
+The first registration is validated, and you get admin rights. (First ID)
 
 -----
 - **POST** - *[YOUR DOMAIN]*/api/user/registration
@@ -80,7 +112,8 @@ First registration is validated, and you get admin rights. (First ID)
     "email": "alexander@email.com",
     "dateOfBirth": "11-11-2000",
     "admin": false,
-    "valid": false
+    "verified": false,
+    "enabled": false
   }
   ```
 
@@ -111,9 +144,9 @@ First registration is validated, and you get admin rights. (First ID)
 
 -----
 - **PUT** - *[YOUR DOMAIN]*/api/user/{id}
-  - For use these, you need token from login.
-  - You can change only 1 parameter like "username" or "password".
-  - You need admin role for change other user or change admin role or valid parameter.
+  - To use this, you need the token from login.
+  - You can change only one parameter like "username" or "password".
+  - You need admin role to change other user or to change admin role or validate, enabled parameter.
   - You can change multiple parameter like this:
 
 
@@ -124,7 +157,7 @@ First registration is validated, and you get admin rights. (First ID)
   ```
   {
     "key": "Authorization",
-    "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
   }
   ```
 
@@ -136,7 +169,8 @@ First registration is validated, and you get admin rights. (First ID)
     "password": "newPassword",
     "dateOfBirth": "11-11-2000",
     "admin": true,
-    "valid": true
+    "verified": true,
+    "enabled": true
   }
   ```
 
@@ -154,13 +188,14 @@ First registration is validated, and you get admin rights. (First ID)
     "email": "alexander@email.com",
     "dateOfBirth": "11-11-2000",
     "admin": true,
-    "valid": true
+    "verified": true,
+    "enabled": true
   }
   ```
 
 -----
 - **GET** - *[YOUR DOMAIN]*/api/user/
-  - For use these, you need token from login.
+  - To use this, you need the token from login.
 
 
   **Request**:
@@ -170,7 +205,7 @@ First registration is validated, and you get admin rights. (First ID)
   ```
   {
     "key": "Authorization",
-    "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
   }
   ```
 
@@ -188,25 +223,27 @@ First registration is validated, and you get admin rights. (First ID)
     "email": "alexander@email.com",
     "dateOfBirth": "11-11-2000",
     "admin": true,
-    "valid": true
+    "verified": true,
+    "enabled": true
   }
   ```
 
 -----
 - **GET** - *[YOUR DOMAIN]*/api/user/{id}
-  - For use these, you need token from login.
+  - To use this, you need the token from login.
 
 
   **Request**:
   
   
   Header:
-    ```
-    {
-      "key": "Authorization",
-      "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
-    }
-    ```
+
+  ```
+  {
+    "key": "Authorization",
+    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+  }
+  ```
 
   **Response**:
   
@@ -215,21 +252,22 @@ First registration is validated, and you get admin rights. (First ID)
   
   
   Body:
-    ```
-    {
-      "id": 1,
-      "username": "Big Alexander",
-      "email": "alexander@email.com",
-      "dateOfBirth": "11-11-2000",
-      "admin": true,
-      "valid": true
-    }
-    ```
+  ```
+  {
+    "id": 1,
+    "username": "Big Alexander",
+    "email": "alexander@email.com",
+    "dateOfBirth": "11-11-2000",
+    "admin": true,
+    "verified": true,
+    "enabled": true
+  }
+  ```
 
 
 -----
 - **GET** - *[YOUR DOMAIN]*/api/user/users
-  - For use these, you need token from login.
+  - To use this, you need the token from login.
 
 
   **Request**:
@@ -239,7 +277,7 @@ First registration is validated, and you get admin rights. (First ID)
   ```
   {
     "key": "Authorization",
-    "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
   }
   ```
 
@@ -259,7 +297,8 @@ First registration is validated, and you get admin rights. (First ID)
         "email": "alexander@email.com",
         "dateOfBirth": "11-11-2000",
         "admin": true,
-        "valid": true
+        "verified": true,
+        "enabled": true
       },
       {
         "id": 2,
@@ -267,8 +306,9 @@ First registration is validated, and you get admin rights. (First ID)
         "email": "sanyi@email.com",
         "dateOfBirth": "11-11-2000",
         "admin": false,
-        "valid": false
-        }
+        "verified": false,
+        "enabled": false
+      }
     ]
   }
   ```

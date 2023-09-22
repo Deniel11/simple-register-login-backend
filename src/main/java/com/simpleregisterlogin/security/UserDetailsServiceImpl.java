@@ -2,7 +2,8 @@ package com.simpleregisterlogin.security;
 
 import com.simpleregisterlogin.entities.User;
 import com.simpleregisterlogin.exceptions.InvalidTokenException;
-import com.simpleregisterlogin.exceptions.InvalidUserException;
+import com.simpleregisterlogin.exceptions.UserNotActivatedException;
+import com.simpleregisterlogin.exceptions.UserNotEnabledException;
 import com.simpleregisterlogin.exceptions.UserNotFoundException;
 import com.simpleregisterlogin.repositories.UserRepository;
 import com.simpleregisterlogin.utils.JwtUtil;
@@ -32,11 +33,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User checkValidUser = user.orElseThrow(UserNotFoundException::new);
         if (checkValidUser.getId() == 1L) {
             checkValidUser.setAdmin(true);
-            checkValidUser.setValid(true);
+            checkValidUser.setVerified(true);
+            checkValidUser.setEnabled(true);
             userRepository.save(checkValidUser);
         }
-        if (!checkValidUser.getValid()) {
-            throw new InvalidUserException();
+        if (!checkValidUser.getVerified()) {
+            throw new UserNotActivatedException();
+        }
+        if (!checkValidUser.getEnabled()) {
+            throw new UserNotEnabledException();
         }
         return user.map(UserDetailsImpl::new).get();
     }

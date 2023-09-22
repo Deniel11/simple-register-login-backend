@@ -12,7 +12,9 @@ public class RegisteredUserDTO {
 
     private boolean admin;
 
-    private boolean valid;
+    private boolean verified;
+
+    private boolean enabled;
 
     public RegisteredUserDTO() {
     }
@@ -45,12 +47,12 @@ public class RegisteredUserDTO {
         this.admin = admin;
     }
 
-    public boolean getValid() {
-        return valid;
+    public boolean getVerified() {
+        return verified;
     }
 
-    public void setValid(boolean valid) {
-        this.valid = valid;
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
     public void setId(Long id) {
@@ -63,5 +65,13 @@ public class RegisteredUserDTO {
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

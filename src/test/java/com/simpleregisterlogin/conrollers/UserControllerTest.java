@@ -201,7 +201,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email").value(fakeUser.getEmail()))
                 .andExpect(jsonPath("$.dateOfBirth").value(String.valueOf(fakeUser.getDateOfBirth())))
                 .andExpect(jsonPath("$.admin").value(fakeUser.getAdmin()))
-                .andExpect(jsonPath("$.valid").value(fakeUser.getValid()));
+                .andExpect(jsonPath("$.verified").value(fakeUser.getVerified()))
+                .andExpect(jsonPath("$.enabled").value(fakeUser.getEnabled()));
     }
 
     @Test
@@ -235,7 +236,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email").value(fakeUser.getEmail()))
                 .andExpect(jsonPath("$.dateOfBirth").value(String.valueOf(fakeUser.getDateOfBirth())))
                 .andExpect(jsonPath("$.admin").value(fakeUser.getAdmin()))
-                .andExpect(jsonPath("$.valid").value(fakeUser.getValid()));
+                .andExpect(jsonPath("$.verified").value(fakeUser.getVerified()))
+                .andExpect(jsonPath("$.enabled").value(fakeUser.getEnabled()));
     }
 
     @Test
@@ -272,7 +274,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.users[1].email").value(fakeUser.getEmail()))
                 .andExpect(jsonPath("$.users[1].dateOfBirth").value(String.valueOf(fakeUser.getDateOfBirth())))
                 .andExpect(jsonPath("$.users[1].admin").value(fakeUser.getAdmin()))
-                .andExpect(jsonPath("$.users[1].valid").value(fakeUser.getValid()));
+                .andExpect(jsonPath("$.users[1].verified").value(fakeUser.getVerified()))
+                .andExpect(jsonPath("$.users[1].enabled").value(fakeUser.getEnabled()));
     }
 
     @Test
@@ -297,7 +300,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email").value(fakeUser.getEmail()))
                 .andExpect(jsonPath("$.dateOfBirth").value(String.valueOf(fakeUser.getDateOfBirth())))
                 .andExpect(jsonPath("$.admin").value(fakeUser.getAdmin()))
-                .andExpect(jsonPath("$.valid").value(fakeUser.getValid()));
+                .andExpect(jsonPath("$.verified").value(fakeUser.getVerified()))
+                .andExpect(jsonPath("$.enabled").value(fakeUser.getEnabled()));
     }
 
     @Test
@@ -412,7 +416,7 @@ public class UserControllerTest {
         User fakeUser = beanFactory.getBean("fakeAdminUser", User.class);
         fakeUser.setId(id);
         UpdateUserDTO updateUserDTO = new UpdateUserDTO();
-        updateUserDTO.setValid(fakeUser.getValid());
+        updateUserDTO.setVerified(fakeUser.getVerified());
         String updateUserDTOJson = mapper.writeValueAsString(updateUserDTO);
         MockHttpServletRequestBuilder requestBuilder = put("/api/user/{id}", id)
                 .header("Authorization", "Bearer " + jwtUtil.generateToken(new UserDetailsImpl(fakeUser)))

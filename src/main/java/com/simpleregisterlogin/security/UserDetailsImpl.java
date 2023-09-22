@@ -29,7 +29,7 @@ public class UserDetailsImpl implements UserDetails {
         this.grantedAuthorityList = new ArrayList<>();
         this.admin = user.getAdmin();
         this.id = user.getId();
-        this.enabled = user.getValid();
+        this.enabled = user.getEnabled();
         addRole();
     }
 

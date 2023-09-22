@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     private final MapperService mapperService;
 
-    ResultTextsConfiguration texts;
+    private final ResultTextsConfiguration texts;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder encoder, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager, MapperService mapperService, ResultTextsConfiguration texts) {
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RegisteredUserDTO addNewUser(UserDTO userDTO) {
+    public RegisteredUserDTO addNewUser(UserDTO userDTO, String token) {
         validateParameters(getInvalidRegistrationParameterNames(userDTO));
         validatePassword(userDTO.getPassword());
         validateUsername(userDTO.getUsername());
@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
 
         User user = mapperService.convertUserDTOtoUser(userDTO);
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setVerificationToken(token);
         userRepository.save(user);
 
         return mapperService.convertUserToRegisteredUserDTO(user);
@@ -201,7 +202,7 @@ public class UserServiceImpl implements UserService {
                 ownUser = false;
             }
         } else {
-            if (updateUserDTO.getAdmin() != null || updateUserDTO.getValid() != null) {
+            if (updateUserDTO.getAdmin() != null || updateUserDTO.getVerified() != null) {
                 throw new CustomAccessDeniedException(texts.getAccessDeniedOneText());
             }
 
@@ -274,11 +275,21 @@ public class UserServiceImpl implements UserService {
     }
 
     private void updateValid(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
-        if (updateUserDTO.getValid() != null) {
-            if (underUpdateUser.getValid() == updateUserDTO.getValid() && ownUser) {
+        if (updateUserDTO.getVerified() != null) {
+            if (underUpdateUser.getVerified() == updateUserDTO.getVerified() && ownUser) {
                 throw new ParameterMatchException(texts.getValidText());
             }
-            underUpdateUser.setValid(updateUserDTO.getValid());
+            underUpdateUser.setVerified(updateUserDTO.getVerified());
+        }
+    }
+
+    public void verifyUser(String verificationToken) {
+        User user = userRepository.findUserByVerificationToken(verificationToken).orElseThrow(() -> new UserNotFoundException());
+        if (user.getVerified()) {
+            throw new UserAlreadyVerifiedException();
+        } else {
+            user.setVerified(true);
+            userRepository.save(user);
         }
     }
 }

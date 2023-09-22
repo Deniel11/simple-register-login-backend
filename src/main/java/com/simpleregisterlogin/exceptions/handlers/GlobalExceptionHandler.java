@@ -78,8 +78,28 @@ public class GlobalExceptionHandler extends ExceptionHandlerExceptionResolver {
         return new ResponseEntity<>(new MessageDTO(texts.getError(), exception.getMessage() + " " + texts.getParameterMatchText()), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(value = InvalidUserException.class)
-    public ResponseEntity<Object> handleInvalidUserException(InvalidUserException exception) {
-        return new ResponseEntity<>(new MessageDTO(texts.getError(), texts.getInvalidUserText()), HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(value = UserNotActivatedException.class)
+    public ResponseEntity<Object> handleUserNotActivatedException(UserNotActivatedException exception) {
+        return new ResponseEntity<>(new MessageDTO(texts.getError(), texts.getUserNotActivatedText()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = UserNotEnabledException.class)
+    public ResponseEntity<Object> handleUserNotEnabledException(UserNotEnabledException exception) {
+        return new ResponseEntity<>(new MessageDTO(texts.getError(), texts.getUserNotEnabledText()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = BuildEmailMessageException.class)
+    public ResponseEntity<Object> handleBuildEmailMessageException(BuildEmailMessageException exception) {
+        return new ResponseEntity<>(new MessageDTO(texts.getError(), texts.getBuildEmailMessageProblemText()), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(value = SendEmailMessageException.class)
+    public ResponseEntity<Object> handleSendEmailMessageException(SendEmailMessageException exception) {
+        return new ResponseEntity<>(new MessageDTO(texts.getError(), texts.getSendEmailMessageProblemText()), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(value = UserAlreadyVerifiedException.class)
+    public ResponseEntity<Object> handleUserAlreadyVerifiedException(UserAlreadyVerifiedException exception) {
+        return new ResponseEntity<>(new MessageDTO("error", texts.getUserAlreadyVerifiedText()), HttpStatus.NOT_ACCEPTABLE);
     }
 }

@@ -23,7 +23,11 @@ public class User {
 
     private boolean admin;
 
-    private boolean valid;
+    private boolean verified;
+
+    private String verificationToken;
+
+    private boolean enabled;
 
     public User() {
     }
@@ -34,7 +38,8 @@ public class User {
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         admin = false;
-        valid = false;
+        verified = false;
+        enabled = false;
     }
 
     public Long getId() {
@@ -73,12 +78,12 @@ public class User {
         this.admin = admin;
     }
 
-    public boolean getValid() {
-        return valid;
+    public boolean getVerified() {
+        return verified;
     }
 
-    public void setValid(boolean valid) {
-        this.valid = valid;
+    public void setVerified(boolean valid) {
+        this.verified = valid;
     }
 
     public void setId(Long id) {
@@ -91,5 +96,21 @@ public class User {
 
     public void setDateOfBirth(String birthdate) {
         this.dateOfBirth = birthdate;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
+    public boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

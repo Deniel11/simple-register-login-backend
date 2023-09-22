@@ -62,75 +62,82 @@ public class UserServiceImplTest {
 
     @Test
     void addNewUser_WithValidUserDTO_ReturnCorrectRegisteredUserDTO() {
+        String verificationToken = "token";
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
-        fakeUser.setValid(false);
+        fakeUser.setVerified(false);
         UserDTO userDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
         RegisteredUserDTO fakeRegisteredUserDTO = beanFactory.getBean("fakeRegisteredUserDTO", RegisteredUserDTO.class);
         Mockito.when(mapperService.convertUserDTOtoUser(userDTO)).thenReturn(fakeUser);
         Mockito.when(mapperService.convertUserToRegisteredUserDTO(fakeUser)).thenReturn(fakeRegisteredUserDTO);
         Mockito.when(encoder.encode(fakeUser.getPassword())).thenReturn(fakeUser.getPassword());
 
-        Assertions.assertEquals(fakeRegisteredUserDTO.getUsername(), userService.addNewUser(userDTO).getUsername());
-        Assertions.assertEquals(fakeRegisteredUserDTO.getEmail(), userService.addNewUser(userDTO).getEmail());
-        Assertions.assertEquals(fakeRegisteredUserDTO.getDateOfBirth(), userService.addNewUser(userDTO).getDateOfBirth());
-        Assertions.assertEquals(fakeRegisteredUserDTO.getAdmin(), userService.addNewUser(userDTO).getAdmin());
-        Assertions.assertEquals(fakeRegisteredUserDTO.getValid(), userService.addNewUser(userDTO).getValid());
+        Assertions.assertEquals(fakeRegisteredUserDTO.getUsername(), userService.addNewUser(userDTO, verificationToken).getUsername());
+        Assertions.assertEquals(fakeRegisteredUserDTO.getEmail(), userService.addNewUser(userDTO, verificationToken).getEmail());
+        Assertions.assertEquals(fakeRegisteredUserDTO.getDateOfBirth(), userService.addNewUser(userDTO, verificationToken).getDateOfBirth());
+        Assertions.assertEquals(fakeRegisteredUserDTO.getAdmin(), userService.addNewUser(userDTO, verificationToken).getAdmin());
+        Assertions.assertEquals(fakeRegisteredUserDTO.getVerified(), userService.addNewUser(userDTO, verificationToken).getVerified());
     }
 
     @Test
     void addNewUser_WithMissingParameter_ThrowsInvalidParameterException() {
+        String verificationToken = "token";
         UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
         fakeUserDTO.setUsername("");
 
-        Assertions.assertThrows(InvalidParameterException.class, () -> userService.addNewUser(fakeUserDTO));
+        Assertions.assertThrows(InvalidParameterException.class, () -> userService.addNewUser(fakeUserDTO, verificationToken));
     }
 
     @Test
     void addNewUser_WithLowPasswordLength_ThrowsLowPasswordLengthException() {
+        String verificationToken = "token";
         UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
         fakeUserDTO.setPassword("pass");
 
-        Assertions.assertThrows(LowPasswordLengthException.class, () -> userService.addNewUser(fakeUserDTO));
+        Assertions.assertThrows(LowPasswordLengthException.class, () -> userService.addNewUser(fakeUserDTO, verificationToken));
     }
 
     @Test
     void addNewUser_WithTakenUsername_ThrowsParameterTakenException() {
+        String verificationToken = "token";
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
         UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
         Mockito.when(userRepository.findUserByUsername(fakeUserDTO.getUsername())).thenReturn(Optional.of(fakeUser));
 
-        Assertions.assertThrows(ParameterTakenException.class, () -> userService.addNewUser(fakeUserDTO));
+        Assertions.assertThrows(ParameterTakenException.class, () -> userService.addNewUser(fakeUserDTO, verificationToken));
     }
 
     @Test
     void addNewUser_WithTakenEmail_ThrowsParameterTakenException() {
+        String verificationToken = "token";
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
         fakeUser.setUsername("otherFakeUser");
         UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
         Mockito.when(userRepository.findUserByUsername(fakeUserDTO.getUsername())).thenReturn(Optional.empty());
         Mockito.when(userRepository.findUserByEmail(fakeUserDTO.getEmail())).thenReturn(Optional.of(fakeUser));
 
-        Assertions.assertThrows(ParameterTakenException.class, () -> userService.addNewUser(fakeUserDTO));
+        Assertions.assertThrows(ParameterTakenException.class, () -> userService.addNewUser(fakeUserDTO, verificationToken));
     }
 
     @Test
     void addNewUser_WithWrongEmailFormat_ThrowsWrongEmailFormatException() {
+        String verificationToken = "token";
         UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
         fakeUserDTO.setEmail("email@email");
         Mockito.when(userRepository.findUserByUsername(fakeUserDTO.getUsername())).thenReturn(Optional.empty());
         Mockito.when(userRepository.findUserByEmail(fakeUserDTO.getEmail())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(WrongEmailFormatException.class, () -> userService.addNewUser(fakeUserDTO));
+        Assertions.assertThrows(WrongEmailFormatException.class, () -> userService.addNewUser(fakeUserDTO, verificationToken));
     }
 
     @Test
     void addNewUser_WithWrongDateFormat_ThrowsWrongDateFormatException() {
+        String verificationToken = "token";
         UserDTO fakeUserDTO = beanFactory.getBean("fakeUserDTO", UserDTO.class);
         fakeUserDTO.setDateOfBirth("10.10.2000000");
         Mockito.when(userRepository.findUserByUsername(fakeUserDTO.getUsername())).thenReturn(Optional.empty());
         Mockito.when(userRepository.findUserByEmail(fakeUserDTO.getEmail())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(WrongDateFormatException.class, () -> userService.addNewUser(fakeUserDTO));
+        Assertions.assertThrows(WrongDateFormatException.class, () -> userService.addNewUser(fakeUserDTO, verificationToken));
     }
 
     @Test
@@ -355,7 +362,7 @@ public class UserServiceImplTest {
         Long id = 1L;
         User editedUser = beanFactory.getBean("fakeUser", User.class);
         UpdateUserDTO updateUserDTO = new UpdateUserDTO();
-        updateUserDTO.setValid(editedUser.getValid());
+        updateUserDTO.setVerified(editedUser.getVerified());
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         Mockito.when(userDetailsService.extractIdFromRequest(request)).thenReturn(id);

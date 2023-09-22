@@ -12,7 +12,9 @@ public class UpdateUserDTO {
 
     private Boolean admin;
 
-    private Boolean valid;
+    private Boolean verified;
+
+    private Boolean enabled;
 
     public UpdateUserDTO() {
     }
@@ -57,11 +59,19 @@ public class UpdateUserDTO {
         this.admin = admin;
     }
 
-    public Boolean getValid() {
-        return valid;
+    public Boolean getVerified() {
+        return verified;
     }
 
-    public void setValid(Boolean valid) {
-        this.valid = valid;
+    public void setVerified(Boolean verified) {
+        this.verified = verified;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

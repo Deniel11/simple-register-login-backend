@@ -116,9 +116,37 @@ public class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void invalidUserException_WithoutParameter_ReturnGivenParameterAndMessage() {
-        MessageDTO messageDTO = new MessageDTO(texts.getError(), texts.getInvalidUserText());
-        MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleInvalidUserException(new InvalidUserException()).getBody();
+    void userNotActivatedException_WithoutParameter_ReturnGivenParameterAndMessage() {
+        MessageDTO messageDTO = new MessageDTO(texts.getError(), texts.getUserNotActivatedText());
+        MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleUserNotActivatedException(new UserNotActivatedException()).getBody();
+        Assertions.assertEquals(messageDTO.getMessage(), resultMessageDTO != null ? resultMessageDTO.getMessage() : null);
+    }
+
+    @Test
+    void userNotEnabledException_WithoutParameter_ReturnGivenParameterAndMessage() {
+        MessageDTO messageDTO = new MessageDTO(texts.getError(), texts.getUserNotEnabledText());
+        MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleUserNotEnabledException(new UserNotEnabledException()).getBody();
+        Assertions.assertEquals(messageDTO.getMessage(), resultMessageDTO != null ? resultMessageDTO.getMessage() : null);
+    }
+
+    @Test
+    void buildEmailMessageException_WithoutParameter_ReturnGivenParameterAndMessage() {
+        MessageDTO messageDTO = new MessageDTO(texts.getError(), texts.getBuildEmailMessageProblemText());
+        MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleBuildEmailMessageException(new BuildEmailMessageException()).getBody();
+        Assertions.assertEquals(messageDTO.getMessage(), resultMessageDTO != null ? resultMessageDTO.getMessage() : null);
+    }
+
+    @Test
+    void sendEmailMessageException_WithoutParameter_ReturnGivenParameterAndMessage() {
+        MessageDTO messageDTO = new MessageDTO(texts.getError(), texts.getSendEmailMessageProblemText());
+        MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleSendEmailMessageException(new SendEmailMessageException()).getBody();
+        Assertions.assertEquals(messageDTO.getMessage(), resultMessageDTO != null ? resultMessageDTO.getMessage() : null);
+    }
+
+    @Test
+    void userAlreadyVerifiedException_WithoutParameter_ReturnGivenParameterAndMessage() {
+        MessageDTO messageDTO = new MessageDTO(texts.getError(), texts.getUserAlreadyVerifiedText());
+        MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleUserAlreadyVerifiedException(new UserAlreadyVerifiedException()).getBody();
         Assertions.assertEquals(messageDTO.getMessage(), resultMessageDTO != null ? resultMessageDTO.getMessage() : null);
     }
 }

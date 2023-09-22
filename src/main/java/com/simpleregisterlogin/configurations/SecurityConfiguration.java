@@ -31,14 +31,11 @@ public class SecurityConfiguration {
 
     private final JwtUtil jwtUtil;
 
-    private final ResultTextsConfiguration texts;
-
     @Autowired
-    public SecurityConfiguration(UserRepository userRepository, JwtRequestFilter jwtRequestFilter, JwtUtil jwtUtil, ResultTextsConfiguration texts) {
+    public SecurityConfiguration(UserRepository userRepository, JwtRequestFilter jwtRequestFilter, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.jwtRequestFilter = jwtRequestFilter;
         this.jwtUtil = jwtUtil;
-        this.texts = texts;
     }
 
     @Bean
@@ -61,7 +58,7 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(authorize -> authorize
-                        .antMatchers("/", "/api/user/registration", "/api/user/login").permitAll()
+                        .antMatchers("/", "/api/user/registration", "/api/user/login", "/api/user/verify-email").permitAll()
                         .antMatchers("/js/**", "/css/**", "/img/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception
@@ -89,7 +86,7 @@ public class SecurityConfiguration {
 
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new CustomAuthenticationEntryPoint(texts);
+        return new CustomAuthenticationEntryPoint();
     }
 
     @Bean
