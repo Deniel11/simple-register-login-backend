@@ -32,11 +32,13 @@ public class TestConfiguration {
         String fakeUserEmail = "fake_user@email.com";
         String fakeUserPassword = "password";
         String fakeUserDateOfBirth = "01-01-2001";
+        String fakeVerificationToken = "fakeVerificationToken";
 
         User fakeUser = new User(fakeUserName, fakeUserEmail, fakeUserPassword, fakeUserDateOfBirth);
         fakeUser.setAdmin(false);
         fakeUser.setVerified(true);
         fakeUser.setEnabled(true);
+        fakeUser.setVerificationToken(fakeVerificationToken);
         return fakeUser;
     }
 
@@ -45,11 +47,13 @@ public class TestConfiguration {
     User getFakeAdminUser() {
         String fakeAdminUserName = "fakeAdminUser";
         String fakeAdminUserEmail = "fake_admin_user@email.com";
+        String fakeAdminVerificationToken = "fakeAdminVerificationToken";
 
         User fakeUser = getFakeUser();
         fakeUser.setUsername(fakeAdminUserName);
         fakeUser.setEmail(fakeAdminUserEmail);
         fakeUser.setAdmin(true);
+        fakeUser.setVerificationToken(fakeAdminVerificationToken);
         return fakeUser;
     }
 

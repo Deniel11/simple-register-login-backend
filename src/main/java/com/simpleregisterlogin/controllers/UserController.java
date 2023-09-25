@@ -63,8 +63,8 @@ public class UserController {
     }
 
     @GetMapping("/verify-email")
-    public ResponseEntity<?> verifyEmailAddress(@RequestParam String token) {
+    public ResponseEntity<MessageDTO> verifyEmailAddress(@RequestParam String token) {
         userService.verifyUser(token);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageDTO(texts.getOk(), texts.getBeenVerifyText()));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO(texts.getOk(), texts.getBeenVerifyText()));
     }
 }

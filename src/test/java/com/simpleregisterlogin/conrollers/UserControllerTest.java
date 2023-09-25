@@ -539,4 +539,41 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.status").value(texts.getError()))
                 .andExpect(jsonPath("$.message").value(texts.getWrongDateFormatText()));
     }
+
+    @Test
+    @Sql({"/db/test/clear_tables.sql", "/db/test/insert_users.sql"})
+    void verifyEmailAddress_WithValidToken_ReturnOkStatusAndVerifyMessage() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = get("/api/user/verify-email?token={token}", "token");
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isAccepted())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(texts.getOk()))
+                .andExpect(jsonPath("$.message").value(texts.getBeenVerifyText()));
+    }
+
+    @Test
+    @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
+    void verifyEmailAddress_WithAlreadyVerifiedUser_ThrowExceptedErrorMessage() throws Exception {
+        User fakeUser = beanFactory.getBean("fakeAdminUser", User.class);
+        MockHttpServletRequestBuilder requestBuilder = get("/api/user/verify-email?token={token}", fakeUser.getVerificationToken());
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getUserAlreadyVerifiedText()));
+    }
+
+    @Test
+    @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
+    void verifyEmailAddress_WithInvalidToken_ThrowExceptedErrorMessage() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = get("/api/user/verify-email?token={token}", "invalidToken");
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(texts.getError()))
+                .andExpect(jsonPath("$.message").value(texts.getUserNotFoundText()));
+    }
 }

@@ -50,8 +50,8 @@ Java Gradle Project
 
 ### Test Coverage:
 - Class: 100%
-- Method: 96%
-- Line: 93%
+- Method: 97%
+- Line: 94%
 
 ## Guides
 
@@ -311,4 +311,30 @@ The first registration is validated, and you get admin rights. (First ID)
       }
     ]
   }
+  ```
+
+
+-----
+- **GET** - *[YOUR DOMAIN]*/api/user/verify-email
+  - To use this endpoint, you need request param with verification token.
+  Example:
+  ```
+    [YOUR DOMAIN]/api/user/verify-email?token=[YOUR VERIFICATION TOKEN]
+  ```
+  - When use registration, then gets an email with this link.
+  - Can check the verification token with MYSQL SELECT method.
+
+
+  **Response**:
+  
+  
+  Status code: 202
+  
+  
+  Body:
+  ```
+    {
+      "status": "ok",
+      "message": "Your email has been verified."
+    }
   ```
