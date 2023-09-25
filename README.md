@@ -1,5 +1,4 @@
 # Simple Register-Login Backend Project
-
 This project is a simple register-login for users with token based authentication and admin roles, with email verification.
 
 ## Implementations:
@@ -54,14 +53,13 @@ Java Gradle Project
 - Line: 94%
 
 ## Guides
-
-Before you use this project, you need to set up your environment variables.
-
+Before you use this project, you need to set up your environment variables
 
 Or you can use env file ".env.sample".
 
+<details>
+<summary><b>Environment Variables</b></summary>
 
-For example:
 ```
 DOMAIN=[YOUR DOMAIN]
 DB_HOST=[YOUR MYSQL DOMAIN]
@@ -78,18 +76,21 @@ MAIL_PORT=587
 MAIL_USERNAME=[YOUR GMAIL USERNAME]
 MAIL_PASSWORD=[YOUR GMAIL APPLICATION PASSWORD]
 ```
+</details>
 
-I use gmail for email service in my application, if you would like to use different one, then change the environment variables.
+> I use gmail for email service in my application, if you would like to use different one, then change the environment variables.
 
-After that, you can use these endpoints:
+> The first registration is validated, and you get admin rights. (First ID)
 
-The first registration is validated, and you get admin rights. (First ID)
+## Endpoints
 
 -----
-- **POST** - *[YOUR DOMAIN]*/api/user/registration
+<details>
+<summary> <b>POST</b> - <i>[YOUR DOMAIN]</i>/api/user/registration</summary>
   
-
-  **Request** Body:
+  **Request** 
+  
+  Body:
   ```
   {
     "username": "Alexander",
@@ -101,8 +102,7 @@ The first registration is validated, and you get admin rights. (First ID)
 
   **Response**:
 
-
-  Status code: 201
+  `Status code: 201`
 
   Body:
   ```
@@ -117,9 +117,76 @@ The first registration is validated, and you get admin rights. (First ID)
   }
   ```
 
------
-- **POST** - *[YOUR DOMAIN]*/api/user/login
+  **Errors**:
+- Invalid Parameter:
+  ```
+  Status code: 404
+  Body:
+  {
+    "status": "error",
+    "message": "[Parameter(s)] is required."
+  }
+  ```
+- Low Password Length:
+  ```
+  Status code: 406
+  Body:
+  {
+    "status": "error",
+    "message": "Password must be [8] characters."
+  }
+  ```
+- Parameter Taken:
+  ```
+  Status code: 409
+  Body:
+  {
+    "status": "error",
+    "message": "[Parameter] is already taken."
+  }
+  ```
+- Wrong Email Format:
+  ```
+  Status code: 406
+  Body:
+  {
+    "status": "error",
+    "message": "Wrong email format."
+  }
+  ```
+- Wrong Date Format:
+  ```
+  Status code: 406
+  Body:
+  {
+    "status": "error",
+    "message": "Accepted date format: [dd-mm-yyyy]."
+  }
+  ```
+- Build Email Message Error:
+  ```
+  Status code: 503
+  Body:
+  {
+    "status": "error",
+    "message": "Build email message problem."
+  }
+  ```
+- Send Email Message Error:
+  ```
+  Status code: 503
+  Body:
+  {
+    "status": "error",
+    "message": "Send email message problem."
+  }
+  ```
 
+</details>
+
+-----
+<details>
+<summary> <b>POST</b> - <i>[YOUR DOMAIN]</i>/api/user/login</summary>
 
   **Request** Body:
   ```
@@ -132,7 +199,7 @@ The first registration is validated, and you get admin rights. (First ID)
   **Response**:
 
 
-  Status code: 200
+  `Status code: 200`
 
   Body:
   ```
@@ -142,12 +209,54 @@ The first registration is validated, and you get admin rights. (First ID)
   }
   ```
 
+  **Errors**:
+- Invalid Parameter:
+  ```
+  Status code: 404
+  Body:
+  {
+    "status": "error",
+    "message": "[Parameter(s)] is required."
+  }
+  ```
+- User Not Found:
+  ```
+  Status code: 404
+  Body:
+  {
+    "status": "error",
+    "message": "Username or password is incorrect."
+  }
+  ```
+- User Not Activated:
+  ```
+  Status code: 401
+  Body:
+  {
+    "status": "error",
+    "message": "Your user is not activated."
+  }
+  ```
+- User Not Enabled:
+  ```
+  Status code: 401
+  Body:
+  {
+    "status": "error",
+    "message": "Your user is not enabled."
+  }
+  ```
+
+</details>
+
 -----
-- **PUT** - *[YOUR DOMAIN]*/api/user/{id}
-  - To use this, you need the token from login.
-  - You can change only one parameter like "username" or "password".
-  - You need admin role to change other user or to change admin role or validate, enabled parameter.
-  - You can change multiple parameter like this:
+<details>
+<summary> <b>PUT</b> - <i>[YOUR DOMAIN]</i>/api/user/user/{id}</summary>
+
+- To use this, you need the token from login.
+- You can change only one parameter like "username" or "password".
+- You need admin role to change other user or to change admin role or validate, enabled parameter. 
+- You can change multiple parameter like this:
 
 
   **Request**:
@@ -157,7 +266,7 @@ The first registration is validated, and you get admin rights. (First ID)
   ```
   {
     "key": "Authorization",
-    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+    "value": "Bearer [YOUR TOKEN]"
   }
   ```
 
@@ -175,44 +284,9 @@ The first registration is validated, and you get admin rights. (First ID)
   ```
 
   **Response**:
-  
-
-  Status code: 200 
-  
-
-  Body:
-  ```
-  {
-    "id": 1,
-    "username": "Big Alexander",
-    "email": "alexander@email.com",
-    "dateOfBirth": "11-11-2000",
-    "admin": true,
-    "verified": true,
-    "enabled": true
-  }
-  ```
-
------
-- **GET** - *[YOUR DOMAIN]*/api/user/
-  - To use this, you need the token from login.
 
 
-  **Request**:
-
-
-  Header:
-  ```
-  {
-    "key": "Authorization",
-    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
-  }
-  ```
-
-  **Response**:
-    
-
-  Status code: 200
+  `Status code: 200`
   
 
   Body:
@@ -228,8 +302,134 @@ The first registration is validated, and you get admin rights. (First ID)
   }
   ```
 
+**Errors**:
+- Custom Access Denied:
+  ```
+  Status code: 403
+  Body:
+  {
+    "status": "error",
+    "message": "Access Denied: Edit: admin, valid"
+  }
+  
+  OR
+  
+  {
+    "status": "error",
+    "message": "Access Denied: Edit: other user"
+  }
+  ```
+- User Not Found:
+  ```
+  Status code: 404
+  Body:
+  {
+    "status": "error",
+    "message": "User with id [id] is not found."
+  }
+  ```
+- Parameter Match:
+  ```
+  Status code: 409
+  Body:
+  {
+    "status": "error",
+    "message": "[Parameter] parameter is already same."
+  }
+  ```
+- Parameter Taken:
+  ```
+  Status code: 409
+  Body:
+  {
+    "status": "error",
+    "message": "[Parameter] is already taken."
+  }
+  ```
+- Wrong Email Format:
+  ```
+  Status code: 406
+  Body:
+  {
+    "status": "error",
+    "message": "Wrong email format."
+  }
+  ```
+- Wrong Date Format:
+  ```
+  Status code: 406
+  Body:
+  {
+    "status": "error",
+    "message": "Accepted date format: [dd-mm-yyyy]."
+  }
+  ```
+- Low Password Length:
+  ```
+  Status code: 406
+  Body:
+  {
+    "status": "error",
+    "message": "Password must be [8] characters."
+  }
+  ```
+
+</details>
+
 -----
-- **GET** - *[YOUR DOMAIN]*/api/user/{id}
+<details>
+<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/user/</summary>
+
+  - To use this, you need the token from login.
+
+
+  **Request**:
+
+
+  Header:
+  ```
+  {
+    "key": "Authorization",
+    "value": "Bearer [YOUR TOKEN]"
+  }
+  ```
+
+  **Response**:
+
+
+  `Status code: 200`
+  
+
+  Body:
+  ```
+  {
+    "id": 1,
+    "username": "Big Alexander",
+    "email": "alexander@email.com",
+    "dateOfBirth": "11-11-2000",
+    "admin": true,
+    "verified": true,
+    "enabled": true
+  }
+  ```
+
+  **Errors**:
+- User Not Found:
+  ```
+  Status code: 404
+  Body:
+  {
+    "status": "error",
+    "message": "User with id [id] is not found."
+  }
+  ```
+
+</details>
+
+-----
+<details>
+<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/user/{id}</summary>
+
   - To use this, you need the token from login.
 
 
@@ -241,14 +441,14 @@ The first registration is validated, and you get admin rights. (First ID)
   ```
   {
     "key": "Authorization",
-    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+    "value": "Bearer [YOUR TOKEN]"
   }
   ```
 
   **Response**:
-  
-  
-  Status code: 200
+
+
+  `Status code: 200`
   
   
   Body:
@@ -264,9 +464,32 @@ The first registration is validated, and you get admin rights. (First ID)
   }
   ```
 
+  **Errors**:
+- Invalid Parameter:
+  ```
+  Status code: 404
+  Body:
+  {
+    "status": "error",
+    "message": "[Parameter(s)] is required."
+  }
+  ```
+- User Not Found:
+  ```
+  Status code: 404
+  Body:
+  {
+    "status": "error",
+    "message": "User with id [id] is not found."
+  }
+  ```
+
+</details>
 
 -----
-- **GET** - *[YOUR DOMAIN]*/api/user/users
+<details>
+<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/user/users</summary>
+
   - To use this, you need the token from login.
 
 
@@ -277,14 +500,14 @@ The first registration is validated, and you get admin rights. (First ID)
   ```
   {
     "key": "Authorization",
-    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTYW55aTIiLCJpc0FkbWluIjpmYWxzZSwiZXhwIjoxNjk0NDY4MDMyLCJpYXQiOjE2OTQ0MzIwMzJ9.-2dwWhCcuMKoD3RgNHt_LO1toXmbZdFhKlKV4EpltoM"
+    "value": "Bearer [YOUR TOKEN]"
   }
   ```
 
   **Response**:
-    
 
-  Status code: 200
+
+  `Status code: 200`
   
 
   Body:
@@ -313,22 +536,24 @@ The first registration is validated, and you get admin rights. (First ID)
   }
   ```
 
+</details>
 
 -----
-- **GET** - *[YOUR DOMAIN]*/api/user/verify-email
+<details>
+<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/user/verify-email</summary>
   - To use this endpoint, you need request param with verification token.
   Example:
   ```
     [YOUR DOMAIN]/api/user/verify-email?token=[YOUR VERIFICATION TOKEN]
   ```
   - When use registration, then gets an email with this link.
-  - Can check the verification token with MYSQL SELECT method.
+  - You can check it the verification token with MYSQL SELECT method.
 
 
   **Response**:
-  
-  
-  Status code: 202
+
+
+  `Status code: 202`
   
   
   Body:
@@ -338,3 +563,7 @@ The first registration is validated, and you get admin rights. (First ID)
       "message": "Your email has been verified."
     }
   ```
+
+</details>
+
+-----
