@@ -571,9 +571,9 @@ public class UserControllerTest {
         MockHttpServletRequestBuilder requestBuilder = get("/api/user/verify-email?token={token}", "invalidToken");
 
         mockMvc.perform(requestBuilder)
-                .andExpect(status().isNotFound())
+                .andExpect(status().isForbidden())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(texts.getError()))
-                .andExpect(jsonPath("$.message").value(texts.getUserNotFoundText()));
+                .andExpect(jsonPath("$.message").value(texts.getInvalidTokenText() + "."));
     }
 }

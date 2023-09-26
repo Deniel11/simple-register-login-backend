@@ -47,10 +47,13 @@ Java Gradle Project
 - Email Validation with Verification API
 - Forgot Password with Forgot Password API
 
-### Test Coverage:
+## Tests:
+### Unit test: 76
+### Integration test: 28
+### Coverage:
 - Class: 100%
 - Method: 97%
-- Line: 94%
+- Line: 93
 
 ## Guides
 Before you use this project, you need to set up your environment variables
@@ -305,8 +308,15 @@ MAIL_PASSWORD=[YOUR GMAIL APPLICATION PASSWORD]
 **Errors**:
 - Custom Access Denied:
   ```
-  Status code: 403
+  Status code: 401
   Body:
+  {
+    "status": "error",
+    "message": "Access Denied."
+  }
+  
+  OR
+  
   {
     "status": "error",
     "message": "Access Denied: Edit: admin, valid"
@@ -414,6 +424,15 @@ MAIL_PASSWORD=[YOUR GMAIL APPLICATION PASSWORD]
   ```
 
   **Errors**:
+- Custom Access Denied:
+  ```
+  Status code: 401
+  Body:
+  {
+    "status": "error",
+    "message": "Access Denied."
+  }
+  ```
 - User Not Found:
   ```
   Status code: 404
@@ -465,6 +484,15 @@ MAIL_PASSWORD=[YOUR GMAIL APPLICATION PASSWORD]
   ```
 
   **Errors**:
+- Custom Access Denied:
+  ```
+  Status code: 401
+  Body:
+  {
+    "status": "error",
+    "message": "Access Denied."
+  }
+  ```
 - Invalid Parameter:
   ```
   Status code: 404
@@ -536,12 +564,25 @@ MAIL_PASSWORD=[YOUR GMAIL APPLICATION PASSWORD]
   }
   ```
 
+  **Errors**:
+- Custom Access Denied:
+  ```
+  Status code: 401
+  Body:
+  {
+    "status": "error",
+    "message": "Access Denied."
+  }
+  ```
+
 </details>
 
 -----
 <details>
 <summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/user/verify-email</summary>
+
   - To use this endpoint, you need request param with verification token.
+
   Example:
   ```
     [YOUR DOMAIN]/api/user/verify-email?token=[YOUR VERIFICATION TOKEN]
@@ -562,6 +603,26 @@ MAIL_PASSWORD=[YOUR GMAIL APPLICATION PASSWORD]
       "status": "ok",
       "message": "Your email has been verified."
     }
+  ```
+
+  **Errors**:
+- User Already Verified:
+  ```
+  Status code: 406
+  Body:
+  {
+    "status": "error",
+    "message": "This user has already been verified!"
+  }
+  ```
+- Invalid Token:
+```
+  Status code: 403
+  Body:
+  {
+    "status": "error",
+    "message": "Invalid token."
+  }
   ```
 
 </details>

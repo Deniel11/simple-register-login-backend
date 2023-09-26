@@ -36,7 +36,13 @@ public class GlobalExceptionHandler extends ExceptionHandlerExceptionResolver {
 
     @ExceptionHandler(value = InvalidTokenException.class)
     public ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException exception) {
-        return new ResponseEntity<>(new MessageDTO(texts.getError(), texts.getInvalidTokenText() + " " + exception.getMessage()), HttpStatus.FORBIDDEN);
+        String message = texts.getInvalidTokenText();
+        if (GeneralUtility.isEmptyOrNull(exception.getMessage())) {
+            message += ".";
+        } else {
+            message += ": " + exception.getMessage();
+        }
+        return new ResponseEntity<>(new MessageDTO(texts.getError(), message), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(value = InvalidParameterException.class)

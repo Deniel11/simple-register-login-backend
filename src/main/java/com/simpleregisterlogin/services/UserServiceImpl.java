@@ -284,7 +284,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public void verifyUser(String verificationToken) {
-        User user = userRepository.findUserByVerificationToken(verificationToken).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findUserByVerificationToken(verificationToken).orElseThrow(() -> new InvalidTokenException());
         if (user.getVerified()) {
             throw new UserAlreadyVerifiedException();
         } else {

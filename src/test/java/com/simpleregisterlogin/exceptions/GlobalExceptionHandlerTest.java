@@ -49,7 +49,7 @@ public class GlobalExceptionHandlerTest {
     @Test
     void invalidTokenException_WithToken_ReturnGivenTokenAndMessage() {
         String token = "[THIS IS TOKEN]";
-        MessageDTO messageDTO = new MessageDTO(texts.getError(), texts.getInvalidTokenText() + " " + token);
+        MessageDTO messageDTO = new MessageDTO(texts.getError(), texts.getInvalidTokenText() + ": " + token);
         MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleInvalidTokenException(new InvalidTokenException(token)).getBody();
         Assertions.assertEquals(messageDTO.getMessage(), resultMessageDTO != null ? resultMessageDTO.getMessage() : null);
     }
