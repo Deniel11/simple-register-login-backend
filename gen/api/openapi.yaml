@@ -1,0 +1,261 @@
+openapi: 3.0.3
+info:
+  description: simple_register_login API
+  title: simple_register_login API
+  version: 1.0.0
+servers:
+- url: https://simple_register_login
+paths:
+  /api/user/registration:
+    post:
+      operationId: registration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RegisteredUserDTO'
+          description: OK
+      summary: POST api/user/registration
+      x-contentType: application/json
+      x-accepts: '*/*'
+  /api/user/login:
+    post:
+      operationId: createAuthenticationToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationRequestDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponseDTO'
+          description: OK
+      summary: POST api/user/login
+      x-contentType: application/json
+      x-accepts: '*/*'
+  /api/user/{id}:
+    get:
+      operationId: getUser
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RegisteredUserDTO'
+          description: OK
+      summary: GET api/user/{id}
+      x-accepts: '*/*'
+    put:
+      operationId: updateUser
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RegisteredUserDTO'
+          description: OK
+      summary: PUT api/user/{id}
+      x-contentType: application/json
+      x-accepts: '*/*'
+  /api/user:
+    get:
+      operationId: getOwnUser
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RegisteredUserDTO'
+          description: OK
+      summary: GET api/user
+      x-accepts: '*/*'
+  /api/user/users:
+    get:
+      operationId: getUsers
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RegisteredUserDTOList'
+          description: OK
+      summary: GET api/user/users
+      x-accepts: '*/*'
+  /api/user/verify-email:
+    get:
+      operationId: verifyEmailAddress
+      parameters:
+      - explode: true
+        in: query
+        name: token
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+          description: OK
+      summary: GET api/user/verify-email
+      x-accepts: '*/*'
+components:
+  schemas:
+    UserDTO:
+      example:
+        password: password
+        dateOfBirth: dateOfBirth
+        email: email
+        username: username
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        dateOfBirth:
+          type: string
+      type: object
+    RegisteredUserDTO:
+      example:
+        verified: true
+        admin: true
+        dateOfBirth: dateOfBirth
+        id: 0
+        email: email
+        enabled: true
+        username: username
+      properties:
+        id:
+          format: int64
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        dateOfBirth:
+          type: string
+        admin:
+          type: boolean
+        verified:
+          type: boolean
+        enabled:
+          type: boolean
+      type: object
+    AuthenticationRequestDTO:
+      example:
+        password: password
+        username: username
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      type: object
+    AuthenticationResponseDTO:
+      example:
+        status: status
+        token: token
+      properties:
+        status:
+          type: string
+        token:
+          type: string
+      type: object
+    RegisteredUserDTOList:
+      example:
+        users:
+        - verified: true
+          admin: true
+          dateOfBirth: dateOfBirth
+          id: 0
+          email: email
+          enabled: true
+          username: username
+        - verified: true
+          admin: true
+          dateOfBirth: dateOfBirth
+          id: 0
+          email: email
+          enabled: true
+          username: username
+      properties:
+        users:
+          items:
+            $ref: '#/components/schemas/RegisteredUserDTO'
+          type: array
+      type: object
+    UpdateUserDTO:
+      example:
+        password: password
+        verified: true
+        admin: true
+        dateOfBirth: dateOfBirth
+        email: email
+        enabled: true
+        username: username
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        dateOfBirth:
+          type: string
+        admin:
+          type: boolean
+        verified:
+          type: boolean
+        enabled:
+          type: boolean
+      type: object
+    MessageDTO:
+      example:
+        message: message
+        status: status
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+      type: object
+

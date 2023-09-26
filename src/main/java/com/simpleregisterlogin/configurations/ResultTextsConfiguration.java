@@ -117,6 +117,62 @@ public class ResultTextsConfiguration {
         return ok;
     }
 
+    public String getUsernameText() {
+        return usernameText;
+    }
+
+    public String getEmailText() {
+        return emailText;
+    }
+
+    public String getPasswordText() {
+        return passwordText;
+    }
+
+    public String getDateOfBirthText() {
+        return dateOfBirthText;
+    }
+
+    public String getIsAdminText() {
+        return isAdminText;
+    }
+
+    public String getValidText() {
+        return validText;
+    }
+
+    public String getIdText() {
+        return idText;
+    }
+
+    public String getAccessDeniedOneText() {
+        return accessDeniedOneText;
+    }
+
+    public String getAccessDeniedTwoText() {
+        return accessDeniedTwoText;
+    }
+
+    public String getVerifySubjectText() {
+        return verifySubjectText;
+    }
+
+    public String getVerifyButtonText() {
+        return verifyButtonText;
+    }
+
+    public String getVerifyContentAddressText() {
+        return verifyContentAddressText;
+    }
+
+    public String getVerifyContentText() {
+        return verifyContentText;
+    }
+
+    public String getBeenVerifyText() {
+        return beenVerifyText;
+    }
+
     public String getError() {
         return error;
     }
@@ -177,44 +233,12 @@ public class ResultTextsConfiguration {
         return parameterMatchText;
     }
 
-    public String getUsernameText() {
-        return usernameText;
-    }
-
-    public String getEmailText() {
-        return emailText;
-    }
-
-    public String getPasswordText() {
-        return passwordText;
-    }
-
-    public String getDateOfBirthText() {
-        return dateOfBirthText;
-    }
-
-    public String getIsAdminText() {
-        return isAdminText;
-    }
-
-    public String getValidText() {
-        return validText;
-    }
-
-    public String getIdText() {
-        return idText;
-    }
-
-    public String getAccessDeniedOneText() {
-        return accessDeniedOneText;
-    }
-
-    public String getAccessDeniedTwoText() {
-        return accessDeniedTwoText;
-    }
-
     public String getUserNotActivatedText() {
         return userNotActivatedText;
+    }
+
+    public String getUserNotEnabledText() {
+        return userNotEnabledText;
     }
 
     public String getBuildEmailMessageProblemText() {
@@ -225,31 +249,7 @@ public class ResultTextsConfiguration {
         return sendEmailMessageProblemText;
     }
 
-    public String getUserNotEnabledText() {
-        return userNotEnabledText;
-    }
-
-    public String getVerifyButtonText() {
-        return verifyButtonText;
-    }
-
-    public String getVerifySubjectText() {
-        return verifySubjectText;
-    }
-
-    public String getVerifyContentAddressText() {
-        return verifyContentAddressText;
-    }
-
-    public String getVerifyContentText() {
-        return verifyContentText;
-    }
-
     public String getUserAlreadyVerifiedText() {
         return userAlreadyVerifiedText;
-    }
-
-    public String getBeenVerifyText() {
-        return beenVerifyText;
     }
 }

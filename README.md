@@ -1,4 +1,6 @@
 # Simple Register-Login Backend Project
+[Open API Documentation](/gen/README.md)
+
 This project is a simple register-login for users with token based authentication and admin roles, with email verification.
 
 ## Implementations:
