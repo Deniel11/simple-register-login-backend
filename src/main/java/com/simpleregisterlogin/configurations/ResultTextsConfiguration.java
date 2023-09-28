@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("classpath:config/texts.sample")
+@PropertySource({"classpath:config/texts.sample", "classpath:config/style.sample"})
 public class ResultTextsConfiguration {
 
     @Value("${text.ok}")
@@ -52,6 +52,30 @@ public class ResultTextsConfiguration {
 
     @Value("${text.email.beenVerify}")
     private String beenVerifyText;
+
+    @Value("${text.password.changed}")
+    private String passwordChangedText;
+
+    @Value("${text.password.forgot.token}")
+    private String forgotPasswordTokenText;
+
+    @Value("${text.password.old}")
+    private String oldPasswordText;
+
+    @Value("${text.password.new}")
+    private String newPasswordText;
+
+    @Value("${text.email.changePasswordButton}")
+    private String changePasswordButtonText;
+
+    @Value("${text.email.changePasswordSubject}")
+    private String changePasswordSubjectText;
+
+    @Value("${text.email.changePasswordContent}")
+    private String changePasswordContentText;
+
+    @Value("${text.email.changePasswordSent}")
+    private String changePasswordSentText;
 
     @Value("${text.error}")
     private String error;
@@ -113,6 +137,21 @@ public class ResultTextsConfiguration {
     @Value("${text.error.userAlreadyVerified}")
     private String userAlreadyVerifiedText;
 
+    @Value("${text.error.passwordIncorrect}")
+    private String passwordIncorrectText;
+
+    @Value("${text.error.emailAddressNotFound.partOne}")
+    private String emailAddressNotFoundPartOneText;
+
+    @Value("${text.error.emailAddressNotFound.partTwo}")
+    private String emailAddressNotFoundPartTwoText;
+
+    @Value("${style.button}")
+    private String buttonStyle;
+
+    @Value("${style.paragraph}")
+    private String paragraphStyle;
+
     public String getOk() {
         return ok;
     }
@@ -171,6 +210,38 @@ public class ResultTextsConfiguration {
 
     public String getBeenVerifyText() {
         return beenVerifyText;
+    }
+
+    public String getPasswordChangedText() {
+        return passwordChangedText;
+    }
+
+    public String getForgotPasswordTokenText() {
+        return forgotPasswordTokenText;
+    }
+
+    public String getOldPasswordText() {
+        return oldPasswordText;
+    }
+
+    public String getNewPasswordText() {
+        return newPasswordText;
+    }
+
+    public String getChangePasswordButtonText() {
+        return changePasswordButtonText;
+    }
+
+    public String getChangePasswordSubjectText() {
+        return changePasswordSubjectText;
+    }
+
+    public String getChangePasswordContentText() {
+        return changePasswordContentText;
+    }
+
+    public String getChangePasswordSentText() {
+        return changePasswordSentText;
     }
 
     public String getError() {
@@ -251,5 +322,25 @@ public class ResultTextsConfiguration {
 
     public String getUserAlreadyVerifiedText() {
         return userAlreadyVerifiedText;
+    }
+
+    public String getPasswordIncorrectText() {
+        return passwordIncorrectText;
+    }
+
+    public String getEmailAddressNotFoundPartOneText() {
+        return emailAddressNotFoundPartOneText;
+    }
+
+    public String getEmailAddressNotFoundPartTwoText() {
+        return emailAddressNotFoundPartTwoText;
+    }
+
+    public String getButtonStyle() {
+        return buttonStyle;
+    }
+
+    public String getParagraphStyle() {
+        return paragraphStyle;
     }
 }

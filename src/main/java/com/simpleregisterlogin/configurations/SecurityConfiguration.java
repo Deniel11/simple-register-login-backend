@@ -58,7 +58,7 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(authorize -> authorize
-                        .antMatchers("/", "/api/user/registration", "/api/user/login", "/api/user/verify-email").permitAll()
+                        .antMatchers("/", "/api/user/registration", "/api/user/login", "/api/user/verify-email", "/api/user/forgot-password", "/api/user/change-password").permitAll()
                         .antMatchers("/js/**", "/css/**", "/img/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception

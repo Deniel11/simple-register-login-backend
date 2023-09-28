@@ -22,5 +22,11 @@ public interface UserService {
 
     RegisteredUserDTO updateUser(Long id, UpdateUserDTO updateUserDTO, HttpServletRequest request);
 
-    void verifyUser(String verificationToken);
+    String verifyUser(String verificationToken);
+
+    String changePassword(String forgotPasswordToken, PasswordDTO passwordDTO);
+
+    String saveToken(String email, String forgotPasswordToken);
+
+
 }

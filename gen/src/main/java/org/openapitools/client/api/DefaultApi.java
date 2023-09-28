@@ -29,7 +29,9 @@ import java.io.IOException;
 
 import org.openapitools.client.model.AuthenticationRequestDTO;
 import org.openapitools.client.model.AuthenticationResponseDTO;
+import org.openapitools.client.model.EmailDTO;
 import org.openapitools.client.model.MessageDTO;
+import org.openapitools.client.model.PasswordDTO;
 import org.openapitools.client.model.RegisteredUserDTO;
 import org.openapitools.client.model.RegisteredUserDTOList;
 import org.openapitools.client.model.UpdateUserDTO;
@@ -60,6 +62,130 @@ public class DefaultApi {
         this.localVarApiClient = apiClient;
     }
 
+    /**
+     * Build call for changePassword
+     * @param token  (required)
+     * @param passwordDTO  (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> OK </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call changePasswordCall(String token, PasswordDTO passwordDTO, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = passwordDTO;
+
+        // create path and map variables
+        String localVarPath = "/api/user/change-password";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        if (token != null) {
+            localVarQueryParams.addAll(localVarApiClient.parameterToPair("token", token));
+        }
+
+        final String[] localVarAccepts = {
+            "*/*"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "PATCH", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call changePasswordValidateBeforeCall(String token, PasswordDTO passwordDTO, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'token' is set
+        if (token == null) {
+            throw new ApiException("Missing the required parameter 'token' when calling changePassword(Async)");
+        }
+        
+        // verify the required parameter 'passwordDTO' is set
+        if (passwordDTO == null) {
+            throw new ApiException("Missing the required parameter 'passwordDTO' when calling changePassword(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = changePasswordCall(token, passwordDTO, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * PATCH api/user/change-password
+     * 
+     * @param token  (required)
+     * @param passwordDTO  (required)
+     * @return MessageDTO
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> OK </td><td>  -  </td></tr>
+     </table>
+     */
+    public MessageDTO changePassword(String token, PasswordDTO passwordDTO) throws ApiException {
+        ApiResponse<MessageDTO> localVarResp = changePasswordWithHttpInfo(token, passwordDTO);
+        return localVarResp.getData();
+    }
+
+    /**
+     * PATCH api/user/change-password
+     * 
+     * @param token  (required)
+     * @param passwordDTO  (required)
+     * @return ApiResponse&lt;MessageDTO&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> OK </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<MessageDTO> changePasswordWithHttpInfo(String token, PasswordDTO passwordDTO) throws ApiException {
+        okhttp3.Call localVarCall = changePasswordValidateBeforeCall(token, passwordDTO, null);
+        Type localVarReturnType = new TypeToken<MessageDTO>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * PATCH api/user/change-password (asynchronously)
+     * 
+     * @param token  (required)
+     * @param passwordDTO  (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> OK </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call changePasswordAsync(String token, PasswordDTO passwordDTO, final ApiCallback<MessageDTO> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = changePasswordValidateBeforeCall(token, passwordDTO, _callback);
+        Type localVarReturnType = new TypeToken<MessageDTO>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
     /**
      * Build call for createAuthenticationToken
      * @param authenticationRequestDTO  (required)
@@ -168,6 +294,117 @@ public class DefaultApi {
 
         okhttp3.Call localVarCall = createAuthenticationTokenValidateBeforeCall(authenticationRequestDTO, _callback);
         Type localVarReturnType = new TypeToken<AuthenticationResponseDTO>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for forgotPassword
+     * @param emailDTO  (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> OK </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call forgotPasswordCall(EmailDTO emailDTO, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = emailDTO;
+
+        // create path and map variables
+        String localVarPath = "/api/user/forgot-password";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "*/*"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call forgotPasswordValidateBeforeCall(EmailDTO emailDTO, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'emailDTO' is set
+        if (emailDTO == null) {
+            throw new ApiException("Missing the required parameter 'emailDTO' when calling forgotPassword(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = forgotPasswordCall(emailDTO, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * GET api/user/forgot-password
+     * 
+     * @param emailDTO  (required)
+     * @return MessageDTO
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> OK </td><td>  -  </td></tr>
+     </table>
+     */
+    public MessageDTO forgotPassword(EmailDTO emailDTO) throws ApiException {
+        ApiResponse<MessageDTO> localVarResp = forgotPasswordWithHttpInfo(emailDTO);
+        return localVarResp.getData();
+    }
+
+    /**
+     * GET api/user/forgot-password
+     * 
+     * @param emailDTO  (required)
+     * @return ApiResponse&lt;MessageDTO&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> OK </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<MessageDTO> forgotPasswordWithHttpInfo(EmailDTO emailDTO) throws ApiException {
+        okhttp3.Call localVarCall = forgotPasswordValidateBeforeCall(emailDTO, null);
+        Type localVarReturnType = new TypeToken<MessageDTO>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * GET api/user/forgot-password (asynchronously)
+     * 
+     * @param emailDTO  (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> OK </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call forgotPasswordAsync(EmailDTO emailDTO, final ApiCallback<MessageDTO> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = forgotPasswordValidateBeforeCall(emailDTO, _callback);
+        Type localVarReturnType = new TypeToken<MessageDTO>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }

@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 README.md
 api/openapi.yaml
@@ -8,7 +7,9 @@ build.sbt
 docs/AuthenticationRequestDTO.md
 docs/AuthenticationResponseDTO.md
 docs/DefaultApi.md
+docs/EmailDTO.md
 docs/MessageDTO.md
+docs/PasswordDTO.md
 docs/RegisteredUserDTO.md
 docs/RegisteredUserDTOList.md
 docs/UpdateUserDTO.md
@@ -42,16 +43,12 @@ src/main/java/org/openapitools/client/auth/HttpBasicAuth.java
 src/main/java/org/openapitools/client/auth/HttpBearerAuth.java
 src/main/java/org/openapitools/client/model/AuthenticationRequestDTO.java
 src/main/java/org/openapitools/client/model/AuthenticationResponseDTO.java
+src/main/java/org/openapitools/client/model/EmailDTO.java
 src/main/java/org/openapitools/client/model/MessageDTO.java
+src/main/java/org/openapitools/client/model/PasswordDTO.java
 src/main/java/org/openapitools/client/model/RegisteredUserDTO.java
 src/main/java/org/openapitools/client/model/RegisteredUserDTOList.java
 src/main/java/org/openapitools/client/model/UpdateUserDTO.java
 src/main/java/org/openapitools/client/model/UserDTO.java
-src/test/java/org/openapitools/client/api/DefaultApiTest.java
-src/test/java/org/openapitools/client/model/AuthenticationRequestDTOTest.java
-src/test/java/org/openapitools/client/model/AuthenticationResponseDTOTest.java
-src/test/java/org/openapitools/client/model/MessageDTOTest.java
-src/test/java/org/openapitools/client/model/RegisteredUserDTOListTest.java
-src/test/java/org/openapitools/client/model/RegisteredUserDTOTest.java
-src/test/java/org/openapitools/client/model/UpdateUserDTOTest.java
-src/test/java/org/openapitools/client/model/UserDTOTest.java
+src/test/java/org/openapitools/client/model/EmailDTOTest.java
+src/test/java/org/openapitools/client/model/PasswordDTOTest.java

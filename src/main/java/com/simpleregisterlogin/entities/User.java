@@ -29,6 +29,8 @@ public class User {
 
     private boolean enabled;
 
+    private String forgotPasswordToken;
+
     public User() {
     }
 
@@ -86,6 +88,14 @@ public class User {
         this.verified = valid;
     }
 
+    public boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -106,11 +116,11 @@ public class User {
         this.verificationToken = verificationToken;
     }
 
-    public boolean getEnabled() {
-        return enabled;
+    public String getForgotPasswordToken() {
+        return forgotPasswordToken;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setForgotPasswordToken(String forgotPasswordToken) {
+        this.forgotPasswordToken = forgotPasswordToken;
     }
 }

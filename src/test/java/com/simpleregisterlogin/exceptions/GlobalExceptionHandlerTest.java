@@ -149,4 +149,20 @@ public class GlobalExceptionHandlerTest {
         MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleUserAlreadyVerifiedException(new UserAlreadyVerifiedException()).getBody();
         Assertions.assertEquals(messageDTO.getMessage(), resultMessageDTO != null ? resultMessageDTO.getMessage() : null);
     }
+
+    @Test
+    void passwordIncorrectException_WithTextParameter_ReturnGivenParameterAndMessage() {
+        String parameter = texts.getOldPasswordText();
+        MessageDTO messageDTO = new MessageDTO(texts.getError(),parameter + " " + texts.getPasswordIncorrectText());
+        MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handlePasswordIncorrectException(new PasswordIncorrectException(parameter)).getBody();
+        Assertions.assertEquals(messageDTO.getMessage(), resultMessageDTO != null ? resultMessageDTO.getMessage() : null);
+    }
+
+    @Test
+    void emailAddressNotFoundException_WithTextParameter_ReturnGivenParameterAndMessage() {
+        String email = "[Email address]";
+        MessageDTO messageDTO = new MessageDTO(texts.getError(),texts.getEmailAddressNotFoundPartOneText() + " " + email + " " + texts.getEmailAddressNotFoundPartTwoText());
+        MessageDTO resultMessageDTO = (MessageDTO) globalExceptionHandler.handleEmailAddressNotFoundException(new EmailAddressNotFoundException(email)).getBody();
+        Assertions.assertEquals(messageDTO.getMessage(), resultMessageDTO != null ? resultMessageDTO.getMessage() : null);
+    }
 }

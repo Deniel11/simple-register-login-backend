@@ -64,7 +64,18 @@ public class UserController {
 
     @GetMapping("/verify-email")
     public ResponseEntity<MessageDTO> verifyEmailAddress(@RequestParam String token) {
-        userService.verifyUser(token);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO(texts.getOk(), texts.getBeenVerifyText()));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO(texts.getOk(), userService.verifyUser(token)));
+    }
+
+    @PatchMapping("/change-password")
+    public ResponseEntity<MessageDTO> changePassword(@RequestParam String token, @RequestBody PasswordDTO passwordDTO) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO(texts.getOk(), userService.changePassword(token, passwordDTO)));
+    }
+
+    @GetMapping("/forgot-password")
+    public ResponseEntity<MessageDTO> forgotPassword(@RequestBody EmailDTO emailDTO) {
+        String token = emailService.getToken();
+        String name = userService.saveToken(emailDTO.getEmail(), token);;
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO(texts.getOk(), emailService.sendChangePasswordRequest(name, emailDTO.getEmail(), token)));
     }
 }

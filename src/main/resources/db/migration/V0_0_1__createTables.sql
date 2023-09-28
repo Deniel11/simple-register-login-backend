@@ -7,7 +7,8 @@ CREATE TABLE users (
     dateOfBirth VARCHAR(255),
     admin BIT NOT NULL,
     verified BIT NOT NULL,
-    verification_token VARCHAR(255),
     enabled BIT NOT NULL,
+    verification_token VARCHAR(255),
+    forgot_password_token VARCHAR(255),
     primary key (id)
 )

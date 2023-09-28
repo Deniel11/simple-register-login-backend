@@ -621,4 +621,81 @@ public class UserServiceImplTest {
 
         Assertions.assertThrows(WrongDateFormatException.class, () -> userService.updateUser(id, updateUserDTO, request));
     }
+
+    @Test
+    void verifyUser_WithValidUser_ReturnsExceptedMessage() {
+        String verificationToken = "token";
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        fakeUser.setVerified(false);
+        Mockito.when(userRepository.findUserByVerificationToken(verificationToken)).thenReturn(Optional.of(fakeUser));
+
+        Assertions.assertEquals(texts.getBeenVerifyText(), userService.verifyUser(verificationToken));
+    }
+
+    @Test
+    void verifyUser_WithInvalidToken_ThrowsInvalidTokenException() {
+        String verificationToken = "token";
+        Mockito.when(userRepository.findUserByVerificationToken(verificationToken)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(InvalidTokenException.class, () -> userService.verifyUser(verificationToken));
+    }
+
+    @Test
+    void verifyUser_WithVerifiedUser_ThrowsUserAlreadyVerifiedException() {
+        String verificationToken = "token";
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        Mockito.when(userRepository.findUserByVerificationToken(verificationToken)).thenReturn(Optional.of(fakeUser));
+
+        Assertions.assertThrows(UserAlreadyVerifiedException.class, () -> userService.verifyUser(verificationToken));
+    }
+
+    @Test
+    void saveToken_WithValidUser_ReturnExceptedUsername() {
+        String forgotPasswordToken = "token";
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        Mockito.when(userRepository.findUserByEmail(fakeUser.getEmail())).thenReturn(Optional.of(fakeUser));
+
+        Assertions.assertEquals(fakeUser.getUsername(), userService.saveToken(fakeUser.getEmail(), forgotPasswordToken));
+    }
+
+    @Test
+    void saveToken_WithInvalidEmail_ThrowsEmailAddressNotFoundException() {
+        String forgotPasswordToken = "token";
+        String invalidEmail = "invalid@email.com";
+        Mockito.when(userRepository.findUserByEmail(invalidEmail)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(EmailAddressNotFoundException.class, () -> userService.saveToken(invalidEmail, forgotPasswordToken));
+    }
+
+    @Test
+    void changePassword_WithValidPasswords_ReturnsExceptedMessage() {
+        String forgotPasswordToken = "token";
+        PasswordDTO fakePasswordDTO = beanFactory.getBean("fakePasswordDTO", PasswordDTO.class);
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        Mockito.when(userRepository.findUserByForgotPasswordToken(forgotPasswordToken)).thenReturn(Optional.of(fakeUser));
+        Mockito.when(encoder.matches(fakePasswordDTO.getOldPassword(), fakeUser.getPassword())).thenReturn(true);
+        Mockito.when(encoder.encode(fakePasswordDTO.getNewPassword())).thenReturn(fakePasswordDTO.getNewPassword());
+
+        Assertions.assertEquals(texts.getPasswordChangedText(), userService.changePassword(forgotPasswordToken, fakePasswordDTO));
+    }
+
+    @Test
+    void changePassword_WithInvalidToken_ThrowsInvalidTokenException() {
+        String forgotPasswordToken = "token";
+        PasswordDTO fakePasswordDTO = beanFactory.getBean("fakePasswordDTO", PasswordDTO.class);
+        Mockito.when(userRepository.findUserByForgotPasswordToken(forgotPasswordToken)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(InvalidTokenException.class, () -> userService.changePassword(forgotPasswordToken, fakePasswordDTO));
+    }
+
+    @Test
+    void changePassword_WithInvalidOldPassword_ThrowsPasswordIncorrectException() {
+        String forgotPasswordToken = "token";
+        PasswordDTO fakePasswordDTO = beanFactory.getBean("fakePasswordDTO", PasswordDTO.class);
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        Mockito.when(userRepository.findUserByForgotPasswordToken(forgotPasswordToken)).thenReturn(Optional.of(fakeUser));
+        Mockito.when(encoder.matches(fakePasswordDTO.getOldPassword(), fakeUser.getPassword())).thenReturn(false);
+
+        Assertions.assertThrows(PasswordIncorrectException.class, () -> userService.changePassword(forgotPasswordToken, fakePasswordDTO));
+    }
 }

@@ -11,12 +11,13 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.Objects;
 import java.util.Random;
 
 @Service
 public class EmailServiceImpl implements EmailService {
 
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     private final Environment env;
 
@@ -30,26 +31,18 @@ public class EmailServiceImpl implements EmailService {
     }
 
     public void sendVerificationRequest(String username, String email, String token) {
-        if (!env.getProperty("MAIL_TEST").equals("true")) {
+        if (Objects.requireNonNull(env.getProperty("MAIL_TEST")).equals("false")) {
             MimeMessage message = mailSender.createMimeMessage();
-
+            String url = "http://" + env.getProperty("DOMAIN") + "/verify-email";
+            String key = "token";
+            String button = "<a style='" + texts.getButtonStyle() + "' href='" + url + "?" + key + "=" + token + "'>" + texts.getVerifyButtonText() + "</a>";
+            String h1 = "<h1>" + texts.getVerifyContentAddressText() + " " + username + ",</h1>";
+            String paragraph = "<p style='" + texts.getParagraphStyle() + "'>" + texts.getVerifyContentText() + "</p>";
             try {
-                message.setFrom("admin@simple-register-login.com");
+                message.setFrom(env.getProperty("MAIL_SENDER_EMAIL"));
                 message.setRecipients(MimeMessage.RecipientType.TO, email);
                 message.setSubject(texts.getVerifySubjectText());
-
-                String button = "<form action=\"http://"
-                        + env.getProperty("DOMAIN")
-                        + "/api/user/verify-email\" method=\"get\" target=\"_blank\"> <input type=\"hidden\" name=\"token\" value=\""
-                        + token
-                        + "\" />  <button type=\"submit\">"
-                        + texts.getVerifyButtonText()
-                        + "</button> </form>";
-
-                String htmlContent = "<h1>" + texts.getVerifyContentAddressText() + " " + username + ",</h1>"
-                        + "<p>" + texts.getVerifyContentText() + "</p>"
-                        + button;
-                message.setContent(htmlContent, "text/html; charset=utf-8");
+                message.setContent(h1 + paragraph + button, "text/html; charset=utf-8");
             } catch (MessagingException exception) {
                 throw new BuildEmailMessageException();
             }
@@ -68,11 +61,36 @@ public class EmailServiceImpl implements EmailService {
         int targetStringLength = 30;
         Random random = new Random();
 
-        String generatedString = random.ints(leftLimit, rightLimit + 1)
+        return random.ints(leftLimit, rightLimit + 1)
                 .limit(targetStringLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
+    }
 
-        return generatedString;
+    @Override
+    public String sendChangePasswordRequest(String username, String email, String token) {
+        if (Objects.requireNonNull(env.getProperty("MAIL_TEST")).equals("false")) {
+            MimeMessage message = mailSender.createMimeMessage();
+            String url = "http://" + env.getProperty("DOMAIN") + "/change-password";
+            String key = "token";
+            String button = "<a style='" + texts.getButtonStyle() + "' href='" + url + "?" + key + "=" + token + "'>" + texts.getChangePasswordButtonText() + "</a>";
+            String h1 = "<h1>" + texts.getVerifyContentAddressText() + " " + username + ",</h1>";
+            String paragraph = "<p style='" + texts.getParagraphStyle() + "'>" + texts.getChangePasswordContentText() + "</p>";
+            try {
+                message.setFrom(env.getProperty("MAIL_SENDER_EMAIL"));
+                message.setRecipients(MimeMessage.RecipientType.TO, email);
+                message.setSubject(texts.getChangePasswordSubjectText());
+                message.setContent(h1 + paragraph + button, "text/html; charset=utf-8");
+            } catch (MessagingException exception) {
+                throw new BuildEmailMessageException();
+            }
+
+            try {
+                mailSender.send(message);
+            } catch (MailSendException exception) {
+                throw new SendEmailMessageException();
+            }
+        }
+        return texts.getChangePasswordSentText();
     }
 }

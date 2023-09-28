@@ -163,6 +163,32 @@ public class UserServiceImpl implements UserService {
         return parameter;
     }
 
+    private String getInvalidForgotPasswordTokenAndPasswordDTO(String forgotPasswordToken, PasswordDTO passwordDTO) {
+        String parameter = "";
+        if (GeneralUtility.isEmptyOrNull(forgotPasswordToken)) {
+            if (parameter.length() > 0) {
+                parameter += ", " + texts.getForgotPasswordTokenText();
+            } else {
+                parameter = texts.getForgotPasswordTokenText();
+            }
+        }
+        if (GeneralUtility.isEmptyOrNull(passwordDTO.getOldPassword())) {
+            if (parameter.length() > 0) {
+                parameter += ", " + texts.getOldPasswordText();
+            } else {
+                parameter = texts.getOldPasswordText();
+            }
+        }
+        if (GeneralUtility.isEmptyOrNull(passwordDTO.getNewPassword())) {
+            if (parameter.length() > 0) {
+                parameter += ", " + texts.getNewPasswordText();
+            } else {
+                parameter = texts.getNewPasswordText();
+            }
+        }
+        return parameter;
+    }
+
     @Override
     public RegisteredUserDTO getUser(Long id) {
 
@@ -283,13 +309,37 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public void verifyUser(String verificationToken) {
+    @Override
+    public String verifyUser(String verificationToken) {
         User user = userRepository.findUserByVerificationToken(verificationToken).orElseThrow(() -> new InvalidTokenException());
         if (user.getVerified()) {
             throw new UserAlreadyVerifiedException();
-        } else {
-            user.setVerified(true);
-            userRepository.save(user);
         }
+        user.setVerified(true);
+        userRepository.save(user);
+        return texts.getBeenVerifyText();
+    }
+
+    @Override
+    public String changePassword(String forgotPasswordToken, PasswordDTO passwordDTO) {
+        validateParameters(getInvalidForgotPasswordTokenAndPasswordDTO(forgotPasswordToken, passwordDTO));
+        validatePassword(passwordDTO.getNewPassword());
+
+        User user = userRepository.findUserByForgotPasswordToken(forgotPasswordToken).orElseThrow(() -> new InvalidTokenException());
+        if (!encoder.matches(passwordDTO.getOldPassword(), user.getPassword())) {
+            throw new PasswordIncorrectException(texts.getOldPasswordText());
+        }
+        user.setPassword(encoder.encode(passwordDTO.getNewPassword()));
+        user.setForgotPasswordToken(null);
+        userRepository.save(user);
+        return texts.getPasswordChangedText();
+    }
+
+    @Override
+    public String saveToken(String email, String forgotPasswordToken) {
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new EmailAddressNotFoundException(email));
+        user.setForgotPasswordToken(forgotPasswordToken);
+        userRepository.save(user);
+        return user.getUsername();
     }
 }

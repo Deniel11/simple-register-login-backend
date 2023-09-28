@@ -51,7 +51,7 @@ public class EmailServiceImplTest {
         Mockito.when(environment.getProperty("MAIL_TEST")).thenReturn("false");
         Mockito.when(environment.getProperty("DOMAIN")).thenReturn("domain");
         Mockito.when(javaMailSender.createMimeMessage()).thenReturn(message);
-        Mockito.doThrow(MessagingException.class).when(message).setFrom("admin@simple-register-login.com");
+        Mockito.doThrow(MessagingException.class).when(message).setSubject(texts.getVerifySubjectText());
         Assertions.assertThrows(BuildEmailMessageException.class, () -> emailService.sendVerificationRequest(fakeUser.getUsername(), fakeUser.getEmail(), verificationToken));
     }
 
@@ -82,5 +82,47 @@ public class EmailServiceImplTest {
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
         Mockito.when(environment.getProperty("MAIL_TEST")).thenReturn("true");
         Assertions.assertDoesNotThrow(() -> emailService.sendVerificationRequest(fakeUser.getUsername(), fakeUser.getEmail(), verificationToken));
+    }
+
+    @Test
+    void sendChangePasswordRequest_WithInvalidFromEmail_ThrowsBuildEmailMessageException() throws MessagingException {
+        String forgotPasswordToken = "token";
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        Mockito.when(environment.getProperty("MAIL_TEST")).thenReturn("false");
+        Mockito.when(environment.getProperty("DOMAIN")).thenReturn("domain");
+        Mockito.when(javaMailSender.createMimeMessage()).thenReturn(message);
+        Mockito.doThrow(MessagingException.class).when(message).setSubject(texts.getChangePasswordSubjectText());
+        Assertions.assertThrows(BuildEmailMessageException.class, () -> emailService.sendChangePasswordRequest(fakeUser.getUsername(), fakeUser.getEmail(), forgotPasswordToken));
+    }
+
+    @Test
+    void sendChangePasswordRequest_WithInvalidSenderData_ThrowsSendEmailMessageException() {
+        String forgotPasswordToken = "token";
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        Mockito.when(environment.getProperty("MAIL_TEST")).thenReturn("false");
+        Mockito.when(environment.getProperty("DOMAIN")).thenReturn("domain");
+        Mockito.when(javaMailSender.createMimeMessage()).thenReturn(message);
+        Mockito.doThrow(MailSendException.class).when(javaMailSender).send(message);
+        Assertions.assertThrows(SendEmailMessageException.class, () -> emailService.sendChangePasswordRequest(fakeUser.getUsername(), fakeUser.getEmail(), forgotPasswordToken));
+    }
+
+    @Test
+    void sendChangePasswordRequest_WithValidData_ReturnsExceptedMessage() {
+        String forgotPasswordToken = "token";
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        Mockito.when(environment.getProperty("MAIL_TEST")).thenReturn("false");
+        Mockito.when(environment.getProperty("DOMAIN")).thenReturn("domain");
+        Mockito.when(javaMailSender.createMimeMessage()).thenReturn(message);
+        Assertions.assertEquals(texts.getChangePasswordSentText(), emailService.sendChangePasswordRequest(fakeUser.getUsername(), fakeUser.getEmail(), forgotPasswordToken));
+        Assertions.assertDoesNotThrow(() -> emailService.sendChangePasswordRequest(fakeUser.getUsername(), fakeUser.getEmail(), forgotPasswordToken));
+    }
+
+    @Test
+    void sendChangePasswordRequest_WithTestCase_ReturnsExceptedMessage() {
+        String forgotPasswordToken = "token";
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        Mockito.when(environment.getProperty("MAIL_TEST")).thenReturn("true");
+        Assertions.assertEquals(texts.getChangePasswordSentText(), emailService.sendChangePasswordRequest(fakeUser.getUsername(), fakeUser.getEmail(), forgotPasswordToken));
+        Assertions.assertDoesNotThrow(() -> emailService.sendChangePasswordRequest(fakeUser.getUsername(), fakeUser.getEmail(), forgotPasswordToken));
     }
 }

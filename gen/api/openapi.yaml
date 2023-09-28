@@ -136,6 +136,52 @@ paths:
           description: OK
       summary: GET api/user/verify-email
       x-accepts: '*/*'
+  /api/user/change-password:
+    patch:
+      operationId: changePassword
+      parameters:
+      - explode: true
+        in: query
+        name: token
+        required: true
+        schema:
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+          description: OK
+      summary: PATCH api/user/change-password
+      x-contentType: application/json
+      x-accepts: '*/*'
+  /api/user/forgot-password:
+    get:
+      operationId: forgotPassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+          description: OK
+      summary: GET api/user/forgot-password
+      x-contentType: application/json
+      x-accepts: '*/*'
 components:
   schemas:
     UserDTO:
@@ -256,6 +302,23 @@ components:
         status:
           type: string
         message:
+          type: string
+      type: object
+    PasswordDTO:
+      example:
+        oldPassword: oldPassword
+        newPassword: newPassword
+      properties:
+        oldPassword:
+          type: string
+        newPassword:
+          type: string
+      type: object
+    EmailDTO:
+      example:
+        email: email
+      properties:
+        email:
           type: string
       type: object
 

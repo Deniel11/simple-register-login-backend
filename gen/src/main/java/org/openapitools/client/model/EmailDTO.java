@@ -25,62 +25,35 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * MessageDTO
+ * EmailDTO
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-09-28T20:21:58.973895300+02:00[Europe/Budapest]")
-public class MessageDTO {
-  public static final String SERIALIZED_NAME_STATUS = "status";
-  @SerializedName(SERIALIZED_NAME_STATUS)
-  private String status;
-
-  public static final String SERIALIZED_NAME_MESSAGE = "message";
-  @SerializedName(SERIALIZED_NAME_MESSAGE)
-  private String message;
+public class EmailDTO {
+  public static final String SERIALIZED_NAME_EMAIL = "email";
+  @SerializedName(SERIALIZED_NAME_EMAIL)
+  private String email;
 
 
-  public MessageDTO status(String status) {
+  public EmailDTO email(String email) {
     
-    this.status = status;
+    this.email = email;
     return this;
   }
 
    /**
-   * Get status
-   * @return status
+   * Get email
+   * @return email
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getStatus() {
-    return status;
+  public String getEmail() {
+    return email;
   }
 
 
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
-
-  public MessageDTO message(String message) {
-    
-    this.message = message;
-    return this;
-  }
-
-   /**
-   * Get message
-   * @return message
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getMessage() {
-    return message;
-  }
-
-
-  public void setMessage(String message) {
-    this.message = message;
+  public void setEmail(String email) {
+    this.email = email;
   }
 
 
@@ -92,23 +65,21 @@ public class MessageDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    MessageDTO messageDTO = (MessageDTO) o;
-    return Objects.equals(this.status, messageDTO.status) &&
-        Objects.equals(this.message, messageDTO.message);
+    EmailDTO emailDTO = (EmailDTO) o;
+    return Objects.equals(this.email, emailDTO.email);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(status, message);
+    return Objects.hash(email);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class MessageDTO {\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
-    sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("class EmailDTO {\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("}");
     return sb.toString();
   }

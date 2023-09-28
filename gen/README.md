@@ -2,7 +2,7 @@
 
 simple_register_login API
 - API version: 1.0.0
-  - Build date: 2023-09-26T14:36:00.203424+02:00[Europe/Budapest]
+  - Build date: 2023-09-28T20:21:58.973895300+02:00[Europe/Budapest]
 
 simple_register_login API
 
@@ -85,12 +85,13 @@ public class Example {
     defaultClient.setBasePath("https://simple_register_login");
 
     DefaultApi apiInstance = new DefaultApi(defaultClient);
-    AuthenticationRequestDTO authenticationRequestDTO = new AuthenticationRequestDTO(); // AuthenticationRequestDTO | 
+    String token = "token_example"; // String | 
+    PasswordDTO passwordDTO = new PasswordDTO(); // PasswordDTO | 
     try {
-      AuthenticationResponseDTO result = apiInstance.createAuthenticationToken(authenticationRequestDTO);
+      MessageDTO result = apiInstance.changePassword(token, passwordDTO);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling DefaultApi#createAuthenticationToken");
+      System.err.println("Exception when calling DefaultApi#changePassword");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -107,7 +108,9 @@ All URIs are relative to *https://simple_register_login*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*DefaultApi* | [**changePassword**](docs/DefaultApi.md#changePassword) | **PATCH** /api/user/change-password | PATCH api/user/change-password
 *DefaultApi* | [**createAuthenticationToken**](docs/DefaultApi.md#createAuthenticationToken) | **POST** /api/user/login | POST api/user/login
+*DefaultApi* | [**forgotPassword**](docs/DefaultApi.md#forgotPassword) | **GET** /api/user/forgot-password | GET api/user/forgot-password
 *DefaultApi* | [**getOwnUser**](docs/DefaultApi.md#getOwnUser) | **GET** /api/user | GET api/user
 *DefaultApi* | [**getUser**](docs/DefaultApi.md#getUser) | **GET** /api/user/{id} | GET api/user/{id}
 *DefaultApi* | [**getUsers**](docs/DefaultApi.md#getUsers) | **GET** /api/user/users | GET api/user/users
@@ -120,24 +123,13 @@ Class | Method | HTTP request | Description
 
  - [AuthenticationRequestDTO](docs/AuthenticationRequestDTO.md)
  - [AuthenticationResponseDTO](docs/AuthenticationResponseDTO.md)
+ - [EmailDTO](docs/EmailDTO.md)
  - [MessageDTO](docs/MessageDTO.md)
+ - [PasswordDTO](docs/PasswordDTO.md)
  - [RegisteredUserDTO](docs/RegisteredUserDTO.md)
  - [RegisteredUserDTOList](docs/RegisteredUserDTOList.md)
  - [UpdateUserDTO](docs/UpdateUserDTO.md)
  - [UserDTO](docs/UserDTO.md)
 
 
-## Documentation for Authorization
 
-Endpoints require authorization:
-- **GET** /api/user
-- **GET** /api/user/{id}
-- **GET** /api/user/users
-- **PUT** /api/user/{id}
-
-## Recommendation
-
-It's recommended to create an instance of `ApiClient` per thread in a multithreaded environment to avoid any potential issues.
-
-## Author
-Daniel Czank

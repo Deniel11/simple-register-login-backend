@@ -4,7 +4,9 @@
 This project is a simple register-login for users with token based authentication and admin roles, with email verification.
 
 ## Implementations:
-Java Gradle Project
+Java Development Kit - JDK 17
+
+Gradle Project with Spring Boot Framework
 
 - Spring Boot Security
 - Spring Boot Security Test
@@ -50,12 +52,12 @@ Java Gradle Project
 - Forgot Password with Forgot Password API
 
 ## Tests:
-### Unit test: 76
-### Integration test: 28
+### Unit test: 90
+### Integration test: 35
 ### Coverage:
 - Class: 100%
-- Method: 97%
-- Line: 93
+- Method: 96%
+- Line: 92%
 
 ## Guides
 Before you use this project, you need to set up your environment variables
@@ -76,6 +78,7 @@ HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
 HIBERNATE_DDL_AUTO=validate
 SHOW_SQL=true
 JWT_SECRET_KEY=[SELECT YOUR SECRET KEY]
+MAIL_SENDER_EMAIL=[YOUR_GMAIL]
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USERNAME=[YOUR GMAIL USERNAME]
@@ -87,6 +90,22 @@ MAIL_PASSWORD=[YOUR GMAIL APPLICATION PASSWORD]
 
 > The first registration is validated, and you get admin rights. (First ID)
 
+Require extra endpoints to the frontend:
+
+---
+
+- `/verify-email`
+
+When the user registered, then gets an email which is included this endpoint. Where you need use `/api/user/verify-email`.
+
+---
+
+- `/change-password`
+
+When the user want to use forgot password function, then gets an email which is included this endpoint. Where you need to use `/api/user/change-password`.
+
+
+More description for the APIs:
 ## Endpoints
 
 -----
@@ -581,9 +600,9 @@ MAIL_PASSWORD=[YOUR GMAIL APPLICATION PASSWORD]
 
 -----
 <details>
-<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/user/verify-email</summary>
+<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/verify-email?token=[Verify email token]</summary>
 
-  - To use this endpoint, you need request param with verification token.
+  - To use this endpoint, you need path variable with verification token.
 
   Example:
   ```
@@ -624,6 +643,137 @@ MAIL_PASSWORD=[YOUR GMAIL APPLICATION PASSWORD]
   {
     "status": "error",
     "message": "Invalid token."
+  }
+  ```
+
+</details>
+
+-----
+<details>
+<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/forgot-password?token=[Forgot password token]</summary>
+
+- You can check it the forgot password token with MYSQL SELECT method.
+
+
+**Request**:
+
+
+- To use this endpoint, you need path variable with forgot password token.
+
+Param example:
+  ```
+    [YOUR DOMAIN]/api/user/forgot-password?token=[YOUR FORGOT PASSWORD TOKEN]
+  ```
+
+Body:
+  ```
+  {
+    "email": "[Requested email address]"
+  }
+  ```
+
+**Response**:
+
+
+`Status code: 202`
+
+
+Body:
+  ```
+    {
+      "status": "ok",
+      "message": "Your password has been changed."
+    }
+  ```
+
+**Errors**:
+- Email Address Not Found:
+  ```
+  Status code: 404
+  Body:
+  {
+    "status": "error",
+    "message": "This email address [Email address] is not found."
+  }
+  ```
+
+</details>
+
+-----
+<details>
+<summary> <b>Patch</b> - <i>[YOUR DOMAIN]</i>/api/user/change-password?token=[Forgot password token]</summary>
+
+- When use `/api/user/forgot-password`, then gets an email with this link.
+- You can check it the forgot password token with MYSQL SELECT method.
+
+
+**Request**:
+
+
+- To use this endpoint, you need path variable with forgot password token.
+
+Param example:
+  ```
+    [YOUR DOMAIN]/api/user/change-password?token=[YOUR FORGOT PASSWORD TOKEN]
+  ```
+
+Body:
+  ```
+  {
+    "oldPassword": "[Old password]",
+    "newPassword": "[New password]"
+  }
+  ```
+
+**Response**:
+
+
+`Status code: 202`
+
+
+Body:
+  ```
+    {
+      "status": "ok",
+      "message": "Your password has been changed."
+    }
+  ```
+
+**Errors**:
+- Invalid Parameter:
+  ```
+  Status code: 404
+  Body:
+  {
+    "status": "error",
+    "message": "[Parameter(s)] is required."
+  }
+  ```
+- Low Password Length:
+  ```
+  Status code: 406
+  Body:
+  {
+    "status": "error",
+    "message": "Password must be [8] characters."
+  }
+  ```
+- Invalid Token:
+  ```
+  Status code: 403
+  Body:
+  {
+    "status": "error",
+    "message": "Invalid token."
+  }
+  ```
+- Password Incorrect:
+  ```
+  Status code: 406
+  Body:
+  {
+    "status": "error",
+    "message": "Old password is incorrect."
   }
   ```
 

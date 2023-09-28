@@ -30,7 +30,7 @@ import org.openapitools.client.model.RegisteredUserDTO;
 /**
  * RegisteredUserDTOList
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-09-26T14:36:00.203424+02:00[Europe/Budapest]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-09-28T20:21:58.973895300+02:00[Europe/Budapest]")
 public class RegisteredUserDTOList {
   public static final String SERIALIZED_NAME_USERS = "users";
   @SerializedName(SERIALIZED_NAME_USERS)

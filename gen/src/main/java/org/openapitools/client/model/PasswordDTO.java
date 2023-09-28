@@ -25,62 +25,62 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * MessageDTO
+ * PasswordDTO
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2023-09-28T20:21:58.973895300+02:00[Europe/Budapest]")
-public class MessageDTO {
-  public static final String SERIALIZED_NAME_STATUS = "status";
-  @SerializedName(SERIALIZED_NAME_STATUS)
-  private String status;
+public class PasswordDTO {
+  public static final String SERIALIZED_NAME_OLD_PASSWORD = "oldPassword";
+  @SerializedName(SERIALIZED_NAME_OLD_PASSWORD)
+  private String oldPassword;
 
-  public static final String SERIALIZED_NAME_MESSAGE = "message";
-  @SerializedName(SERIALIZED_NAME_MESSAGE)
-  private String message;
+  public static final String SERIALIZED_NAME_NEW_PASSWORD = "newPassword";
+  @SerializedName(SERIALIZED_NAME_NEW_PASSWORD)
+  private String newPassword;
 
 
-  public MessageDTO status(String status) {
+  public PasswordDTO oldPassword(String oldPassword) {
     
-    this.status = status;
+    this.oldPassword = oldPassword;
     return this;
   }
 
    /**
-   * Get status
-   * @return status
+   * Get oldPassword
+   * @return oldPassword
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getStatus() {
-    return status;
+  public String getOldPassword() {
+    return oldPassword;
   }
 
 
-  public void setStatus(String status) {
-    this.status = status;
+  public void setOldPassword(String oldPassword) {
+    this.oldPassword = oldPassword;
   }
 
 
-  public MessageDTO message(String message) {
+  public PasswordDTO newPassword(String newPassword) {
     
-    this.message = message;
+    this.newPassword = newPassword;
     return this;
   }
 
    /**
-   * Get message
-   * @return message
+   * Get newPassword
+   * @return newPassword
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getMessage() {
-    return message;
+  public String getNewPassword() {
+    return newPassword;
   }
 
 
-  public void setMessage(String message) {
-    this.message = message;
+  public void setNewPassword(String newPassword) {
+    this.newPassword = newPassword;
   }
 
 
@@ -92,23 +92,23 @@ public class MessageDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    MessageDTO messageDTO = (MessageDTO) o;
-    return Objects.equals(this.status, messageDTO.status) &&
-        Objects.equals(this.message, messageDTO.message);
+    PasswordDTO passwordDTO = (PasswordDTO) o;
+    return Objects.equals(this.oldPassword, passwordDTO.oldPassword) &&
+        Objects.equals(this.newPassword, passwordDTO.newPassword);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(status, message);
+    return Objects.hash(oldPassword, newPassword);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class MessageDTO {\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
-    sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("class PasswordDTO {\n");
+    sb.append("    oldPassword: ").append(toIndentedString(oldPassword)).append("\n");
+    sb.append("    newPassword: ").append(toIndentedString(newPassword)).append("\n");
     sb.append("}");
     return sb.toString();
   }

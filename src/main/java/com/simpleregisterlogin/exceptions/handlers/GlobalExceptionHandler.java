@@ -108,4 +108,14 @@ public class GlobalExceptionHandler extends ExceptionHandlerExceptionResolver {
     public ResponseEntity<Object> handleUserAlreadyVerifiedException(UserAlreadyVerifiedException exception) {
         return new ResponseEntity<>(new MessageDTO("error", texts.getUserAlreadyVerifiedText()), HttpStatus.NOT_ACCEPTABLE);
     }
+
+    @ExceptionHandler(value = PasswordIncorrectException.class)
+    public ResponseEntity<Object> handlePasswordIncorrectException(PasswordIncorrectException exception) {
+        return new ResponseEntity<>(new MessageDTO("error", exception.getMessage() + " " + texts.getPasswordIncorrectText()), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(value = EmailAddressNotFoundException.class)
+    public ResponseEntity<Object> handleEmailAddressNotFoundException(EmailAddressNotFoundException exception) {
+        return new ResponseEntity<>(new MessageDTO("error",texts.getEmailAddressNotFoundPartOneText() + " " + exception.getMessage() + " " + texts.getEmailAddressNotFoundPartTwoText()), HttpStatus.NOT_FOUND);
+    }
 }

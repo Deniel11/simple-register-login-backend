@@ -1,5 +1,6 @@
 package com.simpleregisterlogin.configurations;
 
+import com.simpleregisterlogin.dtos.PasswordDTO;
 import com.simpleregisterlogin.dtos.RegisteredUserDTO;
 import com.simpleregisterlogin.dtos.UpdateUserDTO;
 import com.simpleregisterlogin.dtos.UserDTO;
@@ -79,5 +80,13 @@ public class TestConfiguration {
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     UpdateUserDTO getFakeUpdateUserDTO() {
         return mapperService.convertUserToUpdateUserDTO(getFakeUser());
+    }
+
+    @Bean(name = "fakePasswordDTO")
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    PasswordDTO getFakePasswordDTO() {
+        String oldPassword = "old password";
+        String newPassword = "new password";
+        return new PasswordDTO(oldPassword, newPassword);
     }
 }

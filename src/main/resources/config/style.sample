@@ -1,0 +1,2 @@
+style.button=text-decoration: none; padding: 6px; padding-left: 30px; padding-right: 30px; font-size: 20px; margin-bottom: 20px; color: white; background-color: darkblue;
+style.paragraph=margin-bottom: 20px; font-size: 20px;
