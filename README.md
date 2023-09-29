@@ -52,12 +52,12 @@ Gradle Project with Spring Boot Framework
 - Forgot Password with Forgot Password API
 
 ## Tests:
-### Unit test: 90
-### Integration test: 35
+### Unit test: 93
+### Integration test: 40
 ### Coverage:
 - Class: 100%
-- Method: 96%
-- Line: 92%
+- Method: 97%
+- Line: 93%
 
 ## Guides
 Before you use this project, you need to set up your environment variables
