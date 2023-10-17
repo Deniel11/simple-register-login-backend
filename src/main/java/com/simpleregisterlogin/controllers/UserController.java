@@ -62,9 +62,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(id, updateUserDTO, request));
     }
 
-    @GetMapping("/verify-email")
-    public ResponseEntity<MessageDTO> verifyEmailAddress(@RequestParam String token) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO(texts.getOk(), userService.verifyUser(token)));
+    @PatchMapping ("/verify-email")
+    public ResponseEntity<MessageDTO> verifyEmailAddress(@RequestBody EmailTokenDTO emailTokenDTO) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO(texts.getOk(), userService.verifyUser(emailTokenDTO)));
     }
 
     @PatchMapping("/change-password")
@@ -73,9 +73,9 @@ public class UserController {
     }
 
     @GetMapping("/forgot-password")
-    public ResponseEntity<MessageDTO> forgotPassword(@RequestBody EmailDTO emailDTO) {
+    public ResponseEntity<MessageDTO> forgotPassword(@RequestParam String email) {
         String token = emailService.getToken();
-        String name = userService.saveToken(emailDTO.getEmail(), token);;
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO(texts.getOk(), emailService.sendChangePasswordRequest(name, emailDTO.getEmail(), token)));
+        String name = userService.saveToken(email, token);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO(texts.getOk(), emailService.sendChangePasswordRequest(name, email, token)));
     }
 }

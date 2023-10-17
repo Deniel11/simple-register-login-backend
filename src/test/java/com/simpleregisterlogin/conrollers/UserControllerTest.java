@@ -545,7 +545,11 @@ public class UserControllerTest {
     @Test
     @Sql({"/db/test/clear_tables.sql", "/db/test/insert_users.sql"})
     void verifyEmailAddress_WithValidToken_ReturnOkStatusAndVerifyMessage() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = get("/api/user/verify-email?token={token}", "token");
+        EmailTokenDTO emailTokenDTO = new EmailTokenDTO("token");
+        String emailTokenDTOJSON = mapper.writeValueAsString(emailTokenDTO);
+        MockHttpServletRequestBuilder requestBuilder = patch("/api/user/verify-email")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(emailTokenDTOJSON);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isAccepted())
@@ -558,7 +562,11 @@ public class UserControllerTest {
     @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
     void verifyEmailAddress_WithAlreadyVerifiedUser_ThrowExceptedErrorMessage() throws Exception {
         User fakeUser = beanFactory.getBean("fakeAdminUser", User.class);
-        MockHttpServletRequestBuilder requestBuilder = get("/api/user/verify-email?token={token}", fakeUser.getVerificationToken());
+        EmailTokenDTO emailTokenDTO = new EmailTokenDTO(fakeUser.getVerificationToken());
+        String emailTokenDTOJSON = mapper.writeValueAsString(emailTokenDTO);
+        MockHttpServletRequestBuilder requestBuilder = patch("/api/user/verify-email")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(emailTokenDTOJSON);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotAcceptable())
@@ -568,9 +576,13 @@ public class UserControllerTest {
     }
 
     @Test
-    @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
+    @Sql({"/db/test/clear_tables.sql"})
     void verifyEmailAddress_WithInvalidToken_ThrowExceptedErrorMessage() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = get("/api/user/verify-email?token={token}", "invalidToken");
+        EmailTokenDTO emailTokenDTO = new EmailTokenDTO("invalidToken");
+        String emailTokenDTOJSON = mapper.writeValueAsString(emailTokenDTO);
+        MockHttpServletRequestBuilder requestBuilder = patch("/api/user/verify-email")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(emailTokenDTOJSON);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isForbidden())
@@ -583,12 +595,7 @@ public class UserControllerTest {
     @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
     void forgotPassword_WithValidUserAndEmail_ReturnsExceptedMessage() throws Exception {
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
-        EmailDTO emailDTO = new EmailDTO();
-        emailDTO.setEmail(fakeUser.getEmail());
-        String emailDTOJSON = mapper.writeValueAsString(emailDTO);
-        MockHttpServletRequestBuilder requestBuilder = get("/api/user/forgot-password")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(emailDTOJSON);
+        MockHttpServletRequestBuilder requestBuilder = get("/api/user/forgot-password?email={email}", fakeUser.getEmail());
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isAccepted())
@@ -600,18 +607,14 @@ public class UserControllerTest {
     @Test
     @Sql({"/db/test/clear_tables.sql", "/db/test/insert_fakeUser.sql"})
     void forgotPassword_WithInvalidEmail_ThrowsEmailAddressNotFoundException() throws Exception {
-        EmailDTO emailDTO = new EmailDTO();
-        emailDTO.setEmail("invalid@email.com");
-        String emailDTOJSON = mapper.writeValueAsString(emailDTO);
-        MockHttpServletRequestBuilder requestBuilder = get("/api/user/forgot-password")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(emailDTOJSON);
+        String fakeEmail = "invalid@email.com";
+        MockHttpServletRequestBuilder requestBuilder = get("/api/user/forgot-password?email={email}", fakeEmail);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(texts.getError()))
-                .andExpect(jsonPath("$.message").value(texts.getEmailAddressNotFoundPartOneText() + " " + emailDTO.getEmail() + " " + texts.getEmailAddressNotFoundPartTwoText()));
+                .andExpect(jsonPath("$.message").value(texts.getEmailAddressNotFoundPartOneText() + " " + fakeEmail + " " + texts.getEmailAddressNotFoundPartTwoText()));
     }
 
     @Test

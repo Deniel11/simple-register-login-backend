@@ -624,29 +624,29 @@ public class UserServiceImplTest {
 
     @Test
     void verifyUser_WithValidUser_ReturnsExceptedMessage() {
-        String verificationToken = "token";
+        EmailTokenDTO emailTokenDTO = new EmailTokenDTO("token");
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
         fakeUser.setVerified(false);
-        Mockito.when(userRepository.findUserByVerificationToken(verificationToken)).thenReturn(Optional.of(fakeUser));
+        Mockito.when(userRepository.findUserByVerificationToken(emailTokenDTO.getToken())).thenReturn(Optional.of(fakeUser));
 
-        Assertions.assertEquals(texts.getBeenVerifyText(), userService.verifyUser(verificationToken));
+        Assertions.assertEquals(texts.getBeenVerifyText(), userService.verifyUser(emailTokenDTO));
     }
 
     @Test
     void verifyUser_WithInvalidToken_ThrowsInvalidTokenException() {
-        String verificationToken = "token";
-        Mockito.when(userRepository.findUserByVerificationToken(verificationToken)).thenReturn(Optional.empty());
+        EmailTokenDTO emailTokenDTO = new EmailTokenDTO("token");
+        Mockito.when(userRepository.findUserByVerificationToken(emailTokenDTO.getToken())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(InvalidTokenException.class, () -> userService.verifyUser(verificationToken));
+        Assertions.assertThrows(InvalidTokenException.class, () -> userService.verifyUser(emailTokenDTO));
     }
 
     @Test
     void verifyUser_WithVerifiedUser_ThrowsUserAlreadyVerifiedException() {
-        String verificationToken = "token";
+        EmailTokenDTO emailTokenDTO = new EmailTokenDTO("token");
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
-        Mockito.when(userRepository.findUserByVerificationToken(verificationToken)).thenReturn(Optional.of(fakeUser));
+        Mockito.when(userRepository.findUserByVerificationToken(emailTokenDTO.getToken())).thenReturn(Optional.of(fakeUser));
 
-        Assertions.assertThrows(UserAlreadyVerifiedException.class, () -> userService.verifyUser(verificationToken));
+        Assertions.assertThrows(UserAlreadyVerifiedException.class, () -> userService.verifyUser(emailTokenDTO));
     }
 
     @Test

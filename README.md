@@ -275,7 +275,7 @@ More description for the APIs:
 
 -----
 <details>
-<summary> <b>PUT</b> - <i>[YOUR DOMAIN]</i>/api/user/user/{id}</summary>
+<summary> <b>PUT</b> - <i>[YOUR DOMAIN]</i>/api /user/{id}</summary>
 
 - To use this, you need the token from login.
 - You can change only one parameter like "username" or "password".
@@ -409,7 +409,7 @@ More description for the APIs:
 
 -----
 <details>
-<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/user/</summary>
+<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/</summary>
 
   - To use this, you need the token from login.
 
@@ -468,7 +468,7 @@ More description for the APIs:
 
 -----
 <details>
-<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/user/{id}</summary>
+<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/{id}</summary>
 
   - To use this, you need the token from login.
 
@@ -537,7 +537,7 @@ More description for the APIs:
 
 -----
 <details>
-<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/user/users</summary>
+<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/users</summary>
 
   - To use this, you need the token from login.
 
@@ -600,13 +600,19 @@ More description for the APIs:
 
 -----
 <details>
-<summary> <b>GET</b> - <i>[YOUR DOMAIN]</i>/api/user/verify-email?token=[Verify email token]</summary>
+<summary> <b>PATCH</b> - <i>[YOUR DOMAIN]</i>/api/user/verify-email?token=[Verify email token]</summary>
 
-  - To use this endpoint, you need path variable with verification token.
+  - To use this endpoint, you need request body with verification token.
 
-  Example:
+  **Request**:
+
+
+  Body:
   ```
-    [YOUR DOMAIN]/api/user/verify-email?token=[YOUR VERIFICATION TOKEN]
+  {
+    "key": "token",
+    "value": "[YOUR VERIFICATION TOKEN]"
+  }
   ```
   - When use registration, then gets an email with this link.
   - You can check it the verification token with MYSQL SELECT method.
@@ -658,19 +664,13 @@ More description for the APIs:
 **Request**:
 
 
-- To use this endpoint, you need path variable with forgot password token.
+- To use this endpoint, you need path variable with email address.
 
 Param example:
   ```
-    [YOUR DOMAIN]/api/user/forgot-password?token=[YOUR FORGOT PASSWORD TOKEN]
+    [YOUR DOMAIN]/api/user/forgot-password?email=[REQUESTED EMAIL ADDRESS]
   ```
 
-Body:
-  ```
-  {
-    "email": "[Requested email address]"
-  }
-  ```
 
 **Response**:
 
@@ -682,7 +682,7 @@ Body:
   ```
     {
       "status": "ok",
-      "message": "Your password has been changed."
+      "message": "Change password request email sent.."
     }
   ```
 

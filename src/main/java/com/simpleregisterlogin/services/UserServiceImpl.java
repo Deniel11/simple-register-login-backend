@@ -310,8 +310,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String verifyUser(String verificationToken) {
-        User user = userRepository.findUserByVerificationToken(verificationToken).orElseThrow(() -> new InvalidTokenException());
+    public String verifyUser(EmailTokenDTO emailTokenDTO) {
+        User user = userRepository.findUserByVerificationToken(emailTokenDTO.getToken()).orElseThrow(() -> new InvalidTokenException());
         if (user.getVerified()) {
             throw new UserAlreadyVerifiedException();
         }

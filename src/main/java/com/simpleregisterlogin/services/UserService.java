@@ -22,7 +22,7 @@ public interface UserService {
 
     RegisteredUserDTO updateUser(Long id, UpdateUserDTO updateUserDTO, HttpServletRequest request);
 
-    String verifyUser(String verificationToken);
+    String verifyUser(EmailTokenDTO emailTokenDTO);
 
     String changePassword(String forgotPasswordToken, PasswordDTO passwordDTO);
 
