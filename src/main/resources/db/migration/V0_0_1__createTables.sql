@@ -10,5 +10,6 @@ CREATE TABLE users (
     enabled BIT NOT NULL,
     verification_token VARCHAR(255),
     forgot_password_token VARCHAR(255),
+    forgot_password_request_time BIGINT,
     primary key (id)
 )

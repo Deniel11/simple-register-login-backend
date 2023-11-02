@@ -29,6 +29,9 @@ public class ResultTextsConfiguration {
     @Value("${text.valid}")
     private String validText;
 
+    @Value("${text.enabled}")
+    private String enabledText;
+
     @Value("${text.id}")
     private String idText;
 
@@ -146,6 +149,9 @@ public class ResultTextsConfiguration {
     @Value("${text.error.emailAddressNotFound.partTwo}")
     private String emailAddressNotFoundPartTwoText;
 
+    @Value("${text.error.expiredToken}")
+    private String expiredTokenText;
+
     @Value("${style.button}")
     private String buttonStyle;
 
@@ -178,6 +184,10 @@ public class ResultTextsConfiguration {
 
     public String getValidText() {
         return validText;
+    }
+
+    public String getEnabledText() {
+        return enabledText;
     }
 
     public String getIdText() {
@@ -334,6 +344,10 @@ public class ResultTextsConfiguration {
 
     public String getEmailAddressNotFoundPartTwoText() {
         return emailAddressNotFoundPartTwoText;
+    }
+
+    public String getExpiredTokenText() {
+        return expiredTokenText;
     }
 
     public String getButtonStyle() {

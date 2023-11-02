@@ -53,11 +53,11 @@ Gradle Project with Spring Boot Framework
 
 ## Tests:
 ### Unit test: 93
-### Integration test: 40
+### Integration test: 39
 ### Coverage:
 - Class: 100%
 - Method: 97%
-- Line: 93%
+- Line: 92%
 
 ## Guides
 Before you use this project, you need to set up your environment variables
@@ -720,7 +720,6 @@ Param example:
 Body:
   ```
   {
-    "oldPassword": "[Old password]",
     "newPassword": "[New password]"
   }
   ```
@@ -767,13 +766,13 @@ Body:
     "message": "Invalid token."
   }
   ```
-- Password Incorrect:
+- Expired Token:
   ```
-  Status code: 406
+  Status code: 408
   Body:
   {
     "status": "error",
-    "message": "Old password is incorrect."
+    "message": "Your token has expired!"
   }
   ```
 

@@ -172,13 +172,6 @@ public class UserServiceImpl implements UserService {
                 parameter = texts.getForgotPasswordTokenText();
             }
         }
-        if (GeneralUtility.isEmptyOrNull(passwordDTO.getOldPassword())) {
-            if (parameter.length() > 0) {
-                parameter += ", " + texts.getOldPasswordText();
-            } else {
-                parameter = texts.getOldPasswordText();
-            }
-        }
         if (GeneralUtility.isEmptyOrNull(passwordDTO.getNewPassword())) {
             if (parameter.length() > 0) {
                 parameter += ", " + texts.getNewPasswordText();
@@ -243,6 +236,7 @@ public class UserServiceImpl implements UserService {
         updateDateOfBirth(editedUser, updateUserDTO, ownUser);
         updateAdmin(editedUser, updateUserDTO, ownUser);
         updateValid(editedUser, updateUserDTO, ownUser);
+        updateEnabled(editedUser, updateUserDTO, ownUser);
         userRepository.save(editedUser);
         return mapperService.convertUserToRegisteredUserDTO(editedUser);
     }
@@ -309,6 +303,15 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    private void updateEnabled(User underUpdateUser, UpdateUserDTO updateUserDTO, boolean ownUser) {
+        if (updateUserDTO.getEnabled() != null) {
+            if (underUpdateUser.getEnabled() == updateUserDTO.getEnabled() && ownUser) {
+                throw new ParameterMatchException(texts.getEnabledText());
+            }
+            underUpdateUser.setEnabled(updateUserDTO.getEnabled());
+        }
+    }
+
     @Override
     public String verifyUser(EmailTokenDTO emailTokenDTO) {
         User user = userRepository.findUserByVerificationToken(emailTokenDTO.getToken()).orElseThrow(() -> new InvalidTokenException());
@@ -322,13 +325,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String changePassword(String forgotPasswordToken, PasswordDTO passwordDTO) {
+        User user = userRepository.findUserByForgotPasswordToken(forgotPasswordToken).orElseThrow(() -> new InvalidTokenException());
+        if (user.getForgotPasswordRequestTime() + 600000 < System.currentTimeMillis()) {
+            throw new ExpiredTokenException();
+        }
         validateParameters(getInvalidForgotPasswordTokenAndPasswordDTO(forgotPasswordToken, passwordDTO));
         validatePassword(passwordDTO.getNewPassword());
 
-        User user = userRepository.findUserByForgotPasswordToken(forgotPasswordToken).orElseThrow(() -> new InvalidTokenException());
-        if (!encoder.matches(passwordDTO.getOldPassword(), user.getPassword())) {
-            throw new PasswordIncorrectException(texts.getOldPasswordText());
-        }
         user.setPassword(encoder.encode(passwordDTO.getNewPassword()));
         user.setForgotPasswordToken(null);
         userRepository.save(user);
@@ -339,6 +342,7 @@ public class UserServiceImpl implements UserService {
     public String saveToken(String email, String forgotPasswordToken) {
         User user = userRepository.findUserByEmail(email).orElseThrow(() -> new EmailAddressNotFoundException(email));
         user.setForgotPasswordToken(forgotPasswordToken);
+        user.setForgotPasswordRequestTime(System.currentTimeMillis());
         userRepository.save(user);
         return user.getUsername();
     }

@@ -31,6 +31,8 @@ public class User {
 
     private String forgotPasswordToken;
 
+    private Long forgotPasswordRequestTime;
+
     public User() {
     }
 
@@ -122,5 +124,13 @@ public class User {
 
     public void setForgotPasswordToken(String forgotPasswordToken) {
         this.forgotPasswordToken = forgotPasswordToken;
+    }
+
+    public Long getForgotPasswordRequestTime() {
+        return forgotPasswordRequestTime;
+    }
+
+    public void setForgotPasswordRequestTime(Long forgotPasswordRequestTime) {
+        this.forgotPasswordRequestTime = forgotPasswordRequestTime;
     }
 }

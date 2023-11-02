@@ -118,4 +118,9 @@ public class GlobalExceptionHandler extends ExceptionHandlerExceptionResolver {
     public ResponseEntity<Object> handleEmailAddressNotFoundException(EmailAddressNotFoundException exception) {
         return new ResponseEntity<>(new MessageDTO("error",texts.getEmailAddressNotFoundPartOneText() + " " + exception.getMessage() + " " + texts.getEmailAddressNotFoundPartTwoText()), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(value = ExpiredTokenException.class)
+    public ResponseEntity<Object> handleExpiredTokenException(ExpiredTokenException exception) {
+        return new ResponseEntity<>(new MessageDTO("error", texts.getExpiredTokenText()), HttpStatus.REQUEST_TIMEOUT);
+    }
 }

@@ -85,8 +85,7 @@ public class TestConfiguration {
     @Bean(name = "fakePasswordDTO")
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     PasswordDTO getFakePasswordDTO() {
-        String oldPassword = "old password";
         String newPassword = "new password";
-        return new PasswordDTO(oldPassword, newPassword);
+        return new PasswordDTO(newPassword);
     }
 }

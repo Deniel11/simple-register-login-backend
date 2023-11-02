@@ -623,9 +623,9 @@ public class UserControllerTest {
         String forgotPasswordToken = "token";
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
         PasswordDTO fakePasswordDTO = beanFactory.getBean("fakePasswordDTO", PasswordDTO.class);
-        fakePasswordDTO.setOldPassword(fakeUser.getPassword());
         String fakePasswordDTOJSON = mapper.writeValueAsString(fakePasswordDTO);
         fakeUser.setForgotPasswordToken(forgotPasswordToken);
+        fakeUser.setForgotPasswordRequestTime(System.currentTimeMillis());
         fakeUser.setPassword(encoder.encode(fakeUser.getPassword()));
         userRepository.save(fakeUser);
         MockHttpServletRequestBuilder requestBuilder = patch("/api/user/change-password?token={token}", forgotPasswordToken)
@@ -641,29 +641,37 @@ public class UserControllerTest {
 
     @Test
     @Sql("/db/test/clear_tables.sql")
-    void changePassword_WithInvalidPasswordParameter_ThrowsInvalidParameterException() throws Exception {
+    void changePassword_WithExpiredToken_ThrowsExpitredTokenException() throws Exception {
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
         String forgotPasswordToken = "token";
-        PasswordDTO fakePasswordDTO = beanFactory.getBean("fakePasswordDTO", PasswordDTO.class);
-        fakePasswordDTO.setOldPassword(null);
+        PasswordDTO fakePasswordDTO = new PasswordDTO("new");
         String fakePasswordDTOJSON = mapper.writeValueAsString(fakePasswordDTO);
+        fakeUser.setForgotPasswordToken(forgotPasswordToken);
+        fakeUser.setForgotPasswordRequestTime(System.currentTimeMillis() - 600001);
+        fakeUser.setPassword(encoder.encode(fakeUser.getPassword()));
+        userRepository.save(fakeUser);
         MockHttpServletRequestBuilder requestBuilder = patch("/api/user/change-password?token={token}", forgotPasswordToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(fakePasswordDTOJSON);
 
         mockMvc.perform(requestBuilder)
-                .andExpect(status().isNotFound())
+                .andExpect(status().isRequestTimeout())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(texts.getError()))
-                .andExpect(jsonPath("$.message").value(texts.getOldPasswordText() + " " + texts.getInvalidParameterText()));
+                .andExpect(jsonPath("$.message").value(texts.getExpiredTokenText()));
     }
 
     @Test
     @Sql("/db/test/clear_tables.sql")
     void changePassword_WithLowPasswordLength_ThrowsLowPasswordLengthException() throws Exception {
+        User fakeUser = beanFactory.getBean("fakeUser", User.class);
         String forgotPasswordToken = "token";
-        PasswordDTO fakePasswordDTO = beanFactory.getBean("fakePasswordDTO", PasswordDTO.class);
-        fakePasswordDTO.setNewPassword("pass");
+        PasswordDTO fakePasswordDTO = new PasswordDTO("new");
         String fakePasswordDTOJSON = mapper.writeValueAsString(fakePasswordDTO);
+        fakeUser.setForgotPasswordToken(forgotPasswordToken);
+        fakeUser.setForgotPasswordRequestTime(System.currentTimeMillis());
+        fakeUser.setPassword(encoder.encode(fakeUser.getPassword()));
+        userRepository.save(fakeUser);
         MockHttpServletRequestBuilder requestBuilder = patch("/api/user/change-password?token={token}", forgotPasswordToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(fakePasswordDTOJSON);
@@ -690,22 +698,5 @@ public class UserControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(texts.getError()))
                 .andExpect(jsonPath("$.message").value(texts.getInvalidTokenText() + "."));
-    }
-
-    @Test
-    @Sql({"/db/test/clear_tables.sql", "/db/test/insert_users.sql"})
-    void changePassword_WithIncorrectPassword_ThrowsPasswordIncorrectException() throws Exception {
-        String forgotPasswordToken = "token";
-        PasswordDTO fakePasswordDTO = beanFactory.getBean("fakePasswordDTO", PasswordDTO.class);
-        String fakePasswordDTOJSON = mapper.writeValueAsString(fakePasswordDTO);
-        MockHttpServletRequestBuilder requestBuilder = patch("/api/user/change-password?token={token}", forgotPasswordToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(fakePasswordDTOJSON);
-
-        mockMvc.perform(requestBuilder)
-                .andExpect(status().isNotAcceptable())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(texts.getError()))
-                .andExpect(jsonPath("$.message").value(texts.getOldPasswordText() + " " + texts.getPasswordIncorrectText()));
     }
 }

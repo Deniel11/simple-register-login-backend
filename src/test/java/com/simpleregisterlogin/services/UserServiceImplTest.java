@@ -672,8 +672,8 @@ public class UserServiceImplTest {
         String forgotPasswordToken = "token";
         PasswordDTO fakePasswordDTO = beanFactory.getBean("fakePasswordDTO", PasswordDTO.class);
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        fakeUser.setForgotPasswordRequestTime(System.currentTimeMillis());
         Mockito.when(userRepository.findUserByForgotPasswordToken(forgotPasswordToken)).thenReturn(Optional.of(fakeUser));
-        Mockito.when(encoder.matches(fakePasswordDTO.getOldPassword(), fakeUser.getPassword())).thenReturn(true);
         Mockito.when(encoder.encode(fakePasswordDTO.getNewPassword())).thenReturn(fakePasswordDTO.getNewPassword());
 
         Assertions.assertEquals(texts.getPasswordChangedText(), userService.changePassword(forgotPasswordToken, fakePasswordDTO));
@@ -689,13 +689,13 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void changePassword_WithInvalidOldPassword_ThrowsPasswordIncorrectException() {
+    void changePassword_WithExpiredToken_ThrowsExpiredTokenException() {
         String forgotPasswordToken = "token";
         PasswordDTO fakePasswordDTO = beanFactory.getBean("fakePasswordDTO", PasswordDTO.class);
         User fakeUser = beanFactory.getBean("fakeUser", User.class);
+        fakeUser.setForgotPasswordRequestTime(System.currentTimeMillis() - 600001);
         Mockito.when(userRepository.findUserByForgotPasswordToken(forgotPasswordToken)).thenReturn(Optional.of(fakeUser));
-        Mockito.when(encoder.matches(fakePasswordDTO.getOldPassword(), fakeUser.getPassword())).thenReturn(false);
 
-        Assertions.assertThrows(PasswordIncorrectException.class, () -> userService.changePassword(forgotPasswordToken, fakePasswordDTO));
+        Assertions.assertThrows(ExpiredTokenException.class, () -> userService.changePassword(forgotPasswordToken, fakePasswordDTO));
     }
 }
