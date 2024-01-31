@@ -1,0 +1,17 @@
+version: '1'
+services:
+  spring-app:
+    image: simpleregisterlogin
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+      - .sql.env
+    ports:
+      - 8080:8080
+  mysql:
+    image: mysql:latest
+    env_file: .sql.env
+    ports:
+      - 3307:3306
