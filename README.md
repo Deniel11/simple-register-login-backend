@@ -60,9 +60,13 @@ Gradle Project with Spring Boot Framework
 - Line: 92%
 
 ## Guides
-Before you use this project, you need to set up your environment variables
+First start:
 
-Or you can use env file ".env.sample".
+> If you want to use other database, then use your db details and delete the mysql part of the docker-compose.yml.
+
+You need 2 env file:
+
+".env"
 
 <details>
 <summary><b>Environment Variables</b></summary>
@@ -71,9 +75,6 @@ Or you can use env file ".env.sample".
 DOMAIN=[YOUR DOMAIN]
 DB_HOST=[YOUR MYSQL DOMAIN]
 DB_PORT=[YOUR MYSQL PORT]
-DB_DATABASE=[YOUR DATABASE NAME]
-DB_USERNAME=[YOUR MYSQL USERNAME]
-DB_PASSWORD=[YOUR MYSQL PASSWORD]
 HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
 HIBERNATE_DDL_AUTO=validate
 SHOW_SQL=true
@@ -86,11 +87,29 @@ MAIL_PASSWORD=[YOUR GMAIL APPLICATION PASSWORD]
 ```
 </details>
 
+".sql.env"
+
+<details>
+<summary><b>Environment Variables</b></summary>
+
+```
+MYSQL_ROOT_PASSWORD=password
+MYSQL_USER=root
+MYSQL_PASSWORD=password
+MYSQL_DATABASE=schedule
+```
+</details>
+
 > I use gmail for email service in my application, if you would like to use different one, then change the environment variables.
 
 > The first registration is validated, and you get admin rights. (First ID)
 
-Require extra endpoints to the frontend:
+When you are done with the above settings, then you need this command:
+> docker compose up -d
+
+OR if you upload to the production, then wait for the result.
+
+### Require extra endpoints to the frontend:
 
 ---
 
